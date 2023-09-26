@@ -12,6 +12,12 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
  */
 public class NoticeTemplate {
 
+    String title;
+
+    NoticeTemplate(String title) {
+        this.title = title;
+    }
+
     public void run() throws IOException {
         // Create a document and add a page to it
         PDDocument document = new PDDocument();
@@ -26,7 +32,17 @@ public class NoticeTemplate {
         //contentStream.drawImage(image1, 25, 700);
         contentStream.drawImage(image1, 45, 710, 50, 72);
         contentStream.drawLine(50, 708, 550, 708);
-        contentStream.drawLine(270, 655, 325, 655);
+        int xEnd;
+        int xBegin;
+        if (title == "OFFICE ORDER") {
+            xBegin = 252;
+            xEnd = xBegin+108;
+            
+        } else {
+            xBegin = 270;
+            xEnd = 325;
+        }
+        contentStream.drawLine(xBegin, 655, xEnd, 655);
         // Define a text content stream using the selected font
         contentStream.beginText();
         contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
@@ -65,19 +81,19 @@ public class NoticeTemplate {
         contentStream.newLine();
         contentStream.showText("           Engineering");
         contentStream.endText();
-        
+
         //Date
         contentStream.beginText();
         contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
         contentStream.newLineAtOffset(50, 695);
         contentStream.showText("Date: ");
         contentStream.endText();
-        
+
         //Title
         contentStream.beginText();
         contentStream.setFont(PDType1Font.TIMES_BOLD, 14);
-        contentStream.newLineAtOffset(270, 660);
-        contentStream.showText("NOTICE");
+        contentStream.newLineAtOffset(xBegin, 660);
+        contentStream.showText(title);
         contentStream.endText();
 
         //Designation
@@ -97,7 +113,7 @@ public class NoticeTemplate {
         // Make sure that the content stream is closed:
         contentStream.close();
         // Save the results and ensure that the document is properly closed:
-        document.save("blankTemplate.pdf");
+        document.save("Office_order_Template.pdf");
         document.close();
     }
 

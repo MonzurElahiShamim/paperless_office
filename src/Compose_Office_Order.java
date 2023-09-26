@@ -29,7 +29,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
  *
  * @author Monzur Elahi Shamim
  */
-public class Compose_Notice extends javax.swing.JFrame {
+public class Compose_Office_Order extends javax.swing.JFrame {
 
     private static final PDFont FONT = PDType1Font.TIMES_ROMAN;
     private static final float FONT_SIZE = 12;
@@ -38,7 +38,7 @@ public class Compose_Notice extends javax.swing.JFrame {
     /**
      * Creates new form compose
      */
-    public Compose_Notice() {
+    public Compose_Office_Order() {
         initComponents();
     }
 
@@ -113,7 +113,7 @@ public class Compose_Notice extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_topic(notice).png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/Office order title.png"))); // NOI18N
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_designation.png"))); // NOI18N
 
@@ -136,9 +136,6 @@ public class Compose_Notice extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(401, 401, 401)
-                        .addComponent(jLabel3))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(76, 76, 76)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -147,7 +144,10 @@ public class Compose_Notice extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(377, 377, 377)
+                        .addComponent(jLabel3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -158,15 +158,15 @@ public class Compose_Notice extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(70, 70, 70)
+                .addGap(55, 55, 55)
                 .addComponent(jLabel3)
-                .addGap(43, 43, 43)
+                .addGap(58, 58, 58)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(127, 127, 127)
                 .addComponent(jLabel4)
                 .addGap(48, 48, 48)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addContainerGap(82, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel2);
@@ -330,7 +330,7 @@ public class Compose_Notice extends javax.swing.JFrame {
         try {
 
             //Load the template
-            File blankTemplate = new File("C:\\Users\\Monzur Elahi Shamim\\OneDrive\\Documents\\NetBeansProjects\\PaperlessOffice\\blankTemplate.pdf");
+            File blankTemplate = new File("Office_order_Template.pdf");
             PDDocument document = PDDocument.load(blankTemplate);
             
             //Get the page
@@ -355,7 +355,7 @@ public class Compose_Notice extends javax.swing.JFrame {
             addParagraph(contentStream, page, bodyText, true);
 
             contentStream.close();
-            String fileName = "NewNotice.pdf";
+            String fileName = "NewOfficeOrder.pdf";
             document.save(fileName);
             document.close();
 
@@ -363,7 +363,7 @@ public class Compose_Notice extends javax.swing.JFrame {
             object.setVisible(true);
             setVisible(false);
         } catch (IOException ex) {
-            Logger.getLogger(Compose_Notice.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
         }
 
 
@@ -398,28 +398,28 @@ public class Compose_Notice extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Compose_Office_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Compose_Office_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Compose_Office_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Compose_Office_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
-        NoticeTemplate template = new NoticeTemplate();
+        NoticeTemplate template = new NoticeTemplate("OFFICE ORDER");
         try {
             template.run();
         } catch (IOException ex) {
-            Logger.getLogger(Compose_Notice.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Compose_Notice().setVisible(true);
+                new Compose_Office_Order().setVisible(true);
             }
         });
     }
