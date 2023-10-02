@@ -61,11 +61,11 @@ public class Compose_Letter extends javax.swing.JFrame {
         date = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        noticeBody = new javax.swing.JTextArea();
+        letterBody = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        reference = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -124,12 +124,13 @@ public class Compose_Letter extends javax.swing.JFrame {
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_designation.png"))); // NOI18N
 
-        noticeBody.setColumns(20);
-        noticeBody.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        noticeBody.setLineWrap(true);
-        noticeBody.setRows(5);
-        noticeBody.setWrapStyleWord(true);
-        jScrollPane2.setViewportView(noticeBody);
+        letterBody.setColumns(20);
+        letterBody.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        letterBody.setLineWrap(true);
+        letterBody.setRows(5);
+        letterBody.setText("Sir,");
+        letterBody.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(letterBody);
 
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
@@ -138,8 +139,8 @@ public class Compose_Letter extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         jLabel5.setText("Ref. No:");
 
-        jTextField1.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
-        jTextField1.setText("NSTU/ICE/2023/");
+        reference.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        reference.setText("NSTU/ICE/2023/");
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         jLabel3.setText("To");
@@ -177,7 +178,7 @@ public class Compose_Letter extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(reference, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -196,9 +197,8 @@ public class Compose_Letter extends javax.swing.JFrame {
                                         .addComponent(jLabel9)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(subject_letter))
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(personnel, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(department, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)))
+                                    .addComponent(personnel)
+                                    .addComponent(department))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -209,7 +209,7 @@ public class Compose_Letter extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(reference, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(40, 40, 40)
@@ -301,7 +301,7 @@ public class Compose_Letter extends javax.swing.JFrame {
     
     contentStream.beginText();
     contentStream.setFont(FONT, FONT_SIZE);
-    contentStream.newLineAtOffset(startX, startY);
+    contentStream.newLineAtOffset(startX, 510);
     
     for (String paragraph : paragraphs) {
         List<String> lines = parseLines(paragraph, width);
@@ -369,7 +369,7 @@ public class Compose_Letter extends javax.swing.JFrame {
         try {
 
             //Load the template
-            File blankTemplate = new File("C:\\Users\\Monzur Elahi Shamim\\OneDrive\\Documents\\NetBeansProjects\\PaperlessOffice\\blankTemplate.pdf");
+            File blankTemplate = new File("C:\\Users\\Monzur Elahi Shamim\\OneDrive\\Documents\\NetBeansProjects\\PaperlessOffice\\LetterTemplate.pdf");
             PDDocument document = PDDocument.load(blankTemplate);
             
             //Get the page
@@ -381,16 +381,46 @@ public class Compose_Letter extends javax.swing.JFrame {
             //Set Date
             contentStream.beginText();
             contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
-            contentStream.newLineAtOffset(80, 695);
+            contentStream.newLineAtOffset(510, 695);
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             Date date = new Date();
             String str_date = formatter.format(date);
             //String str_date = date.getText();
             contentStream.showText(str_date);
             contentStream.endText();
+            
+            
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+            contentStream.newLineAtOffset(50, 695);
+            contentStream.showText("Ref. No: " + reference.getText());
+            contentStream.endText();
+            
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+            contentStream.newLineAtOffset(50, 695);
+            contentStream.setLeading(15.5f);
+            contentStream.newLine();
+            contentStream.newLine();
+            contentStream.showText("To");
+            contentStream.newLine();
+            contentStream.showText(personnel.getText());
+            contentStream.newLine();
+            contentStream.showText(department.getText());
+            contentStream.newLine();
+            contentStream.showText("Noakhali Science and Technology University");
+            contentStream.newLine();
+            contentStream.showText("Noakhali-3814");
+            contentStream.newLine();
+            contentStream.newLine();
+            contentStream.showText("Medium: Appropriate Authorities");
+            contentStream.newLine();
+            contentStream.newLine();
+            contentStream.showText("Subject: " + subject_letter.getText());
+            contentStream.endText();
 
             //Body text
-            String bodyText = noticeBody.getText();
+            String bodyText = letterBody.getText();
             addParagraph(contentStream, page, bodyText, true);
 
             contentStream.close();
@@ -400,7 +430,7 @@ public class Compose_Letter extends javax.swing.JFrame {
 
             Preview object = new Preview(fileName);
             object.setVisible(true);
-            setVisible(false);
+            //setVisible(false);
         } catch (IOException ex) {
             Logger.getLogger(Compose_Letter.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -449,7 +479,7 @@ public class Compose_Letter extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        NoticeTemplate template = new NoticeTemplate("NOTICE");
+        LetterTemplate template = new LetterTemplate();
         try {
             template.run();
         } catch (IOException ex) {
@@ -482,10 +512,10 @@ public class Compose_Letter extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextArea noticeBody;
+    private javax.swing.JTextArea letterBody;
     private javax.swing.JTextField personnel;
     private javax.swing.JButton previewBtn;
+    private javax.swing.JTextField reference;
     private javax.swing.JTextField subject_letter;
     // End of variables declaration//GEN-END:variables
 }

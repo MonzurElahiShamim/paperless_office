@@ -332,7 +332,7 @@ public class Compose_Notice extends javax.swing.JFrame {
 
             Preview object = new Preview(fileName);
             object.setVisible(true);
-            setVisible(false);
+            //setVisible(false);
         } catch (IOException ex) {
             Logger.getLogger(Compose_Notice.class.getName()).log(Level.SEVERE, null, ex);
         }

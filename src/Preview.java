@@ -54,6 +54,11 @@ public class Preview extends javax.swing.JFrame {
 
         correctionBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         correctionBtn.setText("Correction");
+        correctionBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                correctionBtnMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -101,6 +106,11 @@ public class Preview extends javax.swing.JFrame {
         object.setVisible(true);
         
     }//GEN-LAST:event_submitBtnMouseClicked
+
+    private void correctionBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_correctionBtnMouseClicked
+        // TODO add your handling code here:
+        setVisible(false);
+    }//GEN-LAST:event_correctionBtnMouseClicked
 
     /**
      * @param args the command line arguments

@@ -4,17 +4,19 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Compose_Letter.java</file>
-            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Compose_Notice.java</file>
             <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/ApplicationMarksheet.java</file>
-            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Preview.java</file>
             <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Approval.java</file>
-            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Home_Stu.java</file>
+            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/LetterTemplate.java</file>
             <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Login.java</file>
             <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/databaseConnection.java</file>
-            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/MarkSheetApplication.java</file>
-            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/NoticeTemplate.java</file>
+            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Registration.java</file>
             <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Home_Admin.java</file>
             <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Compose_Office_Order.java</file>
+            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Compose_Notice.java</file>
+            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Preview.java</file>
+            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/Home_Stu.java</file>
+            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/MarkSheetApplication.java</file>
+            <file>file:/C:/Users/Monzur%20Elahi%20Shamim/OneDrive/Documents/NetBeansProjects/PaperlessOffice/src/NoticeTemplate.java</file>
         </group>
     </open-files>
 </project-private>

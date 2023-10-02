@@ -137,6 +137,9 @@ public class Home_Admin extends javax.swing.JFrame {
 
     private void composeLetterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_composeLetterMouseClicked
         // TODO add your handling code here:
+        setVisible(false);
+        Compose_Letter object = new Compose_Letter();
+        object.setVisible(true);
     }//GEN-LAST:event_composeLetterMouseClicked
 
     private void composeLetterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_composeLetterActionPerformed

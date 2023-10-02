@@ -361,7 +361,7 @@ public class Compose_Office_Order extends javax.swing.JFrame {
 
             Preview object = new Preview(fileName);
             object.setVisible(true);
-            setVisible(false);
+            //setVisible(false);
         } catch (IOException ex) {
             Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
         }
