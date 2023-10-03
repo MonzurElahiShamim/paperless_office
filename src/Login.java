@@ -210,29 +210,38 @@ public class Login extends javax.swing.JFrame {
 
                 rs = stmt.executeQuery(sql);
                 if (rs.next()) {
+                    UserSession.getInstance().setUser(userEmail);
                     setVisible(false);
                     Home_Admin object = new Home_Admin();
                     object.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Password or mail is invalid!");
                 }
-            }
-            else if(teacher.isSelected()==true){
-            
-            }
-            else if(student.isSelected()==true){
-                String sql = "SELECT * FROM student WHERE st_email='" + userEmail + "' && password='" + userPass + "'";
+            } else if (teacher.isSelected() == true) {
+                //String sql = "SELECT * FROM teacher WHERE Email='" + userEmail + "' && password='" + userPass + "'";
+
+//                rs = stmt.executeQuery(sql);
+//                if (rs.next()) {
+//                    UserSession.getInstance().setUser(userEmail);
+//                    setVisible(false);
+//                    Home_Teacher object = new Home_Teacher();
+//                    object.setVisible(true);
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "Password or mail is invalid!");
+//                }
+            } else if (student.isSelected() == true) {
+                String sql = "SELECT * FROM student WHERE eduEmail='" + userEmail + "' && password='" + userPass + "'";
 
                 rs = stmt.executeQuery(sql);
                 if (rs.next()) {
+                    UserSession.getInstance().setUser(userEmail);
                     setVisible(false);
                     Home_Stu object = new Home_Stu();
                     object.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Password or mail is invalid!");
                 }
-            }
-            else {
+            } else {
                 JOptionPane.showMessageDialog(null, "User type not selected!");
             }
 

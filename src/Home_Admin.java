@@ -1,9 +1,11 @@
+
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Monzur Elahi Shamim
@@ -15,6 +17,7 @@ public class Home_Admin extends javax.swing.JFrame {
      */
     public Home_Admin() {
         initComponents();
+
     }
 
     /**
@@ -177,7 +180,13 @@ public class Home_Admin extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Home_Admin().setVisible(true);
+                if (!UserSession.getInstance().isAuthenticated()) {
+                    JOptionPane.showMessageDialog(null, "You need to login first!");
+                    // Redirect the user to the login frame or perform other actions as needed
+                    //dispose(); // Close this frame if the user is not authenticated
+                } else {
+                    new Home_Admin().setVisible(true);
+                }
             }
         });
     }

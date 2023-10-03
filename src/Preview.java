@@ -20,6 +20,11 @@ public class Preview extends javax.swing.JFrame {
     /**
      * Creates new form Approval
      */
+    String callerWindow = "";
+    public Preview() {
+        initComponents();
+        //openpdf(fileName);
+    }
     public Preview(String fileName) {
         initComponents();
         openpdf(fileName);
@@ -27,6 +32,7 @@ public class Preview extends javax.swing.JFrame {
     
     public Preview(String fileName, String callerWindow) {
         initComponents();
+        this.callerWindow = callerWindow;
         openpdf(fileName);
     }
 
@@ -131,6 +137,17 @@ public class Preview extends javax.swing.JFrame {
 
     private void backBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backBtnMouseClicked
         // TODO add your handling code here:
+        if(callerWindow.equals("Compose_Letter") ){
+            
+        }else if (callerWindow.equals("Compose_Notice") ){
+            
+        }else if (callerWindow.equals("Compose_Office_Order") ){
+            
+        }else if (callerWindow.equals("MarkSheet_Application")){
+            
+        }else {
+            
+        }
     }//GEN-LAST:event_backBtnMouseClicked
 
     /**
@@ -162,9 +179,13 @@ public class Preview extends javax.swing.JFrame {
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Approval().setVisible(true);
-                
+            public void run() {                
+//                if (!UserSession.getInstance().isAuthenticated()) {
+//                    JOptionPane.showMessageDialog(null, "You need to login first!");
+//                } else {
+//                    new Approval().setVisible(true); 
+//                }
+                new Preview().setVisible(true);                
             }
             
         });

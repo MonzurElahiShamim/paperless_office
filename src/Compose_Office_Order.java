@@ -419,6 +419,11 @@ public class Compose_Office_Order extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+//                if (!UserSession.getInstance().isAuthenticated()) {
+//                    JOptionPane.showMessageDialog(null, "You need to login first!");
+//                } else {
+//                    new Compose_Office_Order().setVisible(true);
+//                }
                 new Compose_Office_Order().setVisible(true);
             }
         });

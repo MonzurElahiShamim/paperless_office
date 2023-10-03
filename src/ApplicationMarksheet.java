@@ -354,6 +354,11 @@ public class ApplicationMarksheet extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+//                if (!UserSession.getInstance().isAuthenticated()) {
+//                    JOptionPane.showMessageDialog(null, "You need to login first!");
+//                } else {
+//                    new ApplicationMarksheet().setVisible(true);
+//                }
                 new ApplicationMarksheet().setVisible(true);
             }
         });
