@@ -1,5 +1,8 @@
 
+import java.io.File;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -35,6 +38,7 @@ public class Home_Admin extends javax.swing.JFrame {
         officeOrder = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         composeLetter = new javax.swing.JButton();
+        openFile = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home");
@@ -77,13 +81,27 @@ public class Home_Admin extends javax.swing.JFrame {
             }
         });
 
+        openFile.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        openFile.setText("Open File");
+        openFile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                openFileMouseClicked(evt);
+            }
+        });
+        openFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openFileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(61, 61, 61)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(openFile, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(officeOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(notice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -92,21 +110,27 @@ public class Home_Admin extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(28, 28, 28))
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {composeLetter, jButton1, notice, officeOrder});
+
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
-                        .addComponent(notice, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
-                        .addComponent(officeOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 55, 55)
-                        .addComponent(composeLetter, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(111, 111, 111))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addComponent(notice, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addComponent(officeOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addComponent(composeLetter, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addComponent(openFile, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -149,6 +173,32 @@ public class Home_Admin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_composeLetterActionPerformed
 
+    private void openFileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openFileMouseClicked
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("PDF files", "pdf"));
+
+        int returnValue = fileChooser.showOpenDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String filePath = selectedFile.getAbsolutePath();
+            if (filePath.toLowerCase().endsWith(".pdf")) {
+                Preview object = new Preview(filePath);
+                object.setVisible(true);
+            } else {
+                // The selected file is not a PDF file
+                JOptionPane.showMessageDialog(null, "Please select a PDF file.");
+            }
+        } else {
+            // User canceled file selection
+            JOptionPane.showMessageDialog(null, "No file selected.");
+        }
+    }//GEN-LAST:event_openFileMouseClicked
+
+    private void openFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_openFileActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -160,7 +210,7 @@ public class Home_Admin extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Metal".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -180,13 +230,14 @@ public class Home_Admin extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                if (!UserSession.getInstance().isAuthenticated()) {
-                    JOptionPane.showMessageDialog(null, "You need to login first!");
-                    // Redirect the user to the login frame or perform other actions as needed
-                    //dispose(); // Close this frame if the user is not authenticated
-                } else {
-                    new Home_Admin().setVisible(true);
-                }
+//                if (!UserSession.getInstance().isAuthenticated()) {
+//                    JOptionPane.showMessageDialog(null, "You need to login first!");
+//                    // Redirect the user to the login frame or perform other actions as needed
+//                    //dispose(); // Close this frame if the user is not authenticated
+//                } else {
+//                    new Home_Admin().setVisible(true);
+//                }
+                new Home_Admin().setVisible(true);
             }
         });
     }
@@ -198,5 +249,6 @@ public class Home_Admin extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton notice;
     private javax.swing.JButton officeOrder;
+    private javax.swing.JButton openFile;
     // End of variables declaration//GEN-END:variables
 }

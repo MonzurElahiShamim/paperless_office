@@ -55,6 +55,7 @@ public class Registration extends javax.swing.JFrame {
         personalEmail = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setFocusTraversalPolicyProvider(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Student Registration", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
 
@@ -129,15 +130,15 @@ public class Registration extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
                 .addGap(23, 23, 23)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(stID, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mobileNo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fatherName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lastName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(firstName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(120, 120, 120)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(mobileNo, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(fatherName)
+                    .addComponent(lastName)
+                    .addComponent(firstName)
+                    .addComponent(stID)
+                    .addComponent(cancelBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(100, 100, 100)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,21 +151,22 @@ public class Registration extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addGap(42, 42, 42)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(personalEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(institutionalEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(stSession, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(stSession, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                            .addComponent(institutionalEmail)
+                            .addComponent(personalEmail)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
                             .addComponent(jLabel10))
                         .addGap(24, 24, 24)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(password)
-                                .addComponent(confirmPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)))))
-                .addGap(120, 120, 120))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 80, Short.MAX_VALUE))
+                            .addComponent(password)
+                            .addComponent(confirmPassword))))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,7 +219,7 @@ public class Registration extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(877, 577));
+        setSize(new java.awt.Dimension(891, 577));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -239,7 +241,6 @@ public class Registration extends javax.swing.JFrame {
     private void submitBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitBtnMouseClicked
         // TODO add your handling code here:
         String fName = firstName.getText();
-        System.out.println(fName.length());
         String lName = lastName.getText();
         String father = fatherName.getText();
         String mobile = mobileNo.getText();
@@ -247,35 +248,18 @@ public class Registration extends javax.swing.JFrame {
         String session = stSession.getText();
         String instEmail = institutionalEmail.getText();
         String personEmail = personalEmail.getText();
-        String password1 = password.getText();
-        String password2 = confirmPassword.getText();
+        char[] password1 = password.getPassword();
+        char[] password2 = confirmPassword.getPassword();
 
-        if (fName.equals("") || lName.equals("") || father.equals("") || mobile.equals("") || stId.equals("") || session.equals("") || (instEmail.equals("") && personEmail.equals("")) || password1.equals("") || password2.equals("")) {
-            JOptionPane.showMessageDialog(null, "Fill up all fields");
-        } else if (!password1.equals(password2)) {
-            JOptionPane.showMessageDialog(null, "Password does not match!");
-        } else {
+        // Convert char[] to String for validation or storage
+        String password1String = new String(password1);
+        String password2String = new String(password2);
+        // After using passwords, clear them from memory
+        java.util.Arrays.fill(password1, ' ');
+        java.util.Arrays.fill(password2, ' ');
 
-            try (Connection connection = databaseConnection.connection()) {
-                String query = "INSERT INTO student (st_id, firstName, lastName, fatherName, mobile, session, eduEmail, personalEmail, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setString(1, stId);
-                preparedStatement.setString(2, fName);
-                preparedStatement.setString(3, lName);
-                preparedStatement.setString(4, father);
-                preparedStatement.setString(5, mobile);
-                preparedStatement.setString(6, session);
-                preparedStatement.setString(7, instEmail);
-                preparedStatement.setString(8, personEmail);
-                preparedStatement.setString(9, password1);
-
-                preparedStatement.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Registered successfully!");
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
-            }
-        }
+        // Perform password validation or other operations
+        DataValidate.validateAndInsertData(fName, lName, father, mobile, stId, session, instEmail, personEmail, password1String, password2String);
 
     }//GEN-LAST:event_submitBtnMouseClicked
 
@@ -290,7 +274,7 @@ public class Registration extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Metal".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

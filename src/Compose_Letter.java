@@ -125,7 +125,7 @@ public class Compose_Letter extends javax.swing.JFrame {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_designation.png"))); // NOI18N
 
         letterBody.setColumns(20);
-        letterBody.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        letterBody.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         letterBody.setLineWrap(true);
         letterBody.setRows(5);
         letterBody.setText("Sir,");
@@ -461,7 +461,7 @@ public class Compose_Letter extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Metal".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
