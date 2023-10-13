@@ -260,35 +260,6 @@ public class Compose_Office_Order extends javax.swing.JFrame {
     contentStream.endText();
 }
 
-    
-//    private static void addParagraph(PDPageContentStream contentStream, PDPage page, String text, boolean justify) throws IOException {
-//        PDRectangle mediaBox = page.getMediaBox();
-//        float marginY = 180;
-//        float marginX = 50;
-//        float width = mediaBox.getWidth() - 2 * marginX;
-//        float startX = mediaBox.getLowerLeftX() + marginX;
-//        float startY = mediaBox.getUpperRightY() - marginY;
-//        List<String> lines = parseLines(text, width);
-//        contentStream.beginText();
-//        contentStream.setFont(FONT, FONT_SIZE);
-//        contentStream.newLineAtOffset(startX, startY);
-//        for (String line : lines) {
-//            float charSpacing = 0;
-//            if (justify) {
-//                if (line.length() > 1) {
-//                    float size = FONT_SIZE * FONT.getStringWidth(line) / 1000;
-//                    float free = width - size;
-//                    if (free > 0 && !lines.get(lines.size() - 1).equals(line)) {
-//                        charSpacing = free / (line.length() - 1);
-//                    }
-//                }
-//            }
-//            contentStream.setCharacterSpacing(charSpacing);
-//            contentStream.showText(line);
-//            contentStream.newLineAtOffset(0, LEADING);
-//        }
-//        contentStream.endText();
-//    }
 
     private static List<String> parseLines(String text, float width) throws IOException {
         List<String> lines = new ArrayList<>();
@@ -359,9 +330,8 @@ public class Compose_Office_Order extends javax.swing.JFrame {
             document.save(fileName);
             document.close();
 
-            Preview object = new Preview(fileName);
+            Preview object = new Preview(fileName, this, true);
             object.setVisible(true);
-            //setVisible(false);
         } catch (IOException ex) {
             Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
         }

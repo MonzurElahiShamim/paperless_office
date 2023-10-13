@@ -175,7 +175,7 @@ public class Home_Stu extends javax.swing.JFrame {
 
     private void profileBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profileBtnMouseClicked
         setVisible(false);
-        Profile object = new Profile();
+        ProfileStudent object = new ProfileStudent();
         object.setVisible(true);
     }//GEN-LAST:event_profileBtnMouseClicked
 

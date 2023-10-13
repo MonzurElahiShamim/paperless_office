@@ -217,49 +217,47 @@ public class Compose_Notice extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    
     private static void addParagraph(PDPageContentStream contentStream, PDPage page, String text) throws IOException {
         addParagraph(contentStream, page, text, false);
     }
 
     private static void addParagraph(PDPageContentStream contentStream, PDPage page, String text, boolean justify) throws IOException {
-    PDRectangle mediaBox = page.getMediaBox();
-    float marginY = 180;
-    float marginX = 50;
-    float width = mediaBox.getWidth() - 2 * marginX;
-    float startX = mediaBox.getLowerLeftX() + marginX;
-    float startY = mediaBox.getUpperRightY() - marginY;
-    String[] paragraphs = text.split("\n");  // Split the text at newline characters
-    
-    contentStream.beginText();
-    contentStream.setFont(FONT, FONT_SIZE);
-    contentStream.newLineAtOffset(startX, startY);
-    
-    for (String paragraph : paragraphs) {
-        List<String> lines = parseLines(paragraph, width);
-        for (String line : lines) {
-            float charSpacing = 0;
-            if (justify) {
-                if (line.length() > 1) {
-                    float size = FONT_SIZE * FONT.getStringWidth(line) / 1000;
-                    float free = width - size;
-                    if (free > 0 && !lines.get(lines.size() - 1).equals(line)) {
-                        charSpacing = free / (line.length() - 1);
+        PDRectangle mediaBox = page.getMediaBox();
+        float marginY = 180;
+        float marginX = 50;
+        float width = mediaBox.getWidth() - 2 * marginX;
+        float startX = mediaBox.getLowerLeftX() + marginX;
+        float startY = mediaBox.getUpperRightY() - marginY;
+        String[] paragraphs = text.split("\n");  // Split the text at newline characters
+
+        contentStream.beginText();
+        contentStream.setFont(FONT, FONT_SIZE);
+        contentStream.newLineAtOffset(startX, startY);
+
+        for (String paragraph : paragraphs) {
+            List<String> lines = parseLines(paragraph, width);
+            for (String line : lines) {
+                float charSpacing = 0;
+                if (justify) {
+                    if (line.length() > 1) {
+                        float size = FONT_SIZE * FONT.getStringWidth(line) / 1000;
+                        float free = width - size;
+                        if (free > 0 && !lines.get(lines.size() - 1).equals(line)) {
+                            charSpacing = free / (line.length() - 1);
+                        }
                     }
                 }
+                contentStream.setCharacterSpacing(charSpacing);
+                contentStream.showText(line);
+                //contentStream.newLineAtOffset(0, LEADING);
             }
-            contentStream.setCharacterSpacing(charSpacing);
-            contentStream.showText(line);
-            //contentStream.newLineAtOffset(0, LEADING);
-        }
-        
-        // Move to the next paragraph
-        contentStream.newLineAtOffset(0, -FONT_SIZE * 1.5f);
-    }
-    
-    contentStream.endText();
-}
 
+            // Move to the next paragraph
+            contentStream.newLineAtOffset(0, -FONT_SIZE * 1.5f);
+        }
+
+        contentStream.endText();
+    }
 
     private static List<String> parseLines(String text, float width) throws IOException {
         List<String> lines = new ArrayList<>();
@@ -301,9 +299,9 @@ public class Compose_Notice extends javax.swing.JFrame {
         try {
 
             //Load the template
-            File blankTemplate = new File("C:\\Users\\Monzur Elahi Shamim\\OneDrive\\Documents\\NetBeansProjects\\PaperlessOffice\\blankTemplate.pdf");
+            File blankTemplate = new File("blankTemplate.pdf");
             PDDocument document = PDDocument.load(blankTemplate);
-            
+
             //Get the page
             PDPage page = document.getPage(0);
 
@@ -330,7 +328,7 @@ public class Compose_Notice extends javax.swing.JFrame {
             document.save(fileName);
             document.close();
 
-            Preview object = new Preview(fileName);
+            Preview object = new Preview(fileName, this, true);
             object.setVisible(true);
             //setVisible(false);
         } catch (IOException ex) {

@@ -3,25 +3,34 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.border.Border;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Monzur Elahi Shamim
  */
-public class Profile extends javax.swing.JFrame {
-private UserInfo user;
+public class ProfileStudent extends javax.swing.JFrame {
+
+    private UserInfo user;
+    Border editableBorder;
+
     /**
      * Creates new form Profile
      */
-    public Profile() {
+    public ProfileStudent() {
         this.user = retrieveUserDataFromDatabase(UserSession.getInstance().getUser());
         initComponents();
-        name.setText(user.getFirstName() + " " + user.getLastName() );
+        this.editableBorder = name.getBorder();
+        setData();
+        makeNonEditable();
+    }
+
+    private void setData() {
+        name.setText(user.getFirstName() + " " + user.getLastName());
         fatherName.setText(user.getFatherName());
         studentID.setText(user.getStId());
         session.setText(user.getSession());
@@ -30,36 +39,66 @@ private UserInfo user;
         personalMail.setText(user.getPersonEmail());
     }
 
-    private static UserInfo retrieveUserDataFromDatabase(String email) {
-    UserInfo user = null;
-    try (Connection connection = databaseConnection.connection()) {
-        String query = "SELECT * FROM student WHERE eduEmail = ? OR personalEmail = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setString(1, email);
-        preparedStatement.setString(2, email);
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        if (resultSet.next()) {
-            user = new UserInfo();
-            user.setStId(resultSet.getString("st_id"));
-            user.setFirstName(resultSet.getString("firstName"));
-            user.setLastName(resultSet.getString("lastName"));
-            user.setFatherName(resultSet.getString("fatherName"));
-            user.setMobile(resultSet.getString("mobile"));
-            user.setSession(resultSet.getString("session"));
-            user.setInstEmail(resultSet.getString("eduEmail"));
-            user.setPersonEmail(resultSet.getString("personalEmail"));
-            // Retrieve other fields as needed
-        }
-
-        resultSet.close();
-        preparedStatement.close();
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        // Handle the exception properly (logging, error message, etc.)
+    private void makeEditable() {
+//        name.setEditable(true);
+//        name.setBorder(editableBorder);
+        fatherName.setEditable(true);
+        fatherName.setBorder(editableBorder);
+        session.setBorder(editableBorder);
+        session.setEditable(true);
+        mobileNo.setBorder(editableBorder);
+        mobileNo.setEditable(true);
+        personalMail.setBorder(editableBorder);
+        personalMail.setEditable(true);
     }
-    return user;
-}
+
+    private void makeNonEditable() {
+        name.setBorder(null);
+        name.setEditable(false);
+        fatherName.setBorder(null);
+        fatherName.setEditable(false);
+        studentID.setBorder(null);
+        studentID.setEditable(false);
+        session.setBorder(null);
+        session.setEditable(false);
+        mobileNo.setBorder(null);
+        mobileNo.setEditable(false);
+        eduMail.setBorder(null);
+        eduMail.setEditable(false);
+        personalMail.setBorder(null);
+        personalMail.setEditable(false);
+    }
+
+    private static UserInfo retrieveUserDataFromDatabase(String email) {
+        UserInfo user = null;
+        try (Connection connection = databaseConnection.connection()) {
+            String query = "SELECT * FROM student WHERE eduEmail = ? OR personalEmail = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                user = new UserInfo();
+                user.setStId(resultSet.getString("st_id"));
+                user.setFirstName(resultSet.getString("firstName"));
+                user.setLastName(resultSet.getString("lastName"));
+                user.setFatherName(resultSet.getString("fatherName"));
+                user.setMobile(resultSet.getString("mobile"));
+                user.setSession(resultSet.getString("session"));
+                user.setInstEmail(resultSet.getString("eduEmail"));
+                user.setPersonEmail(resultSet.getString("personalEmail"));
+                // Retrieve other fields as needed
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            // Handle the exception properly (logging, error message, etc.)
+        }
+        return user;
+    }
 
     
     /**
@@ -118,16 +157,15 @@ private UserInfo user;
         jLabel7.setText("Personal Email:");
 
         name.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        name.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
 
         studentID.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        studentID.setEnabled(false);
 
         session.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
 
         mobileNo.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
 
         eduMail.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        eduMail.setEnabled(false);
 
         personalMail.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
 
@@ -136,7 +174,7 @@ private UserInfo user;
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/Portrait_Placeholder.png"))); // NOI18N
 
         updateBtn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        updateBtn.setText("Update");
+        updateBtn.setText("Edit");
         updateBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 updateBtnMouseClicked(evt);
@@ -179,23 +217,23 @@ private UserInfo user;
                             .addComponent(jLabel7))
                         .addGap(3, 3, 3)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(studentID, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(fatherName, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(personalMail, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(mobileNo, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eduMail, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(eduMail, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(personalMail))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
+                        .addGap(49, 49, 49)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(updateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(91, 91, 91)
+                        .addGap(41, 41, 41)
                         .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -235,7 +273,7 @@ private UserInfo user;
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(personalMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addComponent(jLabel8)
@@ -272,7 +310,22 @@ private UserInfo user;
     }//GEN-LAST:event_backBtnMouseClicked
 
     private void updateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateBtnMouseClicked
-        
+        if (updateBtn.getText().equals("Edit")) {
+            // Enable text fields and change button text to "Update"
+            makeEditable();
+            updateBtn.setText("Update");
+        } else {
+            String stId = studentID.getText();
+            String newFatherName = fatherName.getText();
+            String newSession = session.getText();
+            String newMobileNo = mobileNo.getText();
+            String newPersonalMail = personalMail.getText();
+            DatabaseOperations.updateStudentData(stId, newFatherName, newMobileNo, newSession, newPersonalMail);
+            this.user = retrieveUserDataFromDatabase(UserSession.getInstance().getUser());
+            setData();
+            makeNonEditable();
+            updateBtn.setText("Edit");
+        }
     }//GEN-LAST:event_updateBtnMouseClicked
 
     private void logoutBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutBtnMouseClicked
@@ -293,26 +346,27 @@ private UserInfo user;
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Profile().setVisible(true);
+                new ProfileStudent().setVisible(true);
             }
         });
     }

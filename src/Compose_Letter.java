@@ -369,7 +369,7 @@ public class Compose_Letter extends javax.swing.JFrame {
         try {
 
             //Load the template
-            File blankTemplate = new File("C:\\Users\\Monzur Elahi Shamim\\OneDrive\\Documents\\NetBeansProjects\\PaperlessOffice\\LetterTemplate.pdf");
+            File blankTemplate = new File("LetterTemplate.pdf");
             PDDocument document = PDDocument.load(blankTemplate);
             
             //Get the page
@@ -428,7 +428,7 @@ public class Compose_Letter extends javax.swing.JFrame {
             document.save(fileName);
             document.close();
 
-            Preview object = new Preview(fileName);
+            Preview object = new Preview(fileName, this, true);
             object.setVisible(true);
             //setVisible(false);
         } catch (IOException ex) {

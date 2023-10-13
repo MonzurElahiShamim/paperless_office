@@ -35,7 +35,7 @@ public class DataValidate {
         }
     }
 
-    public static void validateAndInsertData(String fName, String lName, String father, String mobile, String stId,
+    public static void validateStudentData(String fName, String lName, String father, String mobile, String stId,
             String session, String instEmail, String personEmail, String password1, String password2) {
 
         // Format: Three uppercase letters, two digits, two digits, three digits, 'M' or 'F'
@@ -72,32 +72,11 @@ public class DataValidate {
             JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long.");
         } // If all validations pass, insert data into the database
         else {
-            insertDataIntoDatabase(stId, fName, lName, father, mobile, session, instEmail, personEmail, password1);
+            DatabaseOperations.insertDataIntoDatabase(stId, fName, lName, father, mobile, session, instEmail, personEmail, password1);
         }
 
     }
 
-    private static void insertDataIntoDatabase(String stId, String fName, String lName, String father, String mobile,
-            String session, String instEmail, String personEmail, String password) {
-        try (Connection connection = databaseConnection.connection()) {
-            String query = "INSERT INTO student (st_id, firstName, lastName, fatherName, mobile, session, eduEmail, personalEmail, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, stId);
-            preparedStatement.setString(2, fName);
-            preparedStatement.setString(3, lName);
-            preparedStatement.setString(4, father);
-            preparedStatement.setString(5, mobile);
-            preparedStatement.setString(6, session);
-            preparedStatement.setString(7, instEmail);
-            preparedStatement.setString(8, personEmail);
-            preparedStatement.setString(9, password);
-
-            preparedStatement.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Registered successfully!");
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
-        }
-    }
+    
 
 }

@@ -1,13 +1,4 @@
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 /**
  *
  * @author Monzur Elahi Shamim
@@ -259,7 +250,7 @@ public class Registration extends javax.swing.JFrame {
         java.util.Arrays.fill(password2, ' ');
 
         // Perform password validation or other operations
-        DataValidate.validateAndInsertData(fName, lName, father, mobile, stId, session, instEmail, personEmail, password1String, password2String);
+        DataValidate.validateStudentData(fName, lName, father, mobile, stId, session, instEmail, personEmail, password1String, password2String);
 
     }//GEN-LAST:event_submitBtnMouseClicked
 

@@ -1,6 +1,14 @@
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.icepdf.ri.common.ComponentKeyBinding;
 import org.icepdf.ri.common.SwingController;
 import org.icepdf.ri.common.SwingViewBuilder;
@@ -10,29 +18,34 @@ import org.icepdf.ri.common.SwingViewBuilder;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Monzur Elahi Shamim
  */
-public class Preview extends javax.swing.JFrame {
+public class Preview extends javax.swing.JDialog {
 
-    /**
-     * Creates new form Approval
-     */
-    String callerWindow = "";
+    private JFrame parentFrame;
+    String oldFilePath;
+    String callerClassName;
+
     public Preview() {
         initComponents();
         //openpdf(fileName);
     }
+
     public Preview(String fileName) {
+        this.oldFilePath = fileName;
         initComponents();
         openpdf(fileName);
     }
-    
-    public Preview(String fileName, String callerWindow) {
+
+    public Preview(String fileName, JFrame parent, boolean modal) {
+        super(parent, modal);
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        callerClassName = stackTraceElements[2].getClassName();
+        this.parentFrame = parent;
+        this.oldFilePath = fileName;
         initComponents();
-        this.callerWindow = callerWindow;
         openpdf(fileName);
     }
 
@@ -51,13 +64,12 @@ public class Preview extends javax.swing.JFrame {
         correctionBtn = new javax.swing.JButton();
         backBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(1300, 700));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Preview", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
 
         submitBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        submitBtn.setText("Submit");
+        submitBtn.setText("Save & Submit");
         submitBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 submitBtnMouseClicked(evt);
@@ -86,12 +98,12 @@ public class Preview extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1000, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(submitBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(correctionBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-                    .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
+                    .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(correctionBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(submitBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -118,36 +130,68 @@ public class Preview extends javax.swing.JFrame {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(1319, 759));
+        setSize(new java.awt.Dimension(1199, 759));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitBtnMouseClicked
-        // TODO add your handling code here:
-        setVisible(false);
-        Audience_Selection object = new Audience_Selection();
+
+        // Create a file chooser
+        JFileChooser fileChooser = new JFileChooser();
+
+        // Set the file filter to restrict to specific format (e.g., PDF)
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF Files (*.pdf)", "pdf");
+        fileChooser.setFileFilter(filter);
+
+        // Show the save dialog
+        int userSelection = fileChooser.showSaveDialog(null);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            // Ensure the file has the correct extension
+            String savePath = fileToSave.getAbsolutePath();
+            
+            if (!savePath.toLowerCase().endsWith(".pdf")) {
+                savePath = savePath + ".pdf";
+                fileToSave = new File(savePath);                
+            }
+
+            try {
+                File pdfToSave = new File(oldFilePath);
+                PDDocument document = PDDocument.load(pdfToSave);
+                document.save(fileToSave);
+                document.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Preview.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println("Save as file: " + savePath);
+            String pdfType = "";
+            if(callerClassName.equals("Compose_Notice")){
+                pdfType = "Notice";
+            }else if(callerClassName.equals("Compose_Letter")){
+                pdfType = "Letter";
+            }else if(callerClassName.equals("Compose_Office_Order")){
+                pdfType = "Office Order";
+            }else if(callerClassName.equals("ApplicationMarksheet")){
+                pdfType = "Marksheet Application";
+            }
+            PdfDatabaseManager.savePDFToDatabase(savePath, pdfType, "Unread");
+        } else if (userSelection == JFileChooser.CANCEL_OPTION) {
+            System.out.println("Save command canceled by user.");
+        }
+        this.setVisible(false);
+        Home_Admin object = new Home_Admin();
         object.setVisible(true);
-        
+
     }//GEN-LAST:event_submitBtnMouseClicked
 
     private void correctionBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_correctionBtnMouseClicked
-        // TODO add your handling code here:
-        setVisible(false);
+        this.setVisible(false); // Close the preview dialog
+        parentFrame.setEnabled(true); // Enable the caller frame
     }//GEN-LAST:event_correctionBtnMouseClicked
 
     private void backBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backBtnMouseClicked
-        // TODO add your handling code here:
-        if(callerWindow.equals("Compose_Letter") ){
-            
-        }else if (callerWindow.equals("Compose_Notice") ){
-            
-        }else if (callerWindow.equals("Compose_Office_Order") ){
-            
-        }else if (callerWindow.equals("MarkSheet_Application")){
-            
-        }else {
-            
-        }
+
     }//GEN-LAST:event_backBtnMouseClicked
 
     /**
@@ -176,35 +220,36 @@ public class Preview extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Approval.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {                
+            public void run() {
 //                if (!UserSession.getInstance().isAuthenticated()) {
 //                    JOptionPane.showMessageDialog(null, "You need to login first!");
 //                } else {
 //                    new Approval().setVisible(true); 
 //                }
-                new Preview().setVisible(true);                
+                new Preview().setVisible(true);
             }
-            
+
         });
     }
-    void openpdf(String file){
-        try{
+
+    void openpdf(String file) {
+        try {
             SwingController control = new SwingController();
             SwingViewBuilder factry = new SwingViewBuilder(control);
             JPanel viewerCompntpnl = factry.buildViewerPanel();
             ComponentKeyBinding.install(control, viewerCompntpnl);
             control.getDocumentViewController().setAnnotationCallback(
-            new org.icepdf.ri.common.MyAnnotationCallback(
-            control.getDocumentViewController()));
+                    new org.icepdf.ri.common.MyAnnotationCallback(
+                            control.getDocumentViewController()));
             control.openDocument(file);
             jScrollPane2.setViewportView(viewerCompntpnl);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Cannot Load Pdf");
         }
-                
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

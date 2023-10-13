@@ -304,9 +304,9 @@ public class ApplicationMarksheet extends javax.swing.JFrame {
             document.save(fileName);
             document.close();
 
-            Preview object = new Preview(fileName);
+            Preview object = new Preview(fileName, this, true);
             object.setVisible(true);
-            setVisible(false);
+            //setVisible(false);
         } catch (IOException ex) {
             Logger.getLogger(ApplicationMarksheet.class.getName()).log(Level.SEVERE, null, ex);
         }
