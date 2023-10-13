@@ -1,2 +1,2 @@
 # paperless_office
-testing pull
+testing push
