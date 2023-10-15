@@ -1,6 +1,14 @@
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.icepdf.ri.common.ComponentKeyBinding;
 import org.icepdf.ri.common.SwingController;
 import org.icepdf.ri.common.SwingViewBuilder;
@@ -10,19 +18,35 @@ import org.icepdf.ri.common.SwingViewBuilder;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Monzur Elahi Shamim
  */
-public class Approval extends javax.swing.JFrame {
+public class Approval extends javax.swing.JDialog {
 
-    /**
-     * Creates new form Approval
-     */
+    private JFrame parentFrame;
+    String oldFilePath;
+    String callerClassName;
+
     public Approval() {
         initComponents();
-        openpdf("C:\\Users\\Monzur Elahi Shamim\\OneDrive\\Documents\\NetBeansProjects\\testPdfBox\\Notice.pdf");
+        //openpdf(fileName);
+    }
+
+    public Approval(String fileName) {
+        this.oldFilePath = fileName;
+        initComponents();
+        openpdf(fileName);
+    }
+
+    public Approval(String fileName, JFrame parent, boolean modal) {
+        super(parent, modal);
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        callerClassName = stackTraceElements[2].getClassName();
+        this.parentFrame = parent;
+        this.oldFilePath = fileName;
+        initComponents();
+        openpdf(fileName);
     }
 
     /**
@@ -36,25 +60,37 @@ public class Approval extends javax.swing.JFrame {
 
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        approveBtn = new javax.swing.JButton();
+        correctionBtn = new javax.swing.JButton();
+        backBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1440, 720));
         setSize(new java.awt.Dimension(1300, 700));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Approval", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setText("Approve");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        approveBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        approveBtn.setText("Approve");
+        approveBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                approveBtnMouseClicked(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton2.setText("Correction");
+        correctionBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        correctionBtn.setText("Correction");
+        correctionBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                correctionBtnMouseClicked(evt);
+            }
+        });
+
+        backBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        backBtn.setText("Back");
+        backBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                backBtnMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -62,21 +98,24 @@ public class Approval extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1000, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
+                    .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(correctionBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(approveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(approveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(562, Short.MAX_VALUE))
+                .addComponent(correctionBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(499, Short.MAX_VALUE))
             .addComponent(jScrollPane2)
         );
 
@@ -91,17 +130,24 @@ public class Approval extends javax.swing.JFrame {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(1319, 759));
+        setSize(new java.awt.Dimension(1199, 759));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        // TODO add your handling code here:
-        setVisible(false);
+    private void approveBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_approveBtnMouseClicked
+        this.setVisible(false);
         Audience_Selection object = new Audience_Selection();
         object.setVisible(true);
-        
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_approveBtnMouseClicked
+
+    private void correctionBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_correctionBtnMouseClicked
+//        this.setVisible(false); // Close the preview dialog
+//        parentFrame.setEnabled(true); // Enable the caller frame
+    }//GEN-LAST:event_correctionBtnMouseClicked
+
+    private void backBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backBtnMouseClicked
+
+    }//GEN-LAST:event_backBtnMouseClicked
 
     /**
      * @param args the command line arguments
@@ -129,36 +175,42 @@ public class Approval extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Approval.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+//                if (!UserSession.getInstance().isAuthenticated()) {
+//                    JOptionPane.showMessageDialog(null, "You need to login first!");
+//                } else {
+//                    new Approval().setVisible(true); 
+//                }
                 new Approval().setVisible(true);
-                
             }
-            
+
         });
     }
-    void openpdf(String file){
-        try{
+
+    void openpdf(String file) {
+        try {
             SwingController control = new SwingController();
             SwingViewBuilder factry = new SwingViewBuilder(control);
             JPanel viewerCompntpnl = factry.buildViewerPanel();
             ComponentKeyBinding.install(control, viewerCompntpnl);
             control.getDocumentViewController().setAnnotationCallback(
-            new org.icepdf.ri.common.MyAnnotationCallback(
-            control.getDocumentViewController()));
+                    new org.icepdf.ri.common.MyAnnotationCallback(
+                            control.getDocumentViewController()));
             control.openDocument(file);
             jScrollPane2.setViewportView(viewerCompntpnl);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Cannot Load Pdf");
         }
-                
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton approveBtn;
+    private javax.swing.JButton backBtn;
+    private javax.swing.JButton correctionBtn;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables

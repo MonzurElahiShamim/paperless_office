@@ -37,7 +37,7 @@ public class PdfDatabaseManager {
         }
     }
 
-    public void retrievePdfFromDatabase(int pdfId, String destinationPath) {
+    public static void retrievePdfFromDatabase(int pdfId, String destinationPath) {
         try (Connection connection = databaseConnection.connection()) {
             String sql = "SELECT byte_pdf FROM pdf_storage WHERE pdf_id = ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {

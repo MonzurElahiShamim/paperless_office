@@ -30,7 +30,6 @@ public class Preview extends javax.swing.JDialog {
 
     public Preview() {
         initComponents();
-        //openpdf(fileName);
     }
 
     public Preview(String fileName) {
@@ -150,10 +149,10 @@ public class Preview extends javax.swing.JDialog {
             File fileToSave = fileChooser.getSelectedFile();
             // Ensure the file has the correct extension
             String savePath = fileToSave.getAbsolutePath();
-            
+
             if (!savePath.toLowerCase().endsWith(".pdf")) {
                 savePath = savePath + ".pdf";
-                fileToSave = new File(savePath);                
+                fileToSave = new File(savePath);
             }
 
             try {
@@ -166,13 +165,13 @@ public class Preview extends javax.swing.JDialog {
             }
             System.out.println("Save as file: " + savePath);
             String pdfType = "";
-            if(callerClassName.equals("Compose_Notice")){
+            if (callerClassName.equals("Compose_Notice")) {
                 pdfType = "Notice";
-            }else if(callerClassName.equals("Compose_Letter")){
+            } else if (callerClassName.equals("Compose_Letter")) {
                 pdfType = "Letter";
-            }else if(callerClassName.equals("Compose_Office_Order")){
+            } else if (callerClassName.equals("Compose_Office_Order")) {
                 pdfType = "Office Order";
-            }else if(callerClassName.equals("ApplicationMarksheet")){
+            } else if (callerClassName.equals("ApplicationMarksheet")) {
                 pdfType = "Marksheet Application";
             }
             PdfDatabaseManager.savePDFToDatabase(savePath, pdfType, "Unread");
@@ -180,8 +179,13 @@ public class Preview extends javax.swing.JDialog {
             System.out.println("Save command canceled by user.");
         }
         this.setVisible(false);
-        Home_Admin object = new Home_Admin();
-        object.setVisible(true);
+        if (callerClassName.equals("ApplicationMarksheet")) {
+            Home_Stu object = new Home_Stu();
+            object.setVisible(true);
+        } else {
+            Home_Admin object = new Home_Admin();
+            object.setVisible(true);
+        }
 
     }//GEN-LAST:event_submitBtnMouseClicked
 
@@ -211,13 +215,13 @@ public class Preview extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Approval.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Approval.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Approval.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Approval.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -227,7 +231,7 @@ public class Preview extends javax.swing.JDialog {
 //                if (!UserSession.getInstance().isAuthenticated()) {
 //                    JOptionPane.showMessageDialog(null, "You need to login first!");
 //                } else {
-//                    new Approval().setVisible(true); 
+//                    new Preview().setVisible(true); 
 //                }
                 new Preview().setVisible(true);
             }
