@@ -3,17 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/PaperlessOffice/src/Notification.java</file>
-            <file>file:/E:/PaperlessOffice/src/Home_SU.java</file>
-            <file>file:/E:/PaperlessOffice/src/PdfDatabaseManager.java</file>
-            <file>file:/E:/PaperlessOffice/src/Compose_Office_Order.java</file>
-            <file>file:/E:/PaperlessOffice/src/Preview.java</file>
-            <file>file:/E:/PaperlessOffice/src/Compose_Letter.java</file>
-            <file>file:/E:/PaperlessOffice/src/DatabaseOperations.java</file>
-            <file>file:/E:/PaperlessOffice/src/ProfileStudent.java</file>
-            <file>file:/E:/PaperlessOffice/src/Compose_Notice.java</file>
-            <file>file:/E:/PaperlessOffice/src/NoticeTemplate.java</file>
-            <file>file:/E:/PaperlessOffice/src/NotificationListCellRenderer.java</file>
+            <file>file:/E:/PaperlessOffice/src/Gui_classes/Home_Admin.java</file>
+            <file>file:/E:/PaperlessOffice/src/Test_classes/PDFWithImages.java</file>
+            <file>file:/E:/PaperlessOffice/src/Gui_classes/Compose_Office_Order.java</file>
+            <file>file:/E:/PaperlessOffice/src/DBM_classes/PdfDatabaseManager.java</file>
+            <file>file:/E:/PaperlessOffice/src/Gui_classes/Compose_Letter.java</file>
+            <file>file:/E:/PaperlessOffice/src/Test_classes/TextToImage.java</file>
+            <file>file:/E:/PaperlessOffice/src/Gui_classes/ProfileStudent.java</file>
+            <file>file:/E:/PaperlessOffice/src/Doc_classes/LetterTemplate.java</file>
+            <file>file:/E:/PaperlessOffice/src/Gui_classes/Compose_Notice.java</file>
+            <file>file:/E:/PaperlessOffice/src/Doc_classes/NoticeTemplate.java</file>
+            <file>file:/E:/PaperlessOffice/src/Test_classes/TextToJpeg.java</file>
+            <file>file:/E:/PaperlessOffice/src/Test_classes/GlyphsAndCodesPDF.java</file>
         </group>
     </open-files>
 </project-private>
