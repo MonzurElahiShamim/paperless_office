@@ -1,27 +1,16 @@
 package Gui_classes;
 
-import Doc_classes.NoticeTemplate;
-import Gui_classes.Preview;
+import Test_classes.PDFWithImages;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -33,16 +22,12 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
  * @author Monzur Elahi Shamim
  */
 public class Compose_Office_Order extends javax.swing.JFrame {
-
-    private static final PDFont FONT = PDType1Font.TIMES_ROMAN;
-    private static final float FONT_SIZE = 12;
-    private static final float LEADING = -1.5f * FONT_SIZE;
-
     /**
      * Creates new form compose
      */
     public Compose_Office_Order() {
         initComponents();
+        modifyValues();
     }
 
     /**
@@ -102,14 +87,14 @@ public class Compose_Office_Order extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setPreferredSize(new java.awt.Dimension(930, 1315));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_header.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_header Bn.png"))); // NOI18N
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
-        jLabel2.setText("Date:");
+        jLabel2.setFont(new java.awt.Font("Vrinda", 0, 12)); // NOI18N
+        jLabel2.setText("তারিখঃ");
 
-        date.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
-        date.setText("02/02/2023");
+        date.setFont(new java.awt.Font("Vrinda", 0, 12)); // NOI18N
+        date.setText("৩১/১২/২০২৪ ইং");
         date.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dateActionPerformed(evt);
@@ -121,13 +106,14 @@ public class Compose_Office_Order extends javax.swing.JFrame {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_designation.png"))); // NOI18N
 
         noticeBody.setColumns(20);
-        noticeBody.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        noticeBody.setFont(new java.awt.Font("Vrinda", 1, 18)); // NOI18N
         noticeBody.setLineWrap(true);
         noticeBody.setRows(5);
         noticeBody.setWrapStyleWord(true);
         jScrollPane2.setViewportView(noticeBody);
 
         jTextArea2.setColumns(20);
+        jTextArea2.setFont(new java.awt.Font("Vrinda", 0, 13)); // NOI18N
         jTextArea2.setRows(5);
         jScrollPane3.setViewportView(jTextArea2);
 
@@ -137,7 +123,6 @@ public class Compose_Office_Order extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(76, 76, 76)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,11 +136,16 @@ public class Compose_Office_Order extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(377, 377, 377)
                         .addComponent(jLabel3)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(43, 43, 43))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -169,7 +159,7 @@ public class Compose_Office_Order extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addGap(48, 48, 48)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel2);
@@ -179,9 +169,9 @@ public class Compose_Office_Order extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(52, 52, 52)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 950, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(previewBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cancelBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -220,78 +210,40 @@ public class Compose_Office_Order extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    private static void addParagraph(PDPageContentStream contentStream, PDPage page, String text) throws IOException {
-        addParagraph(contentStream, page, text, false);
-    }
+    private void modifyValues() {
+        String fontPath = "E:/FONTS/Nikosh.ttf";
+        Font customFont = loadCustomFont(fontPath, 18);
+        Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 
-    private static void addParagraph(PDPageContentStream contentStream, PDPage page, String text, boolean justify) throws IOException {
-    PDRectangle mediaBox = page.getMediaBox();
-    float marginY = 180;
-    float marginX = 50;
-    float width = mediaBox.getWidth() - 2 * marginX;
-    float startX = mediaBox.getLowerLeftX() + marginX;
-    float startY = mediaBox.getUpperRightY() - marginY;
-    String[] paragraphs = text.split("\n");  // Split the text at newline characters
-    
-    contentStream.beginText();
-    contentStream.setFont(FONT, FONT_SIZE);
-    contentStream.newLineAtOffset(startX, startY);
-    
-    for (String paragraph : paragraphs) {
-        List<String> lines = parseLines(paragraph, width);
-        for (String line : lines) {
-            float charSpacing = 0;
-            if (justify) {
-                if (line.length() > 1) {
-                    float size = FONT_SIZE * FONT.getStringWidth(line) / 1000;
-                    float free = width - size;
-                    if (free > 0 && !lines.get(lines.size() - 1).equals(line)) {
-                        charSpacing = free / (line.length() - 1);
-                    }
-                }
-            }
-            contentStream.setCharacterSpacing(charSpacing);
-            contentStream.showText(line);
-            //contentStream.newLineAtOffset(0, LEADING);
-        }
+        jLabel2.setFont(customFont);
+        jLabel2.setText("তারিখঃ");
+
+        date.setFont(customFont);
+        date.setText("৩১/১২/২০২৪ ইং");
         
-        // Move to the next paragraph
-        contentStream.newLineAtOffset(0, -FONT_SIZE * 1.5f);
+        noticeBody.setFont(loadCustomFont(fontPath, 20));
+        noticeBody.setText("এতদ্বারা");
     }
     
-    contentStream.endText();
-}
-
-
-    private static List<String> parseLines(String text, float width) throws IOException {
-        List<String> lines = new ArrayList<>();
-        int lastSpace = -1;
-        while (text.length() > 0) {
-            int spaceIndex = text.indexOf(' ', lastSpace + 1);
-            if (spaceIndex < 0) {
-                spaceIndex = text.length();
-            }
-            String subString = text.substring(0, spaceIndex);
-            float size = FONT_SIZE * FONT.getStringWidth(subString) / 1000;
-            if (size > width) {
-                if (lastSpace < 0) {
-                    lastSpace = spaceIndex;
-                }
-                subString = text.substring(0, lastSpace);
-                lines.add(subString);
-                text = text.substring(lastSpace).trim();
-                lastSpace = -1;
-            } else if (spaceIndex == text.length()) {
-                lines.add(text);
-                text = "";
-            } else {
-                lastSpace = spaceIndex;
-            }
+    private static Font loadCustomFont(String fontPath, float fontSize) {
+        try {
+            return Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(fontSize);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+            return null;
         }
-        return lines;
     }
 
+    private static Font loadCustomFont(String fontPath, int fontSize, int fontStyle) {
+        try {
+            Font baseFont = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath));
+            return baseFont.deriveFont(fontStyle, fontSize);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     private void cancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelBtnMouseClicked
         // TODO add your handling code here:
         setVisible(false);
@@ -302,33 +254,33 @@ public class Compose_Office_Order extends javax.swing.JFrame {
     private void previewBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previewBtnMouseClicked
 
         try {
+            PDDocument document = new PDDocument();
+            PDPage page = new PDPage(PDRectangle.A4);
+            document.addPage(page);
 
-            //Load the template
-            File blankTemplate = new File("Office_order_Template.pdf");
-            PDDocument document = PDDocument.load(blankTemplate);
-            
-            //Get the page
-            PDPage page = document.getPage(0);
+            // adding header
+            PDFWithImages.addHeader(document, page);
 
-            //Create content stream
+            // add Date
+            int yPos = (int) page.getMediaBox().getHeight() - 115;
+            int leftMargin = 68;
+            String str_date = date.getText();
+            PDFWithImages.addLine(document, page, leftMargin, yPos, "তারিখঃ " + str_date);
+
+            PDFWithImages.addLine(document, page, 245, yPos-60, 20, "অফিস আদেশ", 'b');
+
+            //Draw Underline 
             PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
-
-            //Set Date
-            contentStream.beginText();
-            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
-            contentStream.newLineAtOffset(80, 695);
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = new Date();
-            String str_date = formatter.format(date);
-            //String str_date = date.getText();
-            contentStream.showText(str_date);
-            contentStream.endText();
-
-            //Body text
-            String bodyText = noticeBody.getText();
-            addParagraph(contentStream, page, bodyText, true);
-
+            contentStream.moveTo(250, yPos - 55); // moves "pencil" to a position
+            contentStream.lineTo(345, yPos - 55);     // creates an invisible line to another position
+            contentStream.stroke();
             contentStream.close();
+            
+            //Body text
+            yPos = 640;
+            String bodyText = noticeBody.getText();
+            PDFWithImages.addParagraph(document, page, yPos, bodyText);
+            
             String fileName = "NewOfficeOrder.pdf";
             document.save(fileName);
             document.close();
@@ -336,6 +288,8 @@ public class Compose_Office_Order extends javax.swing.JFrame {
             Preview object = new Preview(fileName, this, true);
             object.setVisible(true);
         } catch (IOException ex) {
+            Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -381,14 +335,6 @@ public class Compose_Office_Order extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-
-        /* Create and display the form */
-        NoticeTemplate template = new NoticeTemplate("OFFICE ORDER");
-        try {
-            template.run();
-        } catch (IOException ex) {
-            Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

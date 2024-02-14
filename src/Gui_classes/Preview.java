@@ -1,7 +1,7 @@
 package Gui_classes;
 
-
 import DBM_classes.PdfDatabaseManager;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -100,12 +100,12 @@ public class Preview extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1000, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(correctionBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(submitBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1060, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(submitBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(correctionBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -132,7 +132,7 @@ public class Preview extends javax.swing.JDialog {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(1199, 759));
+        setSize(new java.awt.Dimension(1268, 759));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -168,15 +168,16 @@ public class Preview extends javax.swing.JDialog {
             }
             System.out.println("Save as file: " + savePath);
             String pdfType = "";
-            if (callerClassName.equals("Compose_Notice")) {
+            if (callerClassName.equals("Gui_classes.Compose_Notice")) {
                 pdfType = "Notice";
-            } else if (callerClassName.equals("Compose_Letter")) {
+            } else if (callerClassName.equals("Gui_classes.Compose_Letter")) {
                 pdfType = "Letter";
-            } else if (callerClassName.equals("Compose_Office_Order")) {
+            } else if (callerClassName.equals("Gui_classes.Compose_Office_Order")) {
                 pdfType = "Office Order";
-            } else if (callerClassName.equals("ApplicationMarksheet")) {
+            } else if (callerClassName.equals("Gui_classes.ApplicationMarksheet")) {
                 pdfType = "Marksheet Application";
             }
+            System.out.println("Pdf type is: " + pdfType);
             PdfDatabaseManager.savePDFToDatabase(savePath, pdfType, "Unread");
         } else if (userSelection == JFileChooser.CANCEL_OPTION) {
             System.out.println("Save command canceled by user.");
@@ -252,6 +253,10 @@ public class Preview extends javax.swing.JDialog {
                     new org.icepdf.ri.common.MyAnnotationCallback(
                             control.getDocumentViewController()));
             control.openDocument(file);
+            control.getDocumentViewController().setZoom(1.72f);
+            // Set the preferred size of the viewerCompntpnl
+            viewerCompntpnl.setPreferredSize(new Dimension(800, 600));
+            
             jScrollPane2.setViewportView(viewerCompntpnl);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Cannot Load Pdf");

@@ -1,6 +1,5 @@
 package Gui_classes;
 
-import Doc_classes.LetterTemplate;
 import Test_classes.PDFWithImages;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -30,6 +29,10 @@ public class Compose_Letter extends javax.swing.JFrame {
     /**
      * Creates new form compose
      */
+    final String fontPath = "E:/FONTS/Nikosh.ttf";
+    final Font customFont = loadCustomFont(fontPath, 18);
+    final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
+
     public Compose_Letter() {
         initComponents();
         modifyValues();
@@ -52,7 +55,6 @@ public class Compose_Letter extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         date = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         letterBody = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -67,6 +69,8 @@ public class Compose_Letter extends javax.swing.JFrame {
         medium = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         subject_letter = new javax.swing.JTextField();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        designation = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -108,17 +112,15 @@ public class Compose_Letter extends javax.swing.JFrame {
         jLabel2.setText("তারিখঃ");
 
         date.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
-        date.setText("০/০/২০২৪ ইং");
+        date.setText("৩১/১২/২০২৪ ইং");
         date.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dateActionPerformed(evt);
             }
         });
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_designation.png"))); // NOI18N
-
         letterBody.setColumns(20);
-        letterBody.setFont(new java.awt.Font("Siyam Rupali", 1, 12)); // NOI18N
+        letterBody.setFont(customFont);
         letterBody.setLineWrap(true);
         letterBody.setRows(5);
         letterBody.setText("মহোদয়, \n");
@@ -133,6 +135,11 @@ public class Compose_Letter extends javax.swing.JFrame {
         jLabel5.setText("স্মারক নং:");
 
         reference.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        reference.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                referenceActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
         jLabel3.setText("বরাবর");
@@ -163,6 +170,16 @@ public class Compose_Letter extends javax.swing.JFrame {
 
         subject_letter.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
 
+        jScrollPane4.setBorder(null);
+        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane4.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        designation.setColumns(20);
+        designation.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        designation.setRows(5);
+        designation.setText("প্রফেসর ড. মোঃ আশিকুর রহমান খান\nচেয়ারম্যান\nতথ্য ও যোগাযোগ প্রকৌশল বিভাগ\nনোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়");
+        jScrollPane4.setViewportView(designation);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -184,15 +201,13 @@ public class Compose_Letter extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel2)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(14, 14, 14))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel3)
                                         .addComponent(uni_name, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel7)
-                                        .addComponent(medium, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel4)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                             .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,7 +215,9 @@ public class Compose_Letter extends javax.swing.JFrame {
                                                 .addComponent(jLabel9)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(subject_letter, javax.swing.GroupLayout.PREFERRED_SIZE, 731, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addComponent(department, javax.swing.GroupLayout.PREFERRED_SIZE, 770, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(department, javax.swing.GroupLayout.PREFERRED_SIZE, 770, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(medium, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGap(0, 0, Short.MAX_VALUE))))))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
@@ -220,7 +237,7 @@ public class Compose_Letter extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(personnel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(department)
+                .addComponent(department, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(uni_name, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -233,11 +250,11 @@ public class Compose_Letter extends javax.swing.JFrame {
                     .addComponent(subject_letter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(84, 84, 84)
-                .addComponent(jLabel4)
-                .addGap(48, 48, 48)
+                .addGap(67, 67, 67)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel2);
@@ -290,17 +307,11 @@ public class Compose_Letter extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void modifyValues() {
-        String fontPath = "E:/FONTS/Nikosh.ttf";
-        Font customFont = loadCustomFont(fontPath, 18);
-        Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_header Bn.png"))); // NOI18N
-
         jLabel2.setFont(customFont);
         jLabel2.setText("তারিখঃ");
 
         date.setFont(customFont);
-        date.setText("০/০/২০২৪ ইং");
+        date.setText("৩১/১২/২০২৪ ইং");
 
         letterBody.setFont(loadCustomFont(fontPath, 20));
         letterBody.setText("মহোদয়,");
@@ -333,6 +344,8 @@ public class Compose_Letter extends javax.swing.JFrame {
         jLabel9.setText("বিষয়ঃ");
 
         subject_letter.setFont(boldCustomFont);
+
+        designation.setFont(customFont);
     }
 
     private static Font loadCustomFont(String fontPath, float fontSize) {
@@ -394,33 +407,32 @@ public class Compose_Letter extends javax.swing.JFrame {
             PDDocument document = new PDDocument();
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
-            
+
 //            int height = (int) PDRectangle.A4.getHeight(); //~841
 //            System.out.println(height);
 //            int width = (int) PDRectangle.A4.getWidth(); //~595
 //            System.out.println(width);
-
             // adding header
             PDFWithImages.addHeader(document, page);
 
             // Office Letter TopMatter
-            int yPos = (int) page.getMediaBox().getHeight()-115;
+            int yPos = (int) page.getMediaBox().getHeight() - 115;
             int leftMargin = 68;
             String str_date = date.getText();
             PDFWithImages.addLine(document, page, 455, yPos, "তারিখঃ " + str_date);
             PDFWithImages.addLine(document, page, leftMargin, yPos, "স্মারক নং: " + reference.getText());
-            PDFWithImages.addLine(document, page, leftMargin, yPos-25, "বরাবর");
-            PDFWithImages.addLine(document, page, leftMargin, yPos-40, personnel.getText());
-            PDFWithImages.addLine(document, page, leftMargin, yPos-55, department.getText());
-            PDFWithImages.addLine(document, page, leftMargin, yPos-70, "নোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়");
-            PDFWithImages.addLine(document, page, leftMargin, yPos-85, "নোয়াখালী-৩৮১৪");
-            PDFWithImages.addLine(document, page, leftMargin, yPos-105, "মাধ্যমঃ যথাযথ কর্তৃপক্ষ");
-            PDFWithImages.addLine(document, page, leftMargin, yPos-125, 13, "বিষয়ঃ " + subject_letter.getText(), 'b');
+            PDFWithImages.addLine(document, page, leftMargin, yPos - 25, "বরাবর");
+            PDFWithImages.addLine(document, page, leftMargin, yPos - 40, personnel.getText());
+            PDFWithImages.addLine(document, page, leftMargin, yPos - 55, department.getText());
+            PDFWithImages.addLine(document, page, leftMargin, yPos - 70, "নোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়");
+            PDFWithImages.addLine(document, page, leftMargin, yPos - 85, "নোয়াখালী-৩৮১৪");
+            PDFWithImages.addLine(document, page, leftMargin, yPos - 105, "মাধ্যমঃ যথাযথ কর্তৃপক্ষ");
+            PDFWithImages.addLine(document, page, leftMargin, yPos - 125, 13, "বিষয়ঃ " + subject_letter.getText(), 'b');
 
             //Body text
             String bodyText = letterBody.getText();
-            yPos = PDFWithImages.addParagraph(document, page, yPos-155, bodyText);
-            
+            yPos = PDFWithImages.addParagraph(document, page, yPos - 155, bodyText);
+
             yPos -= 30;
             PDFWithImages.addDesignation(document, page, yPos);
 
@@ -461,6 +473,10 @@ public class Compose_Letter extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_personnelActionPerformed
 
+    private void referenceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_referenceActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_referenceActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -489,14 +505,6 @@ public class Compose_Letter extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
 
-        /* Create and display the form */
-//        LetterTemplate template = new LetterTemplate();
-//        try {
-//            template.run();
-//        } catch (IOException ex) {
-//            Logger.getLogger(Compose_Letter.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
 //                if (!UserSession.getInstance().isAuthenticated()) {
@@ -513,10 +521,10 @@ public class Compose_Letter extends javax.swing.JFrame {
     private javax.swing.JButton cancelBtn;
     private javax.swing.JTextField date;
     private javax.swing.JTextField department;
+    private javax.swing.JTextArea designation;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
@@ -525,6 +533,7 @@ public class Compose_Letter extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea letterBody;
     private javax.swing.JLabel medium;

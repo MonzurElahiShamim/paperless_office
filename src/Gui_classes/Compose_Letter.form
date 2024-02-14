@@ -149,7 +149,7 @@
                                               <EmptySpace max="32767" attributes="0"/>
                                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="date" min="-2" pref="95" max="-2" attributes="0"/>
+                                              <Component id="date" min="-2" pref="101" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" attributes="0">
@@ -157,8 +157,6 @@
                                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                                   <Component id="uni_name" alignment="0" min="-2" pref="240" max="-2" attributes="0"/>
                                                   <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="medium" alignment="0" min="-2" pref="69" max="-2" attributes="0"/>
-                                                  <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                                                   <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                                                       <Component id="jScrollPane3" alignment="0" max="32767" attributes="0"/>
                                                       <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
@@ -169,6 +167,8 @@
                                                       </Group>
                                                   </Group>
                                                   <Component id="department" alignment="0" min="-2" pref="770" max="-2" attributes="0"/>
+                                                  <Component id="jScrollPane4" alignment="0" min="-2" pref="300" max="-2" attributes="0"/>
+                                                  <Component id="medium" alignment="0" min="-2" pref="154" max="-2" attributes="0"/>
                                               </Group>
                                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                           </Group>
@@ -197,7 +197,7 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="personnel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="department" max="32767" attributes="0"/>
+                          <Component id="department" pref="58" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="uni_name" min="-2" pref="20" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -211,11 +211,11 @@
                           </Group>
                           <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                           <Component id="jScrollPane2" min="-2" pref="312" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
-                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
+                          <Component id="jScrollPane4" min="-2" pref="114" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="jScrollPane3" min="-2" pref="250" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="43" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -244,18 +244,11 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Siyam Rupali" size="12" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="&#x9e6;/&#x9e6;/&#x9e8;&#x9e6;&#x9e8;&#x9ea; &#x987;&#x982;"/>
+                    <Property name="text" type="java.lang.String" value="&#x9e9;&#x9e7;/&#x9e7;&#x9e8;/&#x9e8;&#x9e6;&#x9e8;&#x9ea; &#x987;&#x982;"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dateActionPerformed"/>
                   </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel4">
-                  <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/Photos/template_designation.png"/>
-                    </Property>
-                  </Properties>
                 </Component>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane2">
                   <AuxValues>
@@ -267,8 +260,8 @@
                     <Component class="javax.swing.JTextArea" name="letterBody">
                       <Properties>
                         <Property name="columns" type="int" value="20"/>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Siyam Rupali" size="12" style="1"/>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                          <Connection code="customFont" type="code"/>
                         </Property>
                         <Property name="lineWrap" type="boolean" value="true"/>
                         <Property name="rows" type="int" value="5"/>
@@ -307,6 +300,9 @@
                       <Font name="Siyam Rupali" size="12" style="0"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="referenceActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel3">
                   <Properties>
@@ -373,6 +369,32 @@
                     </Property>
                   </Properties>
                 </Component>
+                <Container class="javax.swing.JScrollPane" name="jScrollPane4">
+                  <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="null"/>
+                    </Property>
+                    <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
+                    <Property name="verticalScrollBarPolicy" type="int" value="21"/>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                  </AuxValues>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JTextArea" name="designation">
+                      <Properties>
+                        <Property name="columns" type="int" value="20"/>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Siyam Rupali" size="12" style="0"/>
+                        </Property>
+                        <Property name="rows" type="int" value="5"/>
+                        <Property name="text" type="java.lang.String" value="&#x9aa;&#x9cd;&#x9b0;&#x9ab;&#x9c7;&#x9b8;&#x9b0; &#x9a1;. &#x9ae;&#x9cb;&#x983; &#x986;&#x9b6;&#x9bf;&#x995;&#x9c1;&#x9b0; &#x9b0;&#x9b9;&#x9ae;&#x9be;&#x9a8; &#x996;&#x9be;&#x9a8;&#xa;&#x99a;&#x9c7;&#x9df;&#x9be;&#x9b0;&#x9ae;&#x9cd;&#x9af;&#x9be;&#x9a8;&#xa;&#x9a4;&#x9a5;&#x9cd;&#x9af; &#x993; &#x9af;&#x9cb;&#x997;&#x9be;&#x9af;&#x9cb;&#x997; &#x9aa;&#x9cd;&#x9b0;&#x995;&#x9cc;&#x9b6;&#x9b2; &#x9ac;&#x9bf;&#x9ad;&#x9be;&#x997;&#xa;&#x9a8;&#x9cb;&#x9df;&#x9be;&#x996;&#x9be;&#x9b2;&#x9c0; &#x9ac;&#x9bf;&#x99c;&#x9cd;&#x99e;&#x9be;&#x9a8; &#x993; &#x9aa;&#x9cd;&#x9b0;&#x9af;&#x9c1;&#x995;&#x9cd;&#x9a4;&#x9bf; &#x9ac;&#x9bf;&#x9b6;&#x9cd;&#x9ac;&#x9ac;&#x9bf;&#x9a6;&#x9cd;&#x9af;&#x9be;&#x9b2;&#x9df;"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
           </SubComponents>

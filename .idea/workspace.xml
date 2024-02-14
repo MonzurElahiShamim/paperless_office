@@ -2,50 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="26a25a27-74a0-48ba-8001-d98564047448" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/LetterTemplate.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/LetterTemplate.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NewLetter.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/NewLetter.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NewNotice.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/NewNotice.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NewOfficeOrder.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/NewOfficeOrder.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Office_order_Template.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Office_order_Template.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ApplicationMarksheet.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/ApplicationMarksheet.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ApplicationMarksheet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/ApplicationMarksheet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Approval.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Approval.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Approval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Approval.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Audience_Selection.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Audience_Selection.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Audience_Selection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Audience_Selection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Compose_Letter.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Letter.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Compose_Letter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Letter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Compose_Notice.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Notice.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Compose_Notice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Notice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Compose_Office_Order.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Office_Order.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Compose_Office_Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Office_Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataValidate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBM_classes/DataValidate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DatabaseOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBM_classes/DatabaseOperations.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Home_Admin.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Home_Admin.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Home_Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Home_Admin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Home_SU.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Home_SU.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Home_SU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Home_SU.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Home_Stu.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Home_Stu.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Home_Stu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Home_Stu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LetterTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doc_classes/LetterTemplate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Login.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Login.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MarkSheetApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doc_classes/MarkSheetApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NoticeTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doc_classes/NoticeTemplate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Other/Notification.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NotificationListCellRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Other/NotificationListCellRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PdfDatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBM_classes/PdfDatabaseManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Preview.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Preview.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Preview.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Preview.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ProfileStudent.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/ProfileStudent.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ProfileStudent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/ProfileStudent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Registration.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Registration.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Registration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Registration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Other/UserInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Other/UserSession.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/databaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBM_classes/databaseConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doc_classes/LetterTemplate.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doc_classes/NoticeTemplate.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Letter.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Letter.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Letter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Letter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Notice.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Notice.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Notice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Notice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Office_Order.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Office_Order.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Office_Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Office_Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Preview.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Preview.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Preview.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Preview.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Test_classes/PDFWithImages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Test_classes/PDFWithImages.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Test_classes/TextToJpeg.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

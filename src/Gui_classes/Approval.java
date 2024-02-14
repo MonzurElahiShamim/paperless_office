@@ -1,16 +1,9 @@
 package Gui_classes;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.icepdf.ri.common.ComponentKeyBinding;
 import org.icepdf.ri.common.SwingController;
 import org.icepdf.ri.common.SwingViewBuilder;
@@ -137,9 +130,16 @@ public class Approval extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void approveBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_approveBtnMouseClicked
-        this.setVisible(false);
-        Audience_Selection object = new Audience_Selection();
-        object.setVisible(true);
+        int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to proceed?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    JOptionPane.showMessageDialog(null, "Approval Confirmed!");
+                    this.setVisible(false);
+                    
+                    /// Update document status As Approved
+                    
+                    
+                } 
+
     }//GEN-LAST:event_approveBtnMouseClicked
 
     private void correctionBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_correctionBtnMouseClicked
