@@ -412,6 +412,7 @@ public class Compose_Letter extends javax.swing.JFrame {
 //            System.out.println(height);
 //            int width = (int) PDRectangle.A4.getWidth(); //~595
 //            System.out.println(width);
+
             // adding header
             PDFWithImages.addHeader(document, page);
 

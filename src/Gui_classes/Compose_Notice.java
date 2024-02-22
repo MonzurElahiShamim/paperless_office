@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 /*
@@ -281,7 +282,7 @@ public class Compose_Notice extends javax.swing.JFrame {
             PDFWithImages.addLine(document, page, 270, yPos-60, 20, "নোটিশ", 'b');
 
             //Draw Underline 
-            PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
+            PDPageContentStream contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, true, true);
             contentStream.moveTo(270, yPos - 55); // moves "pencil" to a position
             contentStream.lineTo(325, yPos - 55);     // creates an invisible line to another position
             contentStream.stroke();
