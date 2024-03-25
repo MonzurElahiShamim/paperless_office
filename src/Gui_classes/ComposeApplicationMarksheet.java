@@ -24,7 +24,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
  *
  * @author Monzur Elahi Shamim
  */
-public class ApplicationMarksheet extends javax.swing.JFrame {
+public class ComposeApplicationMarksheet extends javax.swing.JFrame {
 
 	final String fontPath = "Fonts/Nikosh.ttf";
 	final Font customFont = loadCustomFont(fontPath, 18);
@@ -49,7 +49,7 @@ public class ApplicationMarksheet extends javax.swing.JFrame {
 		}
 	}
 
-	public ApplicationMarksheet() {
+	public ComposeApplicationMarksheet() {
 		initComponents();
 	}
 
@@ -328,13 +328,13 @@ public class ApplicationMarksheet extends javax.swing.JFrame {
 		    document.save(fileName);
 		    document.close();
 
-		    Preview object = new Preview(fileName, this, true);
+		    pdf_Preview object = new pdf_Preview(fileName, this, true);
 		    object.setVisible(true);
 		    //setVisible(false);
 	    } catch (IOException ex) {
-		    Logger.getLogger(ApplicationMarksheet.class.getName()).log(Level.SEVERE, null, ex);
+		    Logger.getLogger(ComposeApplicationMarksheet.class.getName()).log(Level.SEVERE, null, ex);
 	    } catch (Exception ex) {
-		    Logger.getLogger(ApplicationMarksheet.class.getName()).log(Level.SEVERE, null, ex);
+		    Logger.getLogger(ComposeApplicationMarksheet.class.getName()).log(Level.SEVERE, null, ex);
 	    }
 
     }//GEN-LAST:event_applyBtnMouseClicked
@@ -367,14 +367,15 @@ public class ApplicationMarksheet extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(ApplicationMarksheet.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(ComposeApplicationMarksheet.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(ApplicationMarksheet.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(ComposeApplicationMarksheet.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(ApplicationMarksheet.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(ComposeApplicationMarksheet.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(ApplicationMarksheet.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(ComposeApplicationMarksheet.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		//</editor-fold>
 		//</editor-fold>
 
 		/* Create and display the form */
@@ -383,9 +384,9 @@ public class ApplicationMarksheet extends javax.swing.JFrame {
 //                if (!UserSession.getInstance().isAuthenticated()) {
 //                    JOptionPane.showMessageDialog(null, "You need to login first!");
 //                } else {
-//                    new ApplicationMarksheet().setVisible(true);
+//                    new ComposeApplicationMarksheet().setVisible(true);
 //                }
-				new ApplicationMarksheet().setVisible(true);
+				new ComposeApplicationMarksheet().setVisible(true);
 			}
 		});
 	}

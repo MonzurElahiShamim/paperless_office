@@ -23,7 +23,7 @@ import javax.swing.DefaultListModel;
 public class Home_SU extends javax.swing.JFrame {
 
     private DefaultListModel<Notification> listModel;
-    private List<Notification> notifications; // Assume you have a List<Notification> of notifications
+    private List<Notification> notifications; 
 
     public Home_SU() {
         this.notifications = getNotifications();
@@ -42,8 +42,10 @@ public class Home_SU extends javax.swing.JFrame {
                     System.out.println(selectedNotification.getPdfName() + " is Selected.");
                     PdfDatabaseManager.retrievePdfFromDatabase(selectedNotification.getPdfId(), selectedNotification.getFilePath());
                     String fileName = selectedNotification.getFilePath();
-                    Approval object = new Approval(fileName, Home_SU.this, true);
+		    
+                    Approval object = new Approval(fileName);
                     object.setVisible(true);
+		    setVisible(false);
                 }
             }
         });

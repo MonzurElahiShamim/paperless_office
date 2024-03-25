@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 /*
@@ -23,14 +22,20 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
  *
  * @author Monzur Elahi Shamim
  */
-public class Compose_Notice extends javax.swing.JFrame {
+public class Preview_Office_Order extends javax.swing.JFrame {
 
 	/**
 	 * Creates new form compose
 	 */
-	public Compose_Notice() {
+	public Preview_Office_Order() {
+		int docId = 4;
 		initComponents();
-		modifyValues();
+		modifyValues(docId);
+	}
+
+	public Preview_Office_Order(int docId) {
+		initComponents();
+		modifyValues(docId);
 	}
 
 	/**
@@ -108,13 +113,12 @@ public class Compose_Notice extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_topic(notice).png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/Office order title.png"))); // NOI18N
 
         noticeBody.setColumns(20);
         noticeBody.setFont(new java.awt.Font("Vrinda", 1, 18)); // NOI18N
         noticeBody.setLineWrap(true);
         noticeBody.setRows(5);
-        noticeBody.setText("এতদ্বারা");
         noticeBody.setWrapStyleWord(true);
         jScrollPane2.setViewportView(noticeBody);
 
@@ -140,9 +144,6 @@ public class Compose_Notice extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(401, 401, 401)
-                        .addComponent(jLabel3))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(76, 76, 76)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -153,27 +154,32 @@ public class Compose_Notice extends javax.swing.JFrame {
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(jLabel1)))
-                .addContainerGap(42, Short.MAX_VALUE))
+                        .addGap(377, 377, 377)
+                        .addComponent(jLabel3)))
+                .addContainerGap(73, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(43, 43, 43))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(70, 70, 70)
+                .addGap(55, 55, 55)
                 .addComponent(jLabel3)
-                .addGap(43, 43, 43)
+                .addGap(58, 58, 58)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(165, 165, 165)
+                .addGap(101, 101, 101)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(82, 82, 82)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel2);
@@ -183,9 +189,9 @@ public class Compose_Notice extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(52, 52, 52)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 950, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(previewBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cancelBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -224,21 +230,30 @@ public class Compose_Notice extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-	private void modifyValues() {
+	private void modifyValues(int docId) {
 		String fontPath = "E:/FONTS/Nikosh.ttf";
 		Font customFont = loadCustomFont(fontPath, 18);
 		Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 
-		jLabel2.setFont(customFont);
-		jLabel2.setText("তারিখঃ");
+		String[] rowData = PdfDatabaseManager.retrieveDocAsText(docId);
+		if (rowData != null) {
+			// Access the retrieved data
+			String dateText = rowData[0];
+			//String dept = rowData[2];
+			//String subj = rowData[3];
+			String bodyText = rowData[4];
+			
+			jLabel2.setFont(customFont);
+			jLabel2.setText("তারিখঃ");
 
-		date.setFont(customFont);
-		date.setText("৩১/১২/২০২৪ ইং");
+			date.setFont(customFont);
+			date.setText(dateText);
 
-		noticeBody.setFont(loadCustomFont(fontPath, 20));
-		noticeBody.setText("এতদ্বারা");
-
-		designation.setFont(customFont);
+			noticeBody.setFont(loadCustomFont(fontPath, 20));
+			noticeBody.setText(bodyText);
+			
+			designation.setFont(loadCustomFont(fontPath, 20));
+		}
 	}
 
 	private static Font loadCustomFont(String fontPath, float fontSize) {
@@ -283,38 +298,34 @@ public class Compose_Notice extends javax.swing.JFrame {
 			String str_date = date.getText();
 			PDFWithImages.addLine(document, page, leftMargin, yPos, "তারিখঃ " + str_date);
 
-			PDFWithImages.addLine(document, page, 270, yPos - 60, 20, "নোটিশ", 'b');
+			PDFWithImages.addLine(document, page, 245, yPos - 60, 20, "অফিস আদেশ", 'b');
 
 			//Draw Underline 
-			PDPageContentStream contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, true, true);
-			contentStream.moveTo(270, yPos - 55); // moves "pencil" to a position
-			contentStream.lineTo(325, yPos - 55);     // creates an invisible line to another position
+			PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
+			contentStream.moveTo(250, yPos - 55); // moves "pencil" to a position
+			contentStream.lineTo(345, yPos - 55);     // creates an invisible line to another position
 			contentStream.stroke();
 			contentStream.close();
 
 			//Body text
-			yPos = 620;
+			yPos = 640;
 			String bodyText = noticeBody.getText();
 			PDFWithImages.addParagraph(document, page, yPos, bodyText);
-
-			yPos -= 70;
+			
+			//Designation
+			yPos -= 60;
 			PDFWithImages.addDesignation(document, page, yPos);
 
-			//Save document for preview
-			String fileName = "tempNotice.pdf";
+			String fileName = "NewOfficeOrder.pdf";
 			document.save(fileName);
 			document.close();
 
-			//Save doc as text in Database
-			PdfDatabaseManager.saveDocAsText(str_date, "", "", "", bodyText, "notice", "Unread");
-
 			pdf_Preview object = new pdf_Preview(fileName, this, true);
 			object.setVisible(true);
-			//setVisible(false);
 		} catch (IOException ex) {
-			Logger.getLogger(Compose_Notice.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Preview_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception ex) {
-			Logger.getLogger(Compose_Notice.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Preview_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
 
@@ -350,14 +361,16 @@ public class Compose_Notice extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Office_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Office_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Office_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Office_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		//</editor-fold>
+		//</editor-fold>
 		//</editor-fold>
 		//</editor-fold>
 
@@ -366,9 +379,9 @@ public class Compose_Notice extends javax.swing.JFrame {
 //                if (!UserSession.getInstance().isAuthenticated()) {
 //                    JOptionPane.showMessageDialog(null, "You need to login first!");
 //                } else {
-//                    new Compose_Notice().setVisible(true);
+//                    new Compose_Office_Order().setVisible(true);
 //                }
-				new Compose_Notice().setVisible(true);
+				new Preview_Office_Order().setVisible(true);
 			}
 		});
 	}

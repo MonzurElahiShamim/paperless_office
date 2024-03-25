@@ -1,7 +1,7 @@
 package Gui_classes;
 
 
-import Gui_classes.Preview;
+import Gui_classes.pdf_Preview;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -186,7 +186,7 @@ public class Home_Admin extends javax.swing.JFrame {
             File selectedFile = fileChooser.getSelectedFile();
             String filePath = selectedFile.getAbsolutePath();
             if (filePath.toLowerCase().endsWith(".pdf")) {
-                Preview object = new Preview(filePath);
+                pdf_Preview object = new pdf_Preview(filePath);
                 object.setVisible(true);
             } else {
                 // The selected file is not a PDF file

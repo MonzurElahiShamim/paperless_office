@@ -25,23 +25,23 @@ import org.icepdf.ri.common.SwingViewBuilder;
  *
  * @author Monzur Elahi Shamim
  */
-public class Preview extends javax.swing.JDialog {
+public class pdf_Preview extends javax.swing.JDialog {
 
     private JFrame parentFrame;
     String oldFilePath;
     String callerClassName;
 
-    public Preview() {
+    public pdf_Preview() {
         initComponents();
     }
 
-    public Preview(String fileName) {
+    public pdf_Preview(String fileName) {
         this.oldFilePath = fileName;
         initComponents();
         openpdf(fileName);
     }
 
-    public Preview(String fileName, JFrame parent, boolean modal) {
+    public pdf_Preview(String fileName, JFrame parent, boolean modal) {
         super(parent, modal);
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         callerClassName = stackTraceElements[2].getClassName();
@@ -164,7 +164,7 @@ public class Preview extends javax.swing.JDialog {
                 document.save(fileToSave);
                 document.close();
             } catch (IOException ex) {
-                Logger.getLogger(Preview.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(pdf_Preview.class.getName()).log(Level.SEVERE, null, ex);
             }
             System.out.println("Save as file: " + savePath);
             String pdfType = "";
@@ -219,14 +219,15 @@ public class Preview extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(pdf_Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(pdf_Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(pdf_Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(pdf_Preview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
@@ -235,9 +236,9 @@ public class Preview extends javax.swing.JDialog {
 //                if (!UserSession.getInstance().isAuthenticated()) {
 //                    JOptionPane.showMessageDialog(null, "You need to login first!");
 //                } else {
-//                    new Preview().setVisible(true); 
+//                    new pdf_Preview().setVisible(true); 
 //                }
-                new Preview().setVisible(true);
+                new pdf_Preview().setVisible(true);
             }
 
         });

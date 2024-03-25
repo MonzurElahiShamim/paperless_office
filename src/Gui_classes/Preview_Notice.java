@@ -23,14 +23,20 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
  *
  * @author Monzur Elahi Shamim
  */
-public class Compose_Notice extends javax.swing.JFrame {
+public class Preview_Notice extends javax.swing.JFrame {
 
 	/**
 	 * Creates new form compose
 	 */
-	public Compose_Notice() {
+	public Preview_Notice() {
+		int docId = 3;
 		initComponents();
-		modifyValues();
+		modifyValues(docId);
+	}
+
+	public Preview_Notice(int docId) {
+		initComponents();
+		modifyValues(docId);
 	}
 
 	/**
@@ -60,6 +66,7 @@ public class Compose_Notice extends javax.swing.JFrame {
         jTextArea2 = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         designation = new javax.swing.JTextArea();
+        editBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -110,6 +117,7 @@ public class Compose_Notice extends javax.swing.JFrame {
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/template_topic(notice).png"))); // NOI18N
 
+        noticeBody.setEditable(false);
         noticeBody.setColumns(20);
         noticeBody.setFont(new java.awt.Font("Vrinda", 1, 18)); // NOI18N
         noticeBody.setLineWrap(true);
@@ -178,6 +186,19 @@ public class Compose_Notice extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(jPanel2);
 
+        editBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        editBtn.setText("Edit");
+        editBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                editBtnMouseClicked(evt);
+            }
+        });
+        editBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -188,20 +209,23 @@ public class Compose_Notice extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(previewBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cancelBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cancelBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(80, 80, 80))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(previewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
-                .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(567, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(previewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41)
+                        .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(502, 502, 502)
+                        .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -224,21 +248,30 @@ public class Compose_Notice extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-	private void modifyValues() {
+	private void modifyValues(int docId) {
 		String fontPath = "E:/FONTS/Nikosh.ttf";
 		Font customFont = loadCustomFont(fontPath, 18);
 		Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 
-		jLabel2.setFont(customFont);
-		jLabel2.setText("তারিখঃ");
+		String[] rowData = PdfDatabaseManager.retrieveDocAsText(docId);
+		if (rowData != null) {
+			// Access the retrieved data
+			String dateText = rowData[0];
+			//String dept = rowData[2];
+			//String subj = rowData[3];
+			String bodyText = rowData[4];
 
-		date.setFont(customFont);
-		date.setText("৩১/১২/২০২৪ ইং");
+			jLabel2.setFont(customFont);
+			jLabel2.setText("তারিখঃ");
 
-		noticeBody.setFont(loadCustomFont(fontPath, 20));
-		noticeBody.setText("এতদ্বারা");
+			date.setFont(customFont);
+			date.setText(dateText);
 
-		designation.setFont(customFont);
+			noticeBody.setFont(loadCustomFont(fontPath, 20));
+			noticeBody.setText(bodyText);
+
+			designation.setFont(customFont);
+		}
 	}
 
 	private static Font loadCustomFont(String fontPath, float fontSize) {
@@ -301,20 +334,17 @@ public class Compose_Notice extends javax.swing.JFrame {
 			PDFWithImages.addDesignation(document, page, yPos);
 
 			//Save document for preview
-			String fileName = "tempNotice.pdf";
+			String fileName = "NewNotice.pdf";
 			document.save(fileName);
 			document.close();
-
-			//Save doc as text in Database
-			PdfDatabaseManager.saveDocAsText(str_date, "", "", "", bodyText, "notice", "Unread");
 
 			pdf_Preview object = new pdf_Preview(fileName, this, true);
 			object.setVisible(true);
 			//setVisible(false);
 		} catch (IOException ex) {
-			Logger.getLogger(Compose_Notice.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Preview_Notice.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception ex) {
-			Logger.getLogger(Compose_Notice.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Preview_Notice.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
 
@@ -331,6 +361,14 @@ public class Compose_Notice extends javax.swing.JFrame {
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
 		// TODO add your handling code here:
     }//GEN-LAST:event_cancelBtnActionPerformed
+
+    private void editBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editBtnMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editBtnMouseClicked
+
+    private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editBtnActionPerformed
 
 	/**
 	 * @param args the command line
@@ -350,14 +388,16 @@ public class Compose_Notice extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(Compose_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Notice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		//</editor-fold>
+		//</editor-fold>
 		//</editor-fold>
 		//</editor-fold>
 
@@ -368,7 +408,7 @@ public class Compose_Notice extends javax.swing.JFrame {
 //                } else {
 //                    new Compose_Notice().setVisible(true);
 //                }
-				new Compose_Notice().setVisible(true);
+				new Preview_Notice().setVisible(true);
 			}
 		});
 	}
@@ -377,6 +417,7 @@ public class Compose_Notice extends javax.swing.JFrame {
     private javax.swing.JButton cancelBtn;
     private javax.swing.JTextField date;
     private javax.swing.JTextArea designation;
+    private javax.swing.JButton editBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

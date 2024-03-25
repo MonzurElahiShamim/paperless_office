@@ -25,7 +25,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
  *
  * @author Monzur Elahi Shamim
  */
-public class Compose_Letter extends javax.swing.JFrame {
+public class Preview_Letter extends javax.swing.JFrame {
 
 	/**
 	 * Creates new form compose
@@ -34,9 +34,15 @@ public class Compose_Letter extends javax.swing.JFrame {
 	final Font customFont = loadCustomFont(fontPath, 18);
 	final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 
-	public Compose_Letter() {
+	public Preview_Letter() {
+		int docId = 1; 
 		initComponents();
-		modifyValues();
+		modifyValues(docId);
+	}
+	
+	public Preview_Letter(int docId) {
+		initComponents();
+		modifyValues(docId);
 	}
 
 	/**
@@ -52,17 +58,17 @@ public class Compose_Letter extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        previewBtn = new javax.swing.JButton();
-        cancelBtn = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        approveBtn = new javax.swing.JButton();
+        backBtn = new javax.swing.JButton();
+        docScrollPane = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         date = new javax.swing.JTextField();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        letterBody = new javax.swing.JTextArea();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        bodyScrollPane = new javax.swing.JScrollPane();
+        body_letter = new javax.swing.JTextArea();
+        footerScrollPane = new javax.swing.JScrollPane();
+        footer_letter = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
         reference = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -75,34 +81,35 @@ public class Compose_Letter extends javax.swing.JFrame {
         subject_letter = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
         designation = new javax.swing.JTextArea();
+        editBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Compose", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Preview", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
 
-        previewBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        previewBtn.setText("Preview");
-        previewBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+        approveBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        approveBtn.setText("Approve");
+        approveBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                previewBtnMouseClicked(evt);
+                approveBtnMouseClicked(evt);
             }
         });
-        previewBtn.addActionListener(new java.awt.event.ActionListener() {
+        approveBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                previewBtnActionPerformed(evt);
+                approveBtnActionPerformed(evt);
             }
         });
 
-        cancelBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        cancelBtn.setText("Cancel");
-        cancelBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+        backBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        backBtn.setText("Back");
+        backBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cancelBtnMouseClicked(evt);
+                backBtnMouseClicked(evt);
             }
         });
-        cancelBtn.addActionListener(new java.awt.event.ActionListener() {
+        backBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelBtnActionPerformed(evt);
+                backBtnActionPerformed(evt);
             }
         });
 
@@ -115,6 +122,8 @@ public class Compose_Letter extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
         jLabel2.setText("তারিখঃ");
 
+        date.setEditable(false);
+        date.setBackground(new java.awt.Color(255, 255, 255));
         date.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
         date.setText("৩১/১২/২০২৪ ইং");
         date.addActionListener(new java.awt.event.ActionListener() {
@@ -123,21 +132,24 @@ public class Compose_Letter extends javax.swing.JFrame {
             }
         });
 
-        letterBody.setColumns(20);
-        letterBody.setFont(customFont);
-        letterBody.setLineWrap(true);
-        letterBody.setRows(5);
-        letterBody.setText("মহোদয়, \n");
-        letterBody.setWrapStyleWord(true);
-        jScrollPane2.setViewportView(letterBody);
+        body_letter.setEditable(false);
+        body_letter.setColumns(20);
+        body_letter.setFont(customFont);
+        body_letter.setLineWrap(true);
+        body_letter.setRows(5);
+        body_letter.setText("মহোদয়, \n");
+        body_letter.setWrapStyleWord(true);
+        bodyScrollPane.setViewportView(body_letter);
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane3.setViewportView(jTextArea2);
+        footer_letter.setColumns(20);
+        footer_letter.setRows(5);
+        footerScrollPane.setViewportView(footer_letter);
 
         jLabel5.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
         jLabel5.setText("স্মারক নং:");
 
+        reference.setEditable(false);
+        reference.setBackground(new java.awt.Color(255, 255, 255));
         reference.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
         reference.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -148,11 +160,14 @@ public class Compose_Letter extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
         jLabel3.setText("বরাবর");
 
+        uni_name.setFont(customFont);
         uni_name.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
         jLabel7.setText("নোয়াখালী-৩৮১৪");
 
+        personnel.setEditable(false);
+        personnel.setBackground(new java.awt.Color(255, 255, 255));
         personnel.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
         personnel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -160,6 +175,8 @@ public class Compose_Letter extends javax.swing.JFrame {
             }
         });
 
+        department.setEditable(false);
+        department.setBackground(new java.awt.Color(255, 255, 255));
         department.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
         department.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -172,6 +189,8 @@ public class Compose_Letter extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Siyam Rupali", 1, 12)); // NOI18N
         jLabel9.setText("বিষয়ঃ");
 
+        subject_letter.setEditable(false);
+        subject_letter.setBackground(new java.awt.Color(255, 255, 255));
         subject_letter.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
 
         jScrollPane4.setBorder(null);
@@ -213,8 +232,8 @@ public class Compose_Letter extends javax.swing.JFrame {
                                         .addComponent(uni_name, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel7)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(footerScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(bodyScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(jPanel2Layout.createSequentialGroup()
                                                 .addComponent(jLabel9)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -253,15 +272,28 @@ public class Compose_Letter extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(subject_letter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(bodyScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(67, 67, 67)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(footerScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(43, Short.MAX_VALUE))
         );
 
-        jScrollPane1.setViewportView(jPanel2);
+        docScrollPane.setViewportView(jPanel2);
+
+        editBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        editBtn.setText("Edit");
+        editBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                editBtnMouseClicked(evt);
+            }
+        });
+        editBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -269,23 +301,26 @@ public class Compose_Letter extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 950, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(previewBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                    .addComponent(cancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addComponent(docScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 950, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(approveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(editBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(47, 47, 47))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 660, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(previewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(approveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(docScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 660, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -310,46 +345,60 @@ public class Compose_Letter extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-	private void modifyValues() {
-		jLabel2.setFont(customFont);
-		jLabel2.setText("তারিখঃ");
+	private void modifyValues(int docId) {
+		//int docId = 1; // Replace 123 with the actual doc_id you want to retrieve
+		String[] rowData = PdfDatabaseManager.retrieveDocAsText(docId);
+		if (rowData != null) {
+			// Access the retrieved data
+			String dateText = rowData[0];
+			String recipient = rowData[1];
+			String dept = rowData[2];
+			String subj = rowData[3];
+			String bodyText = rowData[4];
 
-		date.setFont(customFont);
-		date.setText("৩১/১২/২০২৪ ইং");
+			jLabel2.setFont(customFont);
+			jLabel2.setText("তারিখঃ");
 
-		letterBody.setFont(loadCustomFont(fontPath, 20));
-		letterBody.setText("মহোদয়,");
+			date.setFont(customFont);
+			date.setText(dateText);
 
-		jLabel5.setFont(customFont);
-		jLabel5.setText("স্মারক নং:");
+			body_letter.setFont(loadCustomFont(fontPath, 20));
+			body_letter.setText(bodyText);
 
-		reference.setFont(customFont);
-		reference.setText("নোবিপ্রবি/আইসিই/২০২৪/");
+			jLabel5.setFont(customFont);
+			jLabel5.setText("স্মারক নং:");
 
-		jLabel3.setFont(customFont);
-		jLabel3.setText("বরাবর");
+			reference.setFont(customFont);
+			reference.setText("নোবিপ্রবি/আইসিই/২০২৪/");
 
-		uni_name.setFont(customFont); // NOI18N
-		uni_name.setText("নোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়");
+			jLabel3.setFont(customFont);
+			jLabel3.setText("বরাবর");
 
-		jLabel7.setFont(customFont);
-		jLabel7.setText("নোয়াখালী-৩৮১৪");
+			uni_name.setFont(customFont); // NOI18N
+			uni_name.setText("নোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়");
 
-		personnel.setFont(customFont);
-		createPlaceholderText(personnel, "প্রাপকের পদবি ");
+			jLabel7.setFont(customFont);
+			jLabel7.setText("নোয়াখালী-৩৮১৪");
 
-		department.setFont(customFont);
-		createPlaceholderText(department, "ডিপার্টমেন্টের নাম");
+			personnel.setFont(customFont);
+			personnel.setText(recipient);
 
-		medium.setFont(customFont);
-		medium.setText("মাধ্যমঃ যথাযথ কর্তৃপক্ষ");
+			department.setFont(customFont);
+			department.setText(dept);
 
-		jLabel9.setFont(boldCustomFont);
-		jLabel9.setText("বিষয়ঃ");
+			medium.setFont(customFont);
+			medium.setText("মাধ্যমঃ যথাযথ কর্তৃপক্ষ");
 
-		subject_letter.setFont(boldCustomFont);
+			jLabel9.setFont(boldCustomFont);
+			jLabel9.setText("বিষয়ঃ");
 
-		designation.setFont(customFont);
+			subject_letter.setFont(boldCustomFont);
+			subject_letter.setText(subj);
+
+			designation.setFont(customFont);
+		} else {
+			System.out.println("No document found with doc_id: " + docId);
+		}
 	}
 
 	private static Font loadCustomFont(String fontPath, float fontSize) {
@@ -371,53 +420,35 @@ public class Compose_Letter extends javax.swing.JFrame {
 		}
 	}
 
-	private static void createPlaceholderText(JTextField textField, String placeholder) {
 
-		// Set the placeholder text initially
-		textField.setText(placeholder);
-		textField.setForeground(UIManager.getColor("TextField.inactiveForeground"));
-
-		// Add focus listener to show/hide placeholder text
-		textField.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (textField.getText().equals(placeholder)) {
-					textField.setText("");
-					textField.setForeground(UIManager.getColor("TextField.foreground"));
-				}
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (textField.getText().isEmpty()) {
-					textField.setText(placeholder);
-					textField.setForeground(UIManager.getColor("TextField.inactiveForeground"));
-				}
-			}
-		});
-
-	}
-
-    private void cancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelBtnMouseClicked
+    private void backBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backBtnMouseClicked
 		// TODO add your handling code here:
-		setVisible(false);
-		Home_Admin object = new Home_Admin();
-		object.setVisible(true);
-    }//GEN-LAST:event_cancelBtnMouseClicked
+		if (approveBtn.getText() == "Approve") {
+			setVisible(false);
+			Home_SU object = new Home_SU();
+			object.setVisible(true);
+		} else if (approveBtn.getText() == "Update") {
+			reference.setEditable(false);
+			date.setEditable(false);
+			personnel.setEditable(false);
+			department.setEditable(false);
+			subject_letter.setEditable(false);
+			body_letter.setEditable(false);
+			footer_letter.setEditable(false);
+			approveBtn.setText("Approve");
+			jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+			designation.setBackground(new java.awt.Color(255, 255, 255));
+			editBtn.setVisible(true);
+		}
+    }//GEN-LAST:event_backBtnMouseClicked
 
-    private void previewBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previewBtnMouseClicked
+    private void approveBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_approveBtnMouseClicked
 
 		try {
 			PDDocument document = new PDDocument();
 			PDPage page = new PDPage(PDRectangle.A4);
 			document.addPage(page);
 
-//            int height = (int) PDRectangle.A4.getHeight(); //~841
-//            System.out.println(height);
-//            int width = (int) PDRectangle.A4.getWidth(); //~595
-//            System.out.println(width);
-
-			// adding header
 			PDFWithImages.addHeader(document, page);
 
 			// Office Letter TopMatter
@@ -438,10 +469,10 @@ public class Compose_Letter extends javax.swing.JFrame {
 			PDFWithImages.addLine(document, page, leftMargin, yPos - 125, 13, "বিষয়ঃ " + subject, 'b');
 
 			//Body text
-			String bodyText = letterBody.getText();
+			String bodyText = body_letter.getText();
 			yPos = PDFWithImages.addParagraph(document, page, yPos - 155, bodyText);
 
-			yPos -= 30;
+			yPos -= 60;
 			PDFWithImages.addDesignation(document, page, yPos);
 
 			//Save file for pdf_Preview
@@ -449,32 +480,31 @@ public class Compose_Letter extends javax.swing.JFrame {
 			document.save(fileName);
 			document.close();
 
-			//Save doc as text in Database
 			PdfDatabaseManager.saveDocAsText(str_date, receipient, dept, subject, bodyText, "letter", "Unread");
 
 			pdf_Preview object = new pdf_Preview(fileName, this, true);
 			object.setVisible(true);
 			//setVisible(false);
 		} catch (IOException ex) {
-			Logger.getLogger(Compose_Letter.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Preview_Letter.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception ex) {
-			Logger.getLogger(Compose_Letter.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Preview_Letter.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
 
-    }//GEN-LAST:event_previewBtnMouseClicked
+    }//GEN-LAST:event_approveBtnMouseClicked
 
-    private void previewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewBtnActionPerformed
+    private void approveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approveBtnActionPerformed
 
-    }//GEN-LAST:event_previewBtnActionPerformed
+    }//GEN-LAST:event_approveBtnActionPerformed
 
     private void dateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateActionPerformed
 		// TODO add your handling code here:
     }//GEN-LAST:event_dateActionPerformed
 
-    private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
+    private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
 		// TODO add your handling code here:
-    }//GEN-LAST:event_cancelBtnActionPerformed
+    }//GEN-LAST:event_backBtnActionPerformed
 
     private void departmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_departmentActionPerformed
 		// TODO add your handling code here:
@@ -487,6 +517,25 @@ public class Compose_Letter extends javax.swing.JFrame {
     private void referenceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_referenceActionPerformed
 		// TODO add your handling code here:
     }//GEN-LAST:event_referenceActionPerformed
+
+    private void editBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editBtnMouseClicked
+		// TODO add your handling code here:
+    }//GEN-LAST:event_editBtnMouseClicked
+
+    private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
+		// TODO add your handling code here:
+		reference.setEditable(true);
+		date.setEditable(true);
+		personnel.setEditable(true);
+		department.setEditable(true);
+		subject_letter.setEditable(true);
+		body_letter.setEditable(true);
+		footer_letter.setEditable(true);
+		approveBtn.setText("Update");
+		jPanel2.setBackground(new java.awt.Color(240, 240, 240));
+		designation.setBackground(new java.awt.Color(240, 240, 240));
+		editBtn.setVisible(false);
+    }//GEN-LAST:event_editBtnActionPerformed
 
 	/**
 	 * @param args the command line
@@ -506,14 +555,16 @@ public class Compose_Letter extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(Compose_Letter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Letter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(Compose_Letter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Letter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(Compose_Letter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Letter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(Compose_Letter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Preview_Letter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		//</editor-fold>
+		//</editor-fold>
 		//</editor-fold>
 		//</editor-fold>
 
@@ -524,16 +575,23 @@ public class Compose_Letter extends javax.swing.JFrame {
 //                } else {
 //                    new Compose_Letter().setVisible(true);
 //                }
-				new Compose_Letter().setVisible(true);
+				new Preview_Letter().setVisible(true);
 			}
 		});
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelBtn;
+    private javax.swing.JButton approveBtn;
+    private javax.swing.JButton backBtn;
+    private javax.swing.JScrollPane bodyScrollPane;
+    private javax.swing.JTextArea body_letter;
     private javax.swing.JTextField date;
     private javax.swing.JTextField department;
     private javax.swing.JTextArea designation;
+    private javax.swing.JScrollPane docScrollPane;
+    private javax.swing.JButton editBtn;
+    private javax.swing.JScrollPane footerScrollPane;
+    private javax.swing.JTextArea footer_letter;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -542,15 +600,9 @@ public class Compose_Letter extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea letterBody;
     private javax.swing.JLabel medium;
     private javax.swing.JTextField personnel;
-    private javax.swing.JButton previewBtn;
     private javax.swing.JTextField reference;
     private javax.swing.JTextField subject_letter;
     private javax.swing.JLabel uni_name;
