@@ -1,5 +1,8 @@
 package Gui_classes;
 
+import static DBM_classes.DatabaseOperations.retrieveUserDataFromDatabase;
+import Other.UserInfo;
+import Other.UserSession;
 import Test_classes.Converter;
 import Test_classes.PDFWithImages;
 import java.awt.Font;
@@ -184,14 +187,18 @@ public class ComposeProttoyon extends javax.swing.JFrame {
 
     private void applyBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_applyBtnMouseClicked
 	    try {
-		    // Get info from database
-		    String stNameBn = "মঞ্জুর ইলাহী শামীম"; // From database
-		    String stNameEn = "Monzur Elahi Shamim";
-		    String stRoll = "ASH1911012m"; // From database
-		    String session = "২০১৮-১৯"; // From Student Database
-		    String fatherNameBn = "নূর নবী চৌধূরী"; // From Student Database
-		    String fatherNameEn = "Nur Nabi Chowdhury"; // From Student Database
-		    String mobile = "01689668426"; // From Student Database
+		    // Get info from database to a user object
+			String studentEmail = UserSession.getInstance().getUser();
+			//UserInfo student = retrieveUserDataFromDatabase(studentEmail);
+			UserInfo student = retrieveUserDataFromDatabase("shamim1114@student.nstu.edu.bd"); // remove this line and uncomment previous line
+			
+			String stNameBn = student.getStNameBn();
+			String stNameEn = student.getStNameEn();
+			String stRoll = student.getStId();
+			String session = Converter.toBanglaNumerals(student.getSession());
+			String fatherNameBn = student.getFatherNameBn();
+			String fatherNameEn = student.getFatherNameEn();
+			String mobile = student.getMobile();
 
 		    //Derived
 		    String stGender = stRoll.toUpperCase().endsWith("M") ? "ছাত্র" : "ছাত্রী";
@@ -251,7 +258,7 @@ public class ComposeProttoyon extends javax.swing.JFrame {
 		    document.save(fileName);
 		    document.close();
 
-		    pdf_Preview object = new pdf_Preview(fileName, this, true);
+		    pdf_Preview object = new pdf_Preview(fileName,"student", this, true);
 		    object.setVisible(true);
 		    //setVisible(false);
 	    } catch (IOException ex) {

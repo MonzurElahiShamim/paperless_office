@@ -1,16 +1,9 @@
 package Gui_classes;
 
-
-
-
 import Other.UserSession;
 import Other.UserInfo;
 import DBM_classes.DatabaseOperations;
-import DBM_classes.databaseConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import static DBM_classes.DatabaseOperations.retrieveUserDataFromDatabase;
 import javax.swing.border.Border;
 
 /*
@@ -23,98 +16,90 @@ import javax.swing.border.Border;
  */
 public class ProfileStudent extends javax.swing.JFrame {
 
-    private UserInfo user;
-    Border editableBorder;
+	private UserInfo user;
+	Border editableBorder;
 
-    /**
-     * Creates new form Profile
-     */
-    public ProfileStudent() {
-        this.user = retrieveUserDataFromDatabase(UserSession.getInstance().getUser());
-        initComponents();
-        this.editableBorder = name.getBorder();
-        setData();
-        makeNonEditable();
-    }
+	/**
+	 * Creates new form Profile
+	 */
+	public ProfileStudent() {
+		this.user = retrieveUserDataFromDatabase(UserSession.getInstance().getUser());
+		initComponents();
+		//this.editableBorder = nameEn.getBorder();
+		this.editableBorder = javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153));
+		setData();
+		makeNonEditable();
+	}
 
-    private void setData() {
-        name.setText(user.getFirstName() + " " + user.getLastName());
-        fatherName.setText(user.getFatherName());
-        studentID.setText(user.getStId());
-        session.setText(user.getSession());
-        mobileNo.setText(user.getMobile());
-        eduMail.setText(user.getInstEmail());
-        personalMail.setText(user.getPersonEmail());
-    }
+	public ProfileStudent(String email) {
+		this.user = retrieveUserDataFromDatabase(email);
+		initComponents();
+		//this.editableBorder = nameEn.getBorder();
+		this.editableBorder = javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153));
+		setData();
+		makeNonEditable();
+	}
 
-    private void makeEditable() {
+	private void setData() {
+		nameEn.setText(user.getStNameEn());
+		nameBn.setText(user.getStNameBn());
+		fatherNameEn.setText(user.getFatherNameEn());
+		fatherNameBn.setText(user.getFatherNameBn());
+		studentID.setText(user.getStId());
+		session.setText(user.getSession());
+		mobileNo.setText(user.getMobile());
+		eduMail.setText(user.getInstEmail());
+		personalMail.setText(user.getPersonEmail());
+	}
+
+	private void makeEditable() {
 //        name.setEditable(true);
-//        name.setBorder(editableBorder);
-        fatherName.setEditable(true);
-        fatherName.setBorder(editableBorder);
-        session.setBorder(editableBorder);
-        session.setEditable(true);
-        mobileNo.setBorder(editableBorder);
-        mobileNo.setEditable(true);
-        personalMail.setBorder(editableBorder);
-        personalMail.setEditable(true);
-    }
+		nameEn.setBorder(editableBorder);
+		nameBn.setBorder(editableBorder);
+		fatherNameEn.setEditable(true);
+		fatherNameEn.setBorder(editableBorder);
+		fatherNameBn.setEditable(true);
+		fatherNameBn.setBorder(editableBorder);
+		studentID.setBorder(editableBorder);
+		session.setBorder(editableBorder);
+		session.setEditable(true);
+		mobileNo.setBorder(editableBorder);
+		mobileNo.setEditable(true);
+		eduMail.setBorder(editableBorder);
+		personalMail.setBorder(editableBorder);
+		personalMail.setEditable(true);
+	}
 
-    private void makeNonEditable() {
-        name.setBorder(null);
-        name.setEditable(false);
-        fatherName.setBorder(null);
-        fatherName.setEditable(false);
-        studentID.setBorder(null);
-        studentID.setEditable(false);
-        session.setBorder(null);
-        session.setEditable(false);
-        mobileNo.setBorder(null);
-        mobileNo.setEditable(false);
-        eduMail.setBorder(null);
-        eduMail.setEditable(false);
-        personalMail.setBorder(null);
-        personalMail.setEditable(false);
-    }
+	private void makeNonEditable() {
+		nameEn.setBorder(null);
+		nameEn.setEditable(false);
+		nameBn.setBorder(null);
+		nameBn.setEditable(false);
+		fatherNameEn.setBorder(null);
+		fatherNameEn.setEditable(false);
+		fatherNameBn.setBorder(null);
+		fatherNameBn.setEditable(false);
+		studentID.setBorder(null);
+		studentID.setEditable(false);
+		session.setBorder(null);
+		session.setEditable(false);
+		mobileNo.setBorder(null);
+		mobileNo.setEditable(false);
+		eduMail.setBorder(null);
+		eduMail.setEditable(false);
+		personalMail.setBorder(null);
+		personalMail.setEditable(false);
+	}
 
-    private static UserInfo retrieveUserDataFromDatabase(String email) {
-        UserInfo user = null;
-        try (Connection connection = databaseConnection.connection()) {
-            String query = "SELECT * FROM student WHERE eduEmail = ? OR personalEmail = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, email);
-            preparedStatement.setString(2, email);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                user = new UserInfo();
-                user.setStId(resultSet.getString("st_id"));
-                user.setFirstName(resultSet.getString("firstName"));
-                user.setLastName(resultSet.getString("lastName"));
-                user.setFatherName(resultSet.getString("fatherName"));
-                user.setMobile(resultSet.getString("mobile"));
-                user.setSession(resultSet.getString("session"));
-                user.setInstEmail(resultSet.getString("eduEmail"));
-                user.setPersonEmail(resultSet.getString("personalEmail"));
-                // Retrieve other fields as needed
-            }
-
-            resultSet.close();
-            preparedStatement.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            // Handle the exception properly (logging, error message, etc.)
-        }
-        return user;
-    }
-
-    
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
+	/**
+	 * This method is called from within
+	 * the constructor to initialize the
+	 * form. WARNING: Do NOT modify this
+	 * code. The content of this method
+	 * is always regenerated by the Form
+	 * Editor.
+	 */
+	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -126,17 +111,21 @@ public class ProfileStudent extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        name = new javax.swing.JTextField();
+        nameEn = new javax.swing.JTextField();
         studentID = new javax.swing.JTextField();
         session = new javax.swing.JTextField();
         mobileNo = new javax.swing.JTextField();
         eduMail = new javax.swing.JTextField();
         personalMail = new javax.swing.JTextField();
-        fatherName = new javax.swing.JTextField();
+        fatherNameEn = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         updateBtn = new javax.swing.JButton();
         backBtn = new javax.swing.JButton();
         logoutBtn = new javax.swing.JButton();
+        nameBn = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        fatherNameBn = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -164,8 +153,8 @@ public class ProfileStudent extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel7.setText("Personal Email:");
 
-        name.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        name.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        nameEn.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        nameEn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
 
         studentID.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
 
@@ -177,7 +166,7 @@ public class ProfileStudent extends javax.swing.JFrame {
 
         personalMail.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
 
-        fatherName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        fatherNameEn.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/Portrait_Placeholder.png"))); // NOI18N
 
@@ -206,46 +195,61 @@ public class ProfileStudent extends javax.swing.JFrame {
             }
         });
 
+        nameBn.setFont(new java.awt.Font("Siyam Rupali", 1, 16)); // NOI18N
+        nameBn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+
+        jLabel9.setFont(new java.awt.Font("Siyam Rupali", 1, 16)); // NOI18N
+        jLabel9.setText("নাম:");
+
+        fatherNameBn.setFont(new java.awt.Font("Siyam Rupali", 1, 16)); // NOI18N
+
+        jLabel10.setFont(new java.awt.Font("Siyam Rupali", 1, 16)); // NOI18N
+        jLabel10.setText("পিতার নাম:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel5)
-                        .addComponent(jLabel6))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(84, 84, 84)
+                            .addComponent(jLabel1))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabel7)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel7))
-                        .addGap(3, 3, 3)))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel4))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(studentID, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fatherName, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mobileNo, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eduMail, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                    .addComponent(personalMail))
+                    .addComponent(personalMail)
+                    .addComponent(nameBn)
+                    .addComponent(nameEn)
+                    .addComponent(fatherNameEn)
+                    .addComponent(fatherNameBn)
+                    .addComponent(studentID)
+                    .addComponent(session)
+                    .addComponent(mobileNo))
+                .addGap(49, 49, 49)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(updateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(updateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
                         .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(45, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 49, Short.MAX_VALUE))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {backBtn, logoutBtn});
@@ -253,45 +257,54 @@ public class ProfileStudent extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(fatherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(studentID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(mobileNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(eduMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(personalMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(41, 41, 41)
-                .addComponent(jLabel8)
-                .addGap(18, 18, 18)
-                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(nameEn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nameBn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fatherNameEn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fatherNameBn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10)))
+                    .addComponent(jLabel8))
+                .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(backBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logoutBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(75, 75, 75))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(studentID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(mobileNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(eduMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(personalMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(40, 40, 40))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {backBtn, logoutBtn});
@@ -307,83 +320,91 @@ public class ProfileStudent extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(778, 579));
+        setSize(new java.awt.Dimension(778, 638));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void backBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backBtnMouseClicked
-        setVisible(false);
-        Home_Stu object = new Home_Stu();
-        object.setVisible(true);
+		if (updateBtn.getText() == "Edit") {
+			setVisible(false);
+			Home_Stu object = new Home_Stu();
+			object.setVisible(true);
+		} else {
+			makeNonEditable();
+			updateBtn.setText("Edit");
+		}
     }//GEN-LAST:event_backBtnMouseClicked
 
     private void updateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateBtnMouseClicked
-        if (updateBtn.getText().equals("Edit")) {
-            // Enable text fields and change button text to "Update"
-            makeEditable();
-            updateBtn.setText("Update");
-        } else {
-            String stId = studentID.getText();
-            String newFatherName = fatherName.getText();
-            String newSession = session.getText();
-            String newMobileNo = mobileNo.getText();
-            String newPersonalMail = personalMail.getText();
-            DatabaseOperations.updateStudentData(stId, newFatherName, newMobileNo, newSession, newPersonalMail);
-            this.user = retrieveUserDataFromDatabase(UserSession.getInstance().getUser());
-            setData();
-            makeNonEditable();
-            updateBtn.setText("Edit");
-        }
+		if (updateBtn.getText().equals("Edit")) {
+			// Enable text fields and change button text to "Update"
+			makeEditable();
+			updateBtn.setText("Update");
+		} else {
+			String stId = studentID.getText();
+			String newFatherName = fatherNameEn.getText();
+			String newSession = session.getText();
+			String newMobileNo = mobileNo.getText();
+			String newPersonalMail = personalMail.getText();
+			DatabaseOperations.updateStudentData(stId, newFatherName, newMobileNo, newSession, newPersonalMail);
+			this.user = retrieveUserDataFromDatabase(UserSession.getInstance().getUser());
+			setData();
+			makeNonEditable();
+			updateBtn.setText("Edit");
+		}
     }//GEN-LAST:event_updateBtnMouseClicked
 
     private void logoutBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutBtnMouseClicked
-        dispose();
-        UserSession.getInstance().clearSession();
-        Login object = new Login();
-        object.setVisible(true);
+		dispose();
+		UserSession.getInstance().clearSession();
+		Login object = new Login();
+		object.setVisible(true);
     }//GEN-LAST:event_logoutBtnMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+	/**
+	 * @param args the command line
+	 * arguments
+	 */
+	public static void main(String args[]) {
+		/* Set the Nimbus look and feel */
+		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
+		 */
+		try {
+			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+				if ("Windows".equals(info.getName())) {
+					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (ClassNotFoundException ex) {
+			java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		} catch (InstantiationException ex) {
+			java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		} catch (IllegalAccessException ex) {
+			java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+			java.util.logging.Logger.getLogger(ProfileStudent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		}
+		//</editor-fold>
+		//</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ProfileStudent().setVisible(true);
-            }
-        });
-    }
+		/* Create and display the form */
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				new ProfileStudent("shamim1114@student.nstu.edu.bd").setVisible(true);
+			}
+		});
+	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
     private javax.swing.JTextField eduMail;
-    private javax.swing.JTextField fatherName;
+    private javax.swing.JTextField fatherNameBn;
+    private javax.swing.JTextField fatherNameEn;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -391,10 +412,12 @@ public class ProfileStudent extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton logoutBtn;
     private javax.swing.JTextField mobileNo;
-    private javax.swing.JTextField name;
+    private javax.swing.JTextField nameBn;
+    private javax.swing.JTextField nameEn;
     private javax.swing.JTextField personalMail;
     private javax.swing.JTextField session;
     private javax.swing.JTextField studentID;
