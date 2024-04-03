@@ -14,20 +14,21 @@ import javax.swing.JOptionPane;
  */
 public class DatabaseOperations {
 
-	static void insertDataIntoDatabase(String stId, String fName, String lName, String father, String mobile,
+	static void insertDataIntoDatabase(String stId, String nameEn, String nameBn, String fatherEn, String fatherBn, String mobile,
 		String session, String instEmail, String personEmail, String password) {
 		try (Connection connection = databaseConnection.connection()) {
 			String query = "INSERT INTO student (st_id, firstName, lastName, fatherNameEn, mobile, session, eduEmail, personalEmail, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, stId);
-			preparedStatement.setString(2, fName);
-			preparedStatement.setString(3, lName);
-			preparedStatement.setString(4, father);
-			preparedStatement.setString(5, mobile);
-			preparedStatement.setString(6, session);
-			preparedStatement.setString(7, instEmail);
-			preparedStatement.setString(8, personEmail);
-			preparedStatement.setString(9, password);
+			preparedStatement.setString(2, nameEn);
+			preparedStatement.setString(3, nameBn);
+			preparedStatement.setString(4, fatherEn);
+			preparedStatement.setString(5, fatherBn);
+			preparedStatement.setString(6, mobile);
+			preparedStatement.setString(7, session);
+			preparedStatement.setString(8, instEmail);
+			preparedStatement.setString(9, personEmail);
+			preparedStatement.setString(10, password);
 
 			preparedStatement.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Registered successfully!");

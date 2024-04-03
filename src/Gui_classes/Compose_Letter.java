@@ -10,8 +10,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -33,6 +36,13 @@ public class Compose_Letter extends javax.swing.JFrame {
 	final String fontPath = "E:/FONTS/Nikosh.ttf";
 	final Font customFont = loadCustomFont(fontPath, 18);
 	final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
+
+	//Variables for document
+	String str_date;
+	String receipient;
+	String dept;
+	String subject;
+	String bodyText;
 
 	public Compose_Letter() {
 		initComponents();
@@ -75,6 +85,7 @@ public class Compose_Letter extends javax.swing.JFrame {
         subject_letter = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
         designation = new javax.swing.JTextArea();
+        submitBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -263,6 +274,19 @@ public class Compose_Letter extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(jPanel2);
 
+        submitBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        submitBtn.setText("Save & Submit");
+        submitBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                submitBtnMouseClicked(evt);
+            }
+        });
+        submitBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -270,11 +294,12 @@ public class Compose_Letter extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 950, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(previewBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                    .addComponent(cancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
-                .addContainerGap(87, Short.MAX_VALUE))
+                    .addComponent(previewBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(submitBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -285,6 +310,8 @@ public class Compose_Letter extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(previewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22)
                         .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -294,7 +321,7 @@ public class Compose_Letter extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
+                .addContainerGap(24, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -398,24 +425,12 @@ public class Compose_Letter extends javax.swing.JFrame {
 
 	}
 
-    private void cancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelBtnMouseClicked
-		// TODO add your handling code here:
-		setVisible(false);
-		Home_Admin object = new Home_Admin();
-		object.setVisible(true);
-    }//GEN-LAST:event_cancelBtnMouseClicked
-
-    private void previewBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previewBtnMouseClicked
-
+	private String createPdf() {
+		String fileName = "NewLetter.pdf";
 		try {
 			PDDocument document = new PDDocument();
 			PDPage page = new PDPage(PDRectangle.A4);
 			document.addPage(page);
-
-//            int height = (int) PDRectangle.A4.getHeight(); //~841
-//            System.out.println(height);
-//            int width = (int) PDRectangle.A4.getWidth(); //~595
-//            System.out.println(width);
 
 			// adding header
 			PDFWithImages.addHeader(document, page);
@@ -423,10 +438,10 @@ public class Compose_Letter extends javax.swing.JFrame {
 			// Office Letter TopMatter
 			int yPos = (int) page.getMediaBox().getHeight() - 115;
 			int leftMargin = 68;
-			String str_date = date.getText();
-			String receipient = personnel.getText();
-			String dept = department.getText();
-			String subject = subject_letter.getText();
+			str_date = date.getText();
+			receipient = personnel.getText();
+			dept = department.getText();
+			subject = subject_letter.getText();
 			PDFWithImages.addLine(document, page, 455, yPos, "তারিখঃ " + str_date);
 			PDFWithImages.addLine(document, page, leftMargin, yPos, "স্মারক নং: " + reference.getText());
 			PDFWithImages.addLine(document, page, leftMargin, yPos - 25, "বরাবর");
@@ -438,30 +453,34 @@ public class Compose_Letter extends javax.swing.JFrame {
 			PDFWithImages.addLine(document, page, leftMargin, yPos - 125, 13, "বিষয়ঃ " + subject, 'b');
 
 			//Body text
-			String bodyText = letterBody.getText();
+			bodyText = letterBody.getText();
 			yPos = PDFWithImages.addParagraph(document, page, yPos - 155, bodyText);
 
 			yPos -= 30;
 			PDFWithImages.addDesignation(document, page, yPos);
 
 			//Save file for pdf_Preview
-			String fileName = "NewLetter.pdf";
 			document.save(fileName);
 			document.close();
 
-			//Save doc as text in Database
-			PdfDatabaseManager.saveDocAsText(str_date, receipient, dept, subject, bodyText, "letter", "Unread");
-
-			pdf_Preview object = new pdf_Preview(fileName, this, true);
-			object.setVisible(true);
-			//setVisible(false);
-		} catch (IOException ex) {
-			Logger.getLogger(Compose_Letter.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception ex) {
 			Logger.getLogger(Compose_Letter.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		return fileName;
+	}
 
+    private void cancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelBtnMouseClicked
+		// TODO add your handling code here:
+		setVisible(false);
+		Home_Admin object = new Home_Admin();
+		object.setVisible(true);
+    }//GEN-LAST:event_cancelBtnMouseClicked
 
+    private void previewBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previewBtnMouseClicked
+
+		String fileName = createPdf();
+		pdf_Preview object = new pdf_Preview(fileName, "admin", this, true);
+		object.setVisible(true);
     }//GEN-LAST:event_previewBtnMouseClicked
 
     private void previewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewBtnActionPerformed
@@ -487,6 +506,58 @@ public class Compose_Letter extends javax.swing.JFrame {
     private void referenceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_referenceActionPerformed
 		// TODO add your handling code here:
     }//GEN-LAST:event_referenceActionPerformed
+
+    private void submitBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitBtnMouseClicked
+		String fileName = createPdf();
+		//Save doc as text in Database
+		
+		
+		// Create a file chooser
+		JFileChooser fileChooser = new JFileChooser();
+
+		// Set the file filter to restrict to specific format (e.g., PDF)
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF Files (*.pdf)", "pdf");
+		fileChooser.setFileFilter(filter);
+
+		// Show the save dialog
+		int userSelection = fileChooser.showSaveDialog(null);
+
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			File fileToSave = fileChooser.getSelectedFile();
+			// Ensure the file has the correct extension
+			String savePath = fileToSave.getAbsolutePath();
+
+			if (!savePath.toLowerCase().endsWith(".pdf")) {
+				savePath = savePath + ".pdf";
+				fileToSave = new File(savePath);
+			}
+
+			try {
+				File pdfToSave = new File(fileName);
+				PDDocument document = PDDocument.load(pdfToSave);
+				document.save(fileToSave);
+				document.close();
+			} catch (IOException ex) {
+				Logger.getLogger(pdf_Preview.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			System.out.println("Save as file: " + savePath);
+			String pdfType = "Letter";
+			
+			int docId = PdfDatabaseManager.savePDFToDatabase(savePath, pdfType, "Unread");
+			PdfDatabaseManager.saveDocAsText(docId, str_date, receipient, dept, subject, bodyText, "letter", "Unread");
+		} else if (userSelection == JFileChooser.CANCEL_OPTION) {
+			System.out.println("Save command canceled by user.");
+		}
+		JOptionPane.showMessageDialog(null, "Document Successfully Saved & Submitted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+		this.setVisible(false);
+
+		Home_Admin object = new Home_Admin();
+		object.setVisible(true);
+    }//GEN-LAST:event_submitBtnMouseClicked
+
+    private void submitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBtnActionPerformed
+		// TODO add your handling code here:
+    }//GEN-LAST:event_submitBtnActionPerformed
 
 	/**
 	 * @param args the command line
@@ -553,6 +624,7 @@ public class Compose_Letter extends javax.swing.JFrame {
     private javax.swing.JButton previewBtn;
     private javax.swing.JTextField reference;
     private javax.swing.JTextField subject_letter;
+    private javax.swing.JButton submitBtn;
     private javax.swing.JLabel uni_name;
     // End of variables declaration//GEN-END:variables
 }

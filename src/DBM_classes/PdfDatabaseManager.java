@@ -17,9 +17,9 @@ import java.util.logging.Logger;
 
 public class PdfDatabaseManager {
 
-	public static void saveDocAsText(String date, String receipient, String dept, String subj, String body, String type, String status) {
+	public static void saveDocAsText(int pdfId, String date, String receipient, String dept, String subj, String body, String type, String status) {
 		try (Connection connection = databaseConnection.connection()) {
-			String insertQuery = "INSERT INTO doc_as_text (date, receipient, dept, subject, body, type, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+			String insertQuery = "INSERT INTO doc_as_text (date, receipient, dept, subject, body, type, status, doc_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
 
 			// Set values for the prepared statement
@@ -30,6 +30,7 @@ public class PdfDatabaseManager {
 			preparedStatement.setString(5, body);
 			preparedStatement.setString(6, type);
 			preparedStatement.setString(7, status);
+			preparedStatement.setInt(8, pdfId);
 
 			// Execute the query
 			preparedStatement.executeUpdate();
@@ -69,14 +70,15 @@ public class PdfDatabaseManager {
 		return rowData;
 	}
 
-	public static void savePDFToDatabase(String filePath, String type, String status) {
+	public static int savePDFToDatabase(String filePath, String type, String status) {
+		int pdfId = -1;
 		try (Connection connection = databaseConnection.connection()) {
 			String insertQuery = "INSERT INTO pdf_storage (file_path, pdf_name, byte_pdf, type, status) VALUES (?, ?, ?, ?, ?)";
 
 			File pdfFile = new File(filePath);
 			String pdfName = pdfFile.getName();
 			try (FileInputStream fis = new FileInputStream(pdfFile);
-				PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
+				PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
 				// Set values for the prepared statement
 				preparedStatement.setString(1, filePath);
@@ -87,13 +89,22 @@ public class PdfDatabaseManager {
 
 				// Execute the query
 				preparedStatement.executeUpdate();
-
+// Retrieve the auto-generated keys (pdf_id)
+				try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+					if (generatedKeys.next()) {
+						pdfId = generatedKeys.getInt(1);
+						System.out.println("PDF file saved to database successfully! pdf_id: " + pdfId);
+					} else {
+						System.out.println("Failed to retrieve the auto-generated pdf_id.");
+					}
+				}
 				System.out.println("PDF file saved to database successfully!");
 			}
 		} catch (SQLException | java.io.IOException e) {
 			e.printStackTrace();
 			System.out.println("Error: " + e.getMessage());
 		}
+		return pdfId;
 	}
 
 	public static void retrievePdfFromDatabase(int pdfId, String destinationPath) {

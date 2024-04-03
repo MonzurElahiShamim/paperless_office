@@ -239,8 +239,6 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 		if (rowData != null) {
 			// Access the retrieved data
 			String dateText = rowData[0];
-			//String dept = rowData[2];
-			//String subj = rowData[3];
 			String bodyText = rowData[4];
 			
 			jLabel2.setFont(customFont);

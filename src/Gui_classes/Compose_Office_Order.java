@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -27,6 +30,10 @@ public class Compose_Office_Order extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
+	//Variables for document
+	String str_date;
+	String bodyText;
+
 	public Compose_Office_Order() {
 		initComponents();
 		modifyValues();
@@ -59,6 +66,7 @@ public class Compose_Office_Order extends javax.swing.JFrame {
         jTextArea2 = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         designation = new javax.swing.JTextArea();
+        submitBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -178,6 +186,14 @@ public class Compose_Office_Order extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(jPanel2);
 
+        submitBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        submitBtn.setText("Save & Submit");
+        submitBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                submitBtnMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -185,23 +201,26 @@ public class Compose_Office_Order extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(52, 52, 52)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 950, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cancelBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(80, 80, 80))
+                .addGap(50, 50, 50)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(submitBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(previewBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(50, 50, 50))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(previewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
+                .addGap(18, 18, 18)
+                .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
                 .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(567, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -237,7 +256,7 @@ public class Compose_Office_Order extends javax.swing.JFrame {
 
 		noticeBody.setFont(loadCustomFont(fontPath, 20));
 		noticeBody.setText("এতদ্বারা");
-		
+
 		designation.setFont(loadCustomFont(fontPath, 20));
 	}
 
@@ -269,59 +288,13 @@ public class Compose_Office_Order extends javax.swing.JFrame {
 
     private void previewBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previewBtnMouseClicked
 
-		try {
-			PDDocument document = new PDDocument();
-			PDPage page = new PDPage(PDRectangle.A4);
-			document.addPage(page);
-
-			// adding header
-			PDFWithImages.addHeader(document, page);
-
-			// add Date
-			int yPos = (int) page.getMediaBox().getHeight() - 115;
-			int leftMargin = 68;
-			String str_date = date.getText();
-			PDFWithImages.addLine(document, page, leftMargin, yPos, "তারিখঃ " + str_date);
-
-			PDFWithImages.addLine(document, page, 245, yPos - 60, 20, "অফিস আদেশ", 'b');
-
-			//Draw Underline 
-			PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
-			contentStream.moveTo(250, yPos - 55); // moves "pencil" to a position
-			contentStream.lineTo(345, yPos - 55);     // creates an invisible line to another position
-			contentStream.stroke();
-			contentStream.close();
-
-			//Body text
-			yPos = 640;
-			String bodyText = noticeBody.getText();
-			PDFWithImages.addParagraph(document, page, yPos, bodyText);
-			
-			//Designation
-			yPos -= 60;
-			PDFWithImages.addDesignation(document, page, yPos);
-
-			String fileName = "NewOfficeOrder.pdf";
-			document.save(fileName);
-			document.close();
-
-			//Save doc as text in Database
-			PdfDatabaseManager.saveDocAsText(str_date, "", "", "", bodyText, "office order", "Unread");
-			
-			//preview doc in pdf-viewer
-			pdf_Preview object = new pdf_Preview(fileName, this, true);
-			object.setVisible(true);
-		} catch (IOException ex) {
-			Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (Exception ex) {
-			Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
-
     }//GEN-LAST:event_previewBtnMouseClicked
 
     private void previewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewBtnActionPerformed
-
+		String fileName = createPdf();
+		//preview doc in pdf-viewer
+		pdf_Preview object = new pdf_Preview(fileName, this, true);
+		object.setVisible(true);
     }//GEN-LAST:event_previewBtnActionPerformed
 
     private void dateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateActionPerformed
@@ -331,6 +304,53 @@ public class Compose_Office_Order extends javax.swing.JFrame {
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
 		// TODO add your handling code here:
     }//GEN-LAST:event_cancelBtnActionPerformed
+
+    private void submitBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitBtnMouseClicked
+		String fileName = createPdf();
+
+		// Create a file chooser
+		JFileChooser fileChooser = new JFileChooser();
+
+		// Set the file filter to restrict to specific format (e.g., PDF)
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF Files (*.pdf)", "pdf");
+		fileChooser.setFileFilter(filter);
+
+		// Show the save dialog
+		int userSelection = fileChooser.showSaveDialog(null);
+
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			File fileToSave = fileChooser.getSelectedFile();
+			// Ensure the file has the correct extension
+			String savePath = fileToSave.getAbsolutePath();
+
+			if (!savePath.toLowerCase().endsWith(".pdf")) {
+				savePath = savePath + ".pdf";
+				fileToSave = new File(savePath);
+			}
+
+			try {
+				File pdfToSave = new File(fileName);
+				PDDocument document = PDDocument.load(pdfToSave);
+				document.save(fileToSave);
+				document.close();
+			} catch (IOException ex) {
+				Logger.getLogger(pdf_Preview.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			System.out.println("Save as file: " + savePath);
+			String pdfType = "Office Order";
+
+			int docId = PdfDatabaseManager.savePDFToDatabase(savePath, pdfType, "Unread");
+			//Save doc as text in Database
+			PdfDatabaseManager.saveDocAsText(docId, str_date, "", "", "", bodyText, "Office Order", "Unread");
+		} else if (userSelection == JFileChooser.CANCEL_OPTION) {
+			System.out.println("Save command canceled by user.");
+		}
+		JOptionPane.showMessageDialog(null, "Document Successfully Saved & Submitted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+		this.setVisible(false);
+
+		Home_Admin object = new Home_Admin();
+		object.setVisible(true);
+    }//GEN-LAST:event_submitBtnMouseClicked
 
 	/**
 	 * @param args the command line
@@ -389,5 +409,50 @@ public class Compose_Office_Order extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea noticeBody;
     private javax.swing.JButton previewBtn;
+    private javax.swing.JButton submitBtn;
     // End of variables declaration//GEN-END:variables
+
+	private String createPdf() {
+		String fileName = "NewOfficeOrder.pdf";
+		try {
+			PDDocument document = new PDDocument();
+			PDPage page = new PDPage(PDRectangle.A4);
+			document.addPage(page);
+
+			// adding header
+			PDFWithImages.addHeader(document, page);
+
+			// add Date
+			int yPos = (int) page.getMediaBox().getHeight() - 115;
+			int leftMargin = 68;
+			str_date = date.getText();
+			PDFWithImages.addLine(document, page, leftMargin, yPos, "তারিখঃ " + str_date);
+
+			PDFWithImages.addLine(document, page, 245, yPos - 60, 20, "অফিস আদেশ", 'b');
+
+			//Draw Underline 
+			PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
+			contentStream.moveTo(250, yPos - 55); // moves "pencil" to a position
+			contentStream.lineTo(345, yPos - 55);     // creates an invisible line to another position
+			contentStream.stroke();
+			contentStream.close();
+
+			//Body text
+			yPos = 640;
+			bodyText = noticeBody.getText();
+			PDFWithImages.addParagraph(document, page, yPos, bodyText);
+
+			//Designation
+			yPos -= 60;
+			PDFWithImages.addDesignation(document, page, yPos);
+
+			document.save(fileName);
+			document.close();
+		} catch (IOException ex) {
+			Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (Exception ex) {
+			Logger.getLogger(Compose_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return fileName;
+	}
 }

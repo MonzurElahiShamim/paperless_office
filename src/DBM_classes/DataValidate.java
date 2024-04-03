@@ -38,14 +38,14 @@ public class DataValidate {
         }
     }
 
-    public static void validateStudentData(String fName, String lName, String father, String mobile, String stId,
+    public static void validateStudentData(String nameEn, String nameBn, String fatherEn, String fatherBn, String mobile, String stId,
             String session, String instEmail, String personEmail, String password1, String password2) {
 
         // Format: Three uppercase letters, two digits, two digits, three digits, 'M' or 'F'
         String stIdRegex = "^[A-Z]{3}\\d{2}\\d{2}\\d{3}[MF]$";
 
         // Check if any of the required fields are empty
-        if (fName.equals("") || lName.equals("") || father.equals("") || mobile.equals("") || stId.equals("")
+        if (nameEn.equals("") || nameBn.equals("") || fatherEn.equals("") || fatherBn.equals("") || mobile.equals("") || stId.equals("")
                 || session.equals("") || (instEmail.equals("") && personEmail.equals("")) || password1.equals("")
                 || password2.equals("")) {
             JOptionPane.showMessageDialog(null, "Fill up all fields");
@@ -75,7 +75,7 @@ public class DataValidate {
             JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long.");
         } // If all validations pass, insert data into the database
         else {
-            DatabaseOperations.insertDataIntoDatabase(stId, fName, lName, father, mobile, session, instEmail, personEmail, password1);
+            DatabaseOperations.insertDataIntoDatabase(stId, nameEn, nameBn, fatherEn, fatherBn, mobile, session, instEmail, personEmail, password1);
         }
 
     }

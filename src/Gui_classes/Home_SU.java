@@ -1,8 +1,5 @@
 package Gui_classes;
 
-
-
-
 import Other.NotificationListCellRenderer;
 import Other.Notification;
 import DBM_classes.PdfDatabaseManager;
@@ -23,67 +20,86 @@ import javax.swing.DefaultListModel;
  */
 public class Home_SU extends javax.swing.JFrame {
 
-    private DefaultListModel<Notification> listModel;
-    private List<Notification> notifications; 
+	private DefaultListModel<Notification> listModel;
+	private List<Notification> notifications;
 
-    public Home_SU() {
-        this.notifications = getNotifications();
-        listModel = new DefaultListModel<>();
+	public Home_SU() {
+		this.notifications = getNotifications();
+		listModel = new DefaultListModel<>();
 
-        // Add notifications to the list model
-        for (Notification notification : notifications) {
-            listModel.addElement(notification);
-        }
-        initComponents();
-        notificationList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                if (evt.getClickCount() == 2) {
-                    int index = notificationList.locationToIndex(evt.getPoint());
-                    Notification selectedNotification = listModel.getElementAt(index);
-                    System.out.println(selectedNotification.getPdfName() + " is Selected.");
-                    PdfDatabaseManager.retrievePdfFromDatabase(selectedNotification.getPdfId(), selectedNotification.getFilePath());
-                    String fileName = selectedNotification.getFilePath();
-		    
-                    Approval object = new Approval(fileName);
-                    object.setVisible(true);
-		    setVisible(false);
-                }
-            }
-        });
-    }
+		// Add notifications to the list model
+		for (Notification notification : notifications) {
+			listModel.addElement(notification);
+		}
+		initComponents();
+		notificationList.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				if (evt.getClickCount() == 2) {
+					int index = notificationList.locationToIndex(evt.getPoint());
+					Notification selectedNotification = listModel.getElementAt(index);
+					System.out.println(selectedNotification.getPdfName() + " is Selected.");
+					PdfDatabaseManager.retrievePdfFromDatabase(selectedNotification.getPdfId(), selectedNotification.getFilePath());
+					String fileName = selectedNotification.getFilePath();
 
-    public List<Notification> getNotifications() {
-        List<Notification> notifications = new ArrayList<>();
+					int docId = selectedNotification.getPdfId();
+					String[] docInfo = PdfDatabaseManager.retrieveDocAsText(docId);
+					if (docInfo[5].equals("letter")) {
+						Preview_Letter object = new Preview_Letter(docId);
+						object.setVisible(true);
+					} else if (docInfo[5].equals("Notice")) {
+						Preview_Notice object = new Preview_Notice(docId);
+						object.setVisible(true);
+					} else if (docInfo[5].equals("Office Order")) {
+						Preview_Office_Order object = new Preview_Office_Order(docId);
+						object.setVisible(true);
+					} else {
+						Approval object = new Approval(fileName);
+						object.setVisible(true);
+					}
 
-        try (Connection connection = databaseConnection.connection()) {
-            String sql = "SELECT pdf_id, file_path, pdf_name, create_time, type FROM pdf_storage WHERE status = 'unread'";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        int pdfId = resultSet.getInt("pdf_id");
-                        String filePath = resultSet.getString("file_path");
-                        String pdfName = resultSet.getString("pdf_name");
-                        Timestamp createTime = resultSet.getTimestamp("create_time");
-                        String type = resultSet.getString("type");
+					//                    Approval object = new Approval(fileName);
+					//                    object.setVisible(true);
+					setVisible(false);
+				}
+			}
+		});
+	}
 
-                        Notification notification = new Notification(pdfId, filePath, pdfName, createTime, type);
-                        notifications.add(notification);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+	public List<Notification> getNotifications() {
+		List<Notification> notifications = new ArrayList<>();
 
-        return notifications;
-    }
+		try (Connection connection = databaseConnection.connection()) {
+			String sql = "SELECT pdf_id, file_path, pdf_name, create_time, type FROM pdf_storage WHERE status = 'unread'";
+			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				try (ResultSet resultSet = statement.executeQuery()) {
+					while (resultSet.next()) {
+						int pdfId = resultSet.getInt("pdf_id");
+						String filePath = resultSet.getString("file_path");
+						String pdfName = resultSet.getString("pdf_name");
+						Timestamp createTime = resultSet.getTimestamp("create_time");
+						String type = resultSet.getString("type");
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
+						Notification notification = new Notification(pdfId, filePath, pdfName, createTime, type);
+						notifications.add(notification);
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return notifications;
+	}
+
+	/**
+	 * This method is called from within
+	 * the constructor to initialize the
+	 * form. WARNING: Do NOT modify this
+	 * code. The content of this method
+	 * is always regenerated by the Form
+	 * Editor.
+	 */
+	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -241,46 +257,47 @@ public class Home_SU extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logoutBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutBtnMouseClicked
-        dispose();
-        UserSession.getInstance().clearSession();
-        Login object = new Login();
-        object.setVisible(true);
+		dispose();
+		UserSession.getInstance().clearSession();
+		Login object = new Login();
+		object.setVisible(true);
     }//GEN-LAST:event_logoutBtnMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+	/**
+	 * @param args the command line
+	 * arguments
+	 */
+	public static void main(String args[]) {
+		/* Set the Nimbus look and feel */
+		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Home_SU.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Home_SU.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Home_SU.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Home_SU.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+		 */
+		try {
+			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+				if ("Windows".equals(info.getName())) {
+					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (ClassNotFoundException ex) {
+			java.util.logging.Logger.getLogger(Home_SU.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		} catch (InstantiationException ex) {
+			java.util.logging.Logger.getLogger(Home_SU.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		} catch (IllegalAccessException ex) {
+			java.util.logging.Logger.getLogger(Home_SU.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+			java.util.logging.Logger.getLogger(Home_SU.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		}
+		//</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Home_SU().setVisible(true);
-            }
-        });
-    }
+		/* Create and display the form */
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				new Home_SU().setVisible(true);
+			}
+		});
+	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

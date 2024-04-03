@@ -66,6 +66,11 @@ public class pdf_Preview extends javax.swing.JDialog {
 		this.oldFilePath = fileName;
 		this.userType = userType;
 		initComponents();
+		if(userType.equals("admin")){
+			submitBtn.setVisible(false);
+			correctionBtn.setVisible(false);
+			//backBtn.setVisible(false);
+		}
 		openpdf(fileName);
 	}
 
@@ -136,9 +141,9 @@ public class pdf_Preview extends javax.swing.JDialog {
                 .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(correctionBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 506, Short.MAX_VALUE)
                 .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(499, Short.MAX_VALUE))
+                .addContainerGap())
             .addComponent(jScrollPane2)
         );
 
@@ -198,56 +203,56 @@ public class pdf_Preview extends javax.swing.JDialog {
 			this.setVisible(false);
 			Home_Stu object = new Home_Stu();
 			object.setVisible(true);
-		} else {
-			// Create a file chooser
-			JFileChooser fileChooser = new JFileChooser();
-
-			// Set the file filter to restrict to specific format (e.g., PDF)
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF Files (*.pdf)", "pdf");
-			fileChooser.setFileFilter(filter);
-
-			// Show the save dialog
-			int userSelection = fileChooser.showSaveDialog(null);
-
-			if (userSelection == JFileChooser.APPROVE_OPTION) {
-				File fileToSave = fileChooser.getSelectedFile();
-				// Ensure the file has the correct extension
-				String savePath = fileToSave.getAbsolutePath();
-
-				if (!savePath.toLowerCase().endsWith(".pdf")) {
-					savePath = savePath + ".pdf";
-					fileToSave = new File(savePath);
-				}
-
-				try {
-					File pdfToSave = new File(oldFilePath);
-					PDDocument document = PDDocument.load(pdfToSave);
-					document.save(fileToSave);
-					document.close();
-				} catch (IOException ex) {
-					Logger.getLogger(pdf_Preview.class.getName()).log(Level.SEVERE, null, ex);
-				}
-				System.out.println("Save as file: " + savePath);
-				String pdfType = "";
-				if (callerClassName.equals("Gui_classes.Compose_Notice")) {
-					pdfType = "Notice";
-				} else if (callerClassName.equals("Gui_classes.Compose_Letter")) {
-					pdfType = "Letter";
-				} else if (callerClassName.equals("Gui_classes.Compose_Office_Order")) {
-					pdfType = "Office Order";
-				} else if (callerClassName.equals("Gui_classes.ComposeApplicationMarksheet")) {
-					pdfType = "Marksheet Application";
-				}
-				System.out.println("Pdf type is: " + pdfType);
-				PdfDatabaseManager.savePDFToDatabase(savePath, pdfType, "Unread");
-			} else if (userSelection == JFileChooser.CANCEL_OPTION) {
-				System.out.println("Save command canceled by user.");
-			}
-			JOptionPane.showMessageDialog(null, "Document Successfully Saved & Submitted!", "Success", JOptionPane.INFORMATION_MESSAGE);
-			this.setVisible(false);
-
-			Home_Admin object = new Home_Admin();
-			object.setVisible(true);
+//		} else {
+//			// Create a file chooser
+//			JFileChooser fileChooser = new JFileChooser();
+//
+//			// Set the file filter to restrict to specific format (e.g., PDF)
+//			FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF Files (*.pdf)", "pdf");
+//			fileChooser.setFileFilter(filter);
+//
+//			// Show the save dialog
+//			int userSelection = fileChooser.showSaveDialog(null);
+//
+//			if (userSelection == JFileChooser.APPROVE_OPTION) {
+//				File fileToSave = fileChooser.getSelectedFile();
+//				// Ensure the file has the correct extension
+//				String savePath = fileToSave.getAbsolutePath();
+//
+//				if (!savePath.toLowerCase().endsWith(".pdf")) {
+//					savePath = savePath + ".pdf";
+//					fileToSave = new File(savePath);
+//				}
+//
+//				try {
+//					File pdfToSave = new File(oldFilePath);
+//					PDDocument document = PDDocument.load(pdfToSave);
+//					document.save(fileToSave);
+//					document.close();
+//				} catch (IOException ex) {
+//					Logger.getLogger(pdf_Preview.class.getName()).log(Level.SEVERE, null, ex);
+//				}
+//				System.out.println("Save as file: " + savePath);
+//				String pdfType = "";
+//				if (callerClassName.equals("Gui_classes.Compose_Notice")) {
+//					pdfType = "Notice";
+//				} else if (callerClassName.equals("Gui_classes.Compose_Letter")) {
+//					pdfType = "Letter";
+//				} else if (callerClassName.equals("Gui_classes.Compose_Office_Order")) {
+//					pdfType = "Office Order";
+//				} else if (callerClassName.equals("Gui_classes.ComposeApplicationMarksheet")) {
+//					pdfType = "Marksheet Application";
+//				}
+//				System.out.println("Pdf type is: " + pdfType);
+//				PdfDatabaseManager.savePDFToDatabase(savePath, pdfType, "Unread");
+//			} else if (userSelection == JFileChooser.CANCEL_OPTION) {
+//				System.out.println("Save command canceled by user.");
+//			}
+//			JOptionPane.showMessageDialog(null, "Document Successfully Saved & Submitted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+//			this.setVisible(false);
+//
+//			Home_Admin object = new Home_Admin();
+//			object.setVisible(true);
 		}
 
     }//GEN-LAST:event_submitBtnMouseClicked
@@ -258,7 +263,8 @@ public class pdf_Preview extends javax.swing.JDialog {
     }//GEN-LAST:event_correctionBtnMouseClicked
 
     private void backBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backBtnMouseClicked
-
+		this.setVisible(false); // Close the preview dialog
+		parentFrame.setEnabled(true); // Enable the caller frame
     }//GEN-LAST:event_backBtnMouseClicked
 
 	/**
