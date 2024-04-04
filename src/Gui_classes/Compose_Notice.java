@@ -1,7 +1,8 @@
 package Gui_classes;
 
 import DBM_classes.PdfDatabaseManager;
-import Test_classes.PDFWithImages;
+import static Other.Utility.loadCustomFont;
+import Other.PDFWithImages;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
@@ -31,7 +32,9 @@ public class Compose_Notice extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
-	
+	String fontPath = "Fonts/Nikosh.ttf";
+	Font customFont = loadCustomFont(fontPath, 18);
+	Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 	//Variables for document
 	String str_date;
 	String bodyText;
@@ -245,9 +248,6 @@ public class Compose_Notice extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void modifyValues() {
-		String fontPath = "E:/FONTS/Nikosh.ttf";
-		Font customFont = loadCustomFont(fontPath, 18);
-		Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 
 		jLabel2.setFont(customFont);
 		jLabel2.setText("তারিখঃ");
@@ -261,24 +261,6 @@ public class Compose_Notice extends javax.swing.JFrame {
 		designation.setFont(customFont);
 	}
 
-	private static Font loadCustomFont(String fontPath, float fontSize) {
-		try {
-			return Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(fontSize);
-		} catch (IOException | FontFormatException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private static Font loadCustomFont(String fontPath, int fontSize, int fontStyle) {
-		try {
-			Font baseFont = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath));
-			return baseFont.deriveFont(fontStyle, fontSize);
-		} catch (IOException | FontFormatException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
     private void cancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelBtnMouseClicked
 		// TODO add your handling code here:
@@ -310,7 +292,7 @@ public class Compose_Notice extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelBtnActionPerformed
 
     private void submitBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitBtnMouseClicked
-		String fileName = createPdf();		
+		String fileName = createPdf();
 
 		// Create a file chooser
 		JFileChooser fileChooser = new JFileChooser();

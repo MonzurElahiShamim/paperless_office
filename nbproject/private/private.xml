@@ -6,7 +6,6 @@
             <file>file:/E:/PaperlessOffice/src/Test_classes/PDFWithImages.java</file>
             <file>file:/E:/PaperlessOffice/src/Gui_classes/Preview_Notice.java</file>
             <file>file:/E:/PaperlessOffice/src/DBM_classes/PdfDatabaseManager.java</file>
-            <file>file:/E:/PaperlessOffice/src/Other/UserSession.java</file>
             <file>file:/E:/PaperlessOffice/src/Gui_classes/Approval.java</file>
             <file>file:/E:/PaperlessOffice/src/Test_classes/Converter.java</file>
             <file>file:/E:/PaperlessOffice/src/DBM_classes/DataValidate.java</file>
@@ -25,6 +24,7 @@
             <file>file:/E:/PaperlessOffice/src/Gui_classes/ComposeProshongsha.java</file>
             <file>file:/E:/PaperlessOffice/src/Gui_classes/Preview_Office_Order.java</file>
             <file>file:/E:/PaperlessOffice/src/DBM_classes/databaseConnection.java</file>
+            <file>file:/E:/PaperlessOffice/src/Gui_classes/Compose_RemuBill.java</file>
             <file>file:/E:/PaperlessOffice/src/Gui_classes/Compose_Office_Order.java</file>
             <file>file:/E:/PaperlessOffice/src/Gui_classes/Login.java</file>
             <file>file:/E:/PaperlessOffice/src/Test_classes/TextToImage.java</file>

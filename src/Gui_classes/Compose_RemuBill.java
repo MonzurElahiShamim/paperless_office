@@ -1,7 +1,9 @@
 package Gui_classes;
 
 import DBM_classes.PdfDatabaseManager;
-import Test_classes.PDFWithImages;
+import static Other.Utility.loadCustomFont;
+import static Other.Utility.setCommonFont;
+import Other.PDFWithImages;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -42,7 +44,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 	 * Creates new form compose
 	 */
 	final int fontSize = 16;
-	final String fontPath = "E:/FONTS/Nikosh.ttf";
+	final String fontPath = "Fonts/Nikosh.ttf";
 	final Font customFont = loadCustomFont(fontPath, fontSize);
 	final Font boldCustomFont = loadCustomFont(fontPath, fontSize, Font.BOLD);
 	
@@ -93,7 +95,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jTextField7 = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        questionairLbl = new javax.swing.JLabel();
+        cat1Lbl = new javax.swing.JLabel();
         jTextField8 = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
@@ -134,7 +136,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel37 = new javax.swing.JLabel();
         jTextField19 = new javax.swing.JTextField();
         jLabel38 = new javax.swing.JLabel();
-        questionairLbl1 = new javax.swing.JLabel();
+        cat2Lbl = new javax.swing.JLabel();
         jTextField20 = new javax.swing.JTextField();
         jLabel39 = new javax.swing.JLabel();
         jTextField21 = new javax.swing.JTextField();
@@ -245,8 +247,8 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel13.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
         jLabel13.setText("Bold Label:");
 
-        questionairLbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
-        questionairLbl.setText("১. প্রশ্নপত্র প্রণয়ন:");
+        cat1Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
+        cat1Lbl.setText("১. প্রশ্নপত্র প্রণয়ন:");
 
         jTextField8.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jTextField8.setText("dept");
@@ -388,8 +390,8 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel38.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel38.setText("কোর্স কোড ।");
 
-        questionairLbl1.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
-        questionairLbl1.setText("2. প্রশ্নপত্র সমন্বয় সাধন:");
+        cat2Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
+        cat2Lbl.setText("২. প্রশ্নপত্র সমন্বয় সাধন:");
 
         jTextField20.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jTextField20.setText("dept");
@@ -449,7 +451,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                         .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel12))
-                                    .addComponent(questionairLbl)
+                                    .addComponent(cat1Lbl)
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
                                         .addGap(10, 10, 10)
                                         .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -534,7 +536,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel23))))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(questionairLbl1)
+                                        .addComponent(cat2Lbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -623,7 +625,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                     .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(16, 16, 16)
-                .addComponent(questionairLbl)
+                .addComponent(cat1Lbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
@@ -673,19 +675,19 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                     .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel38))
                 .addGap(18, 18, 18)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(questionairLbl1)
+                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel42))
+                    .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel41))
                     .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel39)
                         .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel40)
-                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel41)
-                            .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel42)))))
+                        .addComponent(jLabel40))
+                    .addComponent(cat2Lbl))
                 .addContainerGap(796, Short.MAX_VALUE))
         );
 
@@ -734,7 +736,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -749,53 +751,17 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void modifyValues() {
-//		String fontPath = "E:/FONTS/Nikosh.ttf";
-//		Font customFont = loadCustomFont(fontPath, 18);
-//		Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
-		setCommonFont(remuBillDoc,customFont);
-		billSerialNoLabel.setFont(customFont);
-		billSlNoTxt.setFont(customFont);
 		
-		questionairLbl.setFont(boldCustomFont);
-//		noticeBody.setFont(loadCustomFont(fontPath, 20));
-//		noticeBody.setText("এতদ্বারা");
+		// Setting custom font for all jLabel and jTextField
+		setCommonFont(remuBillDoc,customFont);
+		
+		// Setting custom Bold Font for some headings
+		cat1Lbl.setFont(boldCustomFont);
+		cat2Lbl.setFont(boldCustomFont);
+		
 
-		//designation.setFont(customFont);
-	}
-
-	private static Font loadCustomFont(String fontPath, float fontSize) {
-		try {
-			return Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(fontSize);
-		} catch (IOException | FontFormatException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private static Font loadCustomFont(String fontPath, int fontSize, int fontStyle) {
-		try {
-			Font baseFont = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath));
-			return baseFont.deriveFont(fontStyle, fontSize);
-		} catch (IOException | FontFormatException e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 	
-	public static void setCommonFont(JPanel panel, Font font) {
-        Component[] components = panel.getComponents();
-        for (Component comp : components) {
-            if (comp instanceof JLabel) {
-                JLabel label = (JLabel) comp;
-                label.setFont(font);
-            }else if (comp instanceof JTextField) {
-                JTextField textField = (JTextField) comp;
-                textField.setFont(font);
-            } else if (comp instanceof JPanel) {
-                setCommonFont((JPanel) comp, font); // Recursive call for nested panels
-            }
-        }
-    }
 
     private void cancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelBtnMouseClicked
 		// TODO add your handling code here:
@@ -936,6 +902,8 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel billSerialNoLabel;
     private javax.swing.JTextField billSlNoTxt;
     private javax.swing.JButton cancelBtn;
+    private javax.swing.JLabel cat1Lbl;
+    private javax.swing.JLabel cat2Lbl;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1009,8 +977,6 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> msYear3;
     private javax.swing.JComboBox<String> msYear4;
     private javax.swing.JButton previewBtn;
-    private javax.swing.JLabel questionairLbl;
-    private javax.swing.JLabel questionairLbl1;
     private javax.swing.JPanel remuBillDoc;
     private javax.swing.JButton submitBtn;
     // End of variables declaration//GEN-END:variables

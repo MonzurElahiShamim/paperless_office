@@ -1,4 +1,4 @@
-package Test_classes;
+package Other;
 
 /**
  *

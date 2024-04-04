@@ -27,7 +27,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel1" pref="120" max="32767" attributes="0"/>
+              <Component id="jPanel1" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -166,7 +166,7 @@
                                                   <EmptySpace max="-2" attributes="0"/>
                                                   <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                              <Component id="questionairLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="cat1Lbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                               <Group type="102" alignment="0" attributes="0">
                                                   <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -257,7 +257,7 @@
                                                   </Group>
                                               </Group>
                                               <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="questionairLbl1" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="cat2Lbl" min="-2" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
                                                   <Component id="jTextField20" min="-2" pref="65" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
@@ -368,7 +368,7 @@
                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                          <Component id="questionairLbl" min="-2" max="-2" attributes="0"/>
+                          <Component id="cat1Lbl" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -422,22 +422,22 @@
                               <Component id="jLabel38" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="questionairLbl1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                  <Component id="jTextField23" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel42" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jTextField22" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel41" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jTextField20" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel39" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jTextField21" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel40" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" alignment="3" groupAlignment="3" attributes="0">
-                                      <Component id="jTextField22" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel41" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Group type="103" alignment="3" groupAlignment="3" attributes="0">
-                                          <Component id="jTextField23" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel42" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
                               </Group>
+                              <Component id="cat2Lbl" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="796" max="32767" attributes="0"/>
                       </Group>
@@ -649,7 +649,7 @@
                     <Property name="text" type="java.lang.String" value="Bold Label:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="questionairLbl">
+                <Component class="javax.swing.JLabel" name="cat1Lbl">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Siyam Rupali" size="11" style="1"/>
@@ -1029,12 +1029,12 @@
                     <Property name="text" type="java.lang.String" value="&#x995;&#x9cb;&#x9b0;&#x9cd;&#x9b8; &#x995;&#x9cb;&#x9a1; &#x964;"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="questionairLbl1">
+                <Component class="javax.swing.JLabel" name="cat2Lbl">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Siyam Rupali" size="11" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="2. &#x9aa;&#x9cd;&#x9b0;&#x9b6;&#x9cd;&#x9a8;&#x9aa;&#x9a4;&#x9cd;&#x9b0; &#x9b8;&#x9ae;&#x9a8;&#x9cd;&#x9ac;&#x9df; &#x9b8;&#x9be;&#x9a7;&#x9a8;:"/>
+                    <Property name="text" type="java.lang.String" value="&#x9e8;. &#x9aa;&#x9cd;&#x9b0;&#x9b6;&#x9cd;&#x9a8;&#x9aa;&#x9a4;&#x9cd;&#x9b0; &#x9b8;&#x9ae;&#x9a8;&#x9cd;&#x9ac;&#x9df; &#x9b8;&#x9be;&#x9a7;&#x9a8;:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="jTextField20">

@@ -2,7 +2,7 @@ package Gui_classes;
 
 import DBM_classes.PdfDatabaseManager;
 import DBM_classes.databaseConnection;
-import Test_classes.PDFWithImages;
+import Other.PDFWithImages;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.event.FocusEvent;
@@ -35,7 +35,7 @@ public class Preview_Letter extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
-	final String fontPath = "E:/FONTS/Nikosh.ttf";
+	final String fontPath = "Fonts/Nikosh.ttf";
 	final Font customFont = loadCustomFont(fontPath, 18);
 	final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 

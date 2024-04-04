@@ -1,6 +1,5 @@
-package Test_classes;
+package Other;
 
-import Test_classes.TextToImage;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;

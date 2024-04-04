@@ -4,7 +4,7 @@ import static DBM_classes.DatabaseOperations.retrieveUserDataFromDatabase;
 import DBM_classes.PdfDatabaseManager;
 import Other.UserInfo;
 import Other.UserSession;
-import Test_classes.Converter;
+import Other.Converter;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package Gui_classes;
 
 import DBM_classes.PdfDatabaseManager;
-import Test_classes.PDFWithImages;
+import Other.PDFWithImages;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
@@ -249,7 +249,7 @@ public class Preview_Notice extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void modifyValues(int docId) {
-		String fontPath = "E:/FONTS/Nikosh.ttf";
+		String fontPath = "Fonts/Nikosh.ttf";
 		Font customFont = loadCustomFont(fontPath, 18);
 		Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 

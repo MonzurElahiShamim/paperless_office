@@ -3,8 +3,9 @@ package Gui_classes;
 import static DBM_classes.DatabaseOperations.retrieveUserDataFromDatabase;
 import Other.UserInfo;
 import Other.UserSession;
-import Test_classes.Converter;
-import Test_classes.PDFWithImages;
+import static Other.Utility.loadCustomFont;
+import Other.Converter;
+import Other.PDFWithImages;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
@@ -33,24 +34,6 @@ public class ComposeProshongsha extends javax.swing.JFrame {
 	final Font customFont = loadCustomFont(fontPath, 18);
 	final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 
-	private static Font loadCustomFont(String fontPath, float fontSize) {
-		try {
-			return Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(fontSize);
-		} catch (IOException | FontFormatException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private static Font loadCustomFont(String fontPath, int fontSize, int fontStyle) {
-		try {
-			Font baseFont = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath));
-			return baseFont.deriveFont(fontStyle, fontSize);
-		} catch (IOException | FontFormatException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
 	public ComposeProshongsha() {
 		initComponents();
