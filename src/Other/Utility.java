@@ -9,10 +9,12 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
@@ -21,6 +23,11 @@ import javax.swing.UIManager;
  * @author Monzur Elahi Shamim
  */
 public class Utility {
+
+	final static int FONT_SIZE = 16;
+	public final static String NIKOSH_FONT_PATH = "Fonts/Nikosh.ttf";
+	public final static Font NIKOSH = loadCustomFont(NIKOSH_FONT_PATH, FONT_SIZE);
+	public final static Font NIKOSH_BOLD = loadCustomFont(NIKOSH_FONT_PATH, FONT_SIZE, Font.BOLD);
 
 	public static Font loadCustomFont(String fontPath, float fontSize) {
 		try {
@@ -83,4 +90,43 @@ public class Utility {
 
 	}
 
+	public static void createPlaceholderText(JTextArea textArea, String placeholder) {
+
+		// Set the placeholder text initially
+		textArea.setText(placeholder);
+		textArea.setForeground(UIManager.getColor("TextField.inactiveForeground"));
+
+		// Add focus listener to show/hide placeholder text
+		textArea.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (textArea.getText().equals(placeholder)) {
+					textArea.setText("");
+					textArea.setForeground(UIManager.getColor("TextField.foreground"));
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (textArea.getText().isEmpty()) {
+					textArea.setText(placeholder);
+					textArea.setForeground(UIManager.getColor("TextField.inactiveForeground"));
+				}
+			}
+		});
+
+	}
+
+	public static void setMaxInputLength(JTextArea textArea, java.awt.event.KeyEvent evt, int maxInputLength) {
+		if (evt.getKeyChar() == '\n') {
+			textArea.setText(textArea.getText().substring(0, textArea.getText().length()-1));
+		}
+		int InputLength = maxInputLength;
+		if (textArea.getText().length() >= InputLength) {
+			evt.consume(); // Ignore the key event if the limit is reached
+			textArea.setText(textArea.getText().substring(0, InputLength));
+		}
+		textArea.setText(textArea.getText().replace("\n", " "));
+		
+	}
 }

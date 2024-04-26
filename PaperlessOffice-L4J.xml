@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>E:\PaperlessOffice\dist\PaperlessOffice.jar</jar>
+  <outfile>E:\PaperlessOffice\dist\PaperlessOffice.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon>E:\PaperlessOffice\PaperlessOffice-Icon1.ico</icon>
+  <singleInstance>
+    <mutexName>Paperless Office</mutexName>
+    <windowTitle>Paperless Office</windowTitle>
+  </singleInstance>
+  <classPath>
+    <mainClass>Gui_classes.login</mainClass>
+    <cp>lib/icepdf-core-4.3.3.jar</cp>
+    <cp>lib/icepdf-viewer-4.3.3.jar</cp>
+    <cp>lib/dom4j-1.6.1.jar</cp>
+    <cp>lib/poi-3.9-20121203.jar</cp>
+    <cp>lib/poi-ooxml-3.9-20121203.jar</cp>
+    <cp>lib/poi-ooxml-schemas-3.9-20121203.jar</cp>
+    <cp>lib/xmlbeans-3.1.0.jar</cp>
+    <cp>lib/pdfbox-2.0.28.jar</cp>
+    <cp>lib/commons-logging-1.2.jar</cp>
+    <cp>lib/fontbox-2.0.28.jar</cp>
+    <cp>lib/AbsoluteLayout.jar</cp>
+    <cp>lib/pdfbox-2.0.28.jar</cp>
+    <cp>lib/fontbox-2.0.28.jar</cp>
+    <cp>lib/commons-logging-1.2.jar</cp>
+    <cp>lib/pdfbox-3.0.0-alpha3-javadoc.jar</cp>
+    <cp>lib/commons-logging-1.2.jar</cp>
+    <cp>lib/fontbox-2.0.28.jar</cp>
+    <cp>lib/pdfbox-2.0.28.jar</cp>
+    <cp>lib/mysql-connector-j-8.3.0.jar</cp>
+  </classPath>
+  <jre>
+    <path>%JAVA_HOME%;%PATH%</path>
+    <requiresJdk>false</requiresJdk>
+    <requires64Bit>false</requires64Bit>
+    <minVersion>1.8.0</minVersion>
+    <maxVersion></maxVersion>
+  </jre>
+</launch4jConfig>

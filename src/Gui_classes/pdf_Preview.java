@@ -1,7 +1,8 @@
 package Gui_classes;
 
-import static DBM_classes.DatabaseOperations.retrieveUserDataFromDatabase;
-import DBM_classes.PdfDatabaseManager;
+import Gui_classes.Student.Home_Stu;
+import static DB_classes.DatabaseOperations.retrieveUserDataFromDatabase;
+import DB_classes.PdfDatabaseManager;
 import Other.UserInfo;
 import Other.UserSession;
 import Other.Converter;
@@ -66,10 +67,12 @@ public class pdf_Preview extends javax.swing.JDialog {
 		this.oldFilePath = fileName;
 		this.userType = userType;
 		initComponents();
-		if(userType.equals("admin")){
+		if(userType.equals("admin") || userType.equals("student")){
 			submitBtn.setVisible(false);
 			correctionBtn.setVisible(false);
 			//backBtn.setVisible(false);
+		}else if(userType.equals("studen")){
+			submitBtn.setText("Apply");
 		}
 		openpdf(fileName);
 	}
@@ -320,7 +323,10 @@ public class pdf_Preview extends javax.swing.JDialog {
 				new org.icepdf.ri.common.MyAnnotationCallback(
 					control.getDocumentViewController()));
 			control.openDocument(file);
-			control.getDocumentViewController().setZoom(1.72f);
+//			control.getDocumentViewController().setZoom(1.72f);
+			control.getDocumentViewController().setViewType(2);
+			control.getDocumentViewController().setFitMode(4);
+			
 			// Set the preferred size of the viewerCompntpnl
 			viewerCompntpnl.setPreferredSize(new Dimension(800, 600));
 

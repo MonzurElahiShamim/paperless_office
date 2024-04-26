@@ -48,7 +48,7 @@ public class TextToImage {
 		Graphics2D tempG = tempImage.createGraphics();
 		tempG.setFont(font);
 		FontMetrics metrics = tempG.getFontMetrics();
-
+		
 		// Calculate text dimensions with padding
 		int padding = 15; // Adjust the padding as needed
 		int textWidth = metrics.stringWidth(text) + 2 * padding;

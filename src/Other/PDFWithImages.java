@@ -96,13 +96,30 @@ public class PDFWithImages {
 	}
 	public static void drawLine(PDDocument document, PDPage page, int x1, int y1, int x2, int y2, Color color, float thickness) throws IOException {
 		PDPageContentStream contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, true, true);
-		    contentStream.moveTo(x1, y1); // moves "pencil" to a position
+		    contentStream.moveTo(x1, y1);   // moves "pencil" to a position
 		    contentStream.lineTo(x2, y2);     // creates an invisible line to another position
 		    contentStream.setStrokingColor(color);
 		    contentStream.setLineWidth(thickness);
 		    contentStream.stroke();
 		    contentStream.close();
 	}
+	public static void drawRect(PDDocument document, PDPage page, int x1, int y1, int x2, int y2) throws IOException {
+		Color color = Color.BLACK;
+		float thickness = 1.0f;
+		drawRect(document, page, x1, y1, x2, y2, color, thickness);
+	}
+	
+	public static void drawRect(PDDocument document, PDPage page, int x1, int y1, int x2, int y2, float thickness) throws IOException {
+		Color color = Color.BLACK;
+		drawRect(document, page, x1, y1, x2, y2, color, thickness);
+	}
+	
+	public static void drawRect(PDDocument document, PDPage page, int x1, int y1, int x2, int y2, Color color, float thickness) throws IOException {
+		drawLine(document, page, x1, y1, x2, y1, color, thickness); // top edge
+		drawLine(document, page, x1, y1, x1, y2, color, thickness); // left edge
+		drawLine(document, page, x2, y1, x2, y2, color, thickness); // right edge
+		drawLine(document, page, x1, y2, x2, y2, color, thickness); // top edge
+	}	
 
 	public static void addHeader(PDDocument document, PDPage page) throws Exception {
 
@@ -141,6 +158,41 @@ public class PDFWithImages {
 		// Make sure that the content stream is closed:
 		contentStream.close();
 	}
+	
+	public static void addRemuHeader(PDDocument document, PDPage page) throws Exception {
+
+		// Start a new content stream which will "hold" the to be created content
+		PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+		//A4: Height=841, Width=595
+		int yPos = (int) page.getMediaBox().getHeight() - 30;
+		int pageWidth = (int) page.getMediaBox().getWidth();
+
+		//create image object for NSTU Logo
+		PDImageXObject image1 = PDImageXObject.createFromFile("src\\Photos\\nstu_logo.png", document);
+		contentStream.drawImage(image1, 45, yPos - 25, 40, 50); // nstu logo
+
+		// University Name
+		addLine(document, page, 110, yPos-5, 14, "নোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়", 'B');
+		addLine(document, page, 110, yPos - 15, 8, "Noakhali Science and Technology University", 'B');
+		addLine(document, page, 160, yPos - 27, 8, "সোনাপুর, নোয়াখালী-৩৮১৪", 'B');
+
+		// Contacts
+		addLine(document, page, 335, yPos , 7, "Mobile: 01811 150935");
+		addLine(document, page, 335, yPos - 13, 7, "Email: info.nstu.edu.bd");
+		addLine(document, page, 335, yPos - 26, 7, "Website: www.nstu.edu.bd");
+
+		// Department Name
+		addLine(document, page, 460, yPos - 15, 15, "পরীক্ষা নিয়ন্ত্রক দপ্তর", 'B');
+
+		//Draw horizontal Line
+		contentStream.moveTo(25, yPos - 30); // moves "pencil" to a position
+		contentStream.lineTo(pageWidth - 25, yPos - 30);     // creates an invisible line to another position
+		contentStream.stroke();
+
+		// Make sure that the content stream is closed:
+		contentStream.close();
+	}
 
 	//public static void drawLine(int xStart, int yStart, int xEnd, int yEnd){}
 	public static void addDesignation(PDDocument document, PDPage page, int yPos) throws Exception {
@@ -156,12 +208,20 @@ public class PDFWithImages {
 	}
 
 	public static int addParagraph(PDDocument document, PDPage page, int yPos, String text) throws Exception {
+		int startY;
+		int marginX = 68;
+		float fontSize = 12f;
+		startY = addParagraph(document, page, marginX, yPos,fontSize, text);
+		return startY;
+	}
+	
+	public static int addParagraph(PDDocument document, PDPage page, int xPos, int yPos, float fontSize, String text) throws Exception {
 		float startY = yPos;
+		float marginX = xPos;
 		try {
 			PDPageContentStream contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, true, true);
 			PDRectangle mediaBox = page.getMediaBox();
 
-			float marginX = 68;
 			int widthAdjust = 20;
 			float width = mediaBox.getWidth() - 2 * marginX;
 			float startX = mediaBox.getLowerLeftX() + marginX;
@@ -174,11 +234,11 @@ public class PDFWithImages {
 			contentStream.setFont(FONT, FONT_SIZE);
 
 			for (String paragraph : paragraphs) {
-				java.util.List<String> lines = parseLines(paragraph, width - widthAdjust);
+				java.util.List<String> lines = parseLines(paragraph, width - widthAdjust, fontSize);
 				for (String line : lines) {
 					// Create an image from the text
 					BufferedImage image = TextToImage.generateImage(line);
-					float imageScaleFactor = 5;
+					float imageScaleFactor = 60f/fontSize;
 					int lineWidth = (int) (image.getWidth() / imageScaleFactor);
 					int lineHeight = (int) (image.getHeight() / imageScaleFactor);
 					if (Math.abs(lineWidth - width) < 30) {
@@ -201,8 +261,9 @@ public class PDFWithImages {
 		}
 		return (int) startY;
 	}
+	
 
-	private static java.util.List<String> parseLines(String text, float width) throws IOException, FontFormatException {
+	private static java.util.List<String> parseLines(String text, float width, float fontSize) throws IOException, FontFormatException {
 		java.util.List<String> lines = new ArrayList<>();
 		String[] words = text.split("\\s+");
 
@@ -210,7 +271,7 @@ public class PDFWithImages {
 		float currentWidth = 0;
 
 		for (String word : words) {
-			float wordWidth = getStringWidth(word);
+			float wordWidth = getStringWidth(word, fontSize);
 
 			if (currentWidth + wordWidth <= width) {
 				currentLine.append(word).append(" ");
@@ -229,9 +290,9 @@ public class PDFWithImages {
 	}
 
 // Helper method to get the width of a string
-	private static int getStringWidth(String str) throws FontFormatException, IOException {
+	private static int getStringWidth(String str, float fontSize) throws FontFormatException, IOException {
 		String fontPath = "Fonts/Nikosh.ttf";
-		Font font = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(Font.PLAIN, 12);
+		Font font = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(Font.PLAIN, fontSize);
 
 		// Get font metrics to calculate text size
 		BufferedImage tempImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
