@@ -25,9 +25,14 @@ import javax.swing.UIManager;
 public class Utility {
 
 	final static int FONT_SIZE = 16;
+	//Nikosh Font
 	public final static String NIKOSH_FONT_PATH = "Fonts/Nikosh.ttf";
 	public final static Font NIKOSH = loadCustomFont(NIKOSH_FONT_PATH, FONT_SIZE);
 	public final static Font NIKOSH_BOLD = loadCustomFont(NIKOSH_FONT_PATH, FONT_SIZE, Font.BOLD);
+	
+	public final static String SOLAIMANLIPI_FONT_PATH = "Fonts/SolaimanLipi_22-02-2012.ttf";
+	public final static Font SOLAIMANLIPI = loadCustomFont(SOLAIMANLIPI_FONT_PATH, FONT_SIZE);
+	public final static Font SOLAIMANLIPI_BOLD = loadCustomFont(SOLAIMANLIPI_FONT_PATH, FONT_SIZE, Font.BOLD);
 
 	public static Font loadCustomFont(String fontPath, float fontSize) {
 		try {
@@ -128,5 +133,25 @@ public class Utility {
 		}
 		textArea.setText(textArea.getText().replace("\n", " "));
 		
+	}
+	
+	public static void deleteFile(String filePath) {
+		// Create a File object representing the file to be deleted
+		File fileToDelete = new File(filePath);
+
+		// Check if the file exists before attempting to delete
+		if (fileToDelete.exists()) {
+			// Attempt to delete the file
+			boolean deletionResult = fileToDelete.delete();
+
+			// Check if the file was successfully deleted
+			if (deletionResult) {
+				System.out.println("File deleted successfully.");
+			} else {
+				System.out.println("Failed to delete the file.");
+			}
+		} else {
+			System.out.println("File does not exist.");
+		}
 	}
 }

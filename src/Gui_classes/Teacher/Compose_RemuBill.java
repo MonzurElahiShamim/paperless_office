@@ -1,18 +1,30 @@
 package Gui_classes.Teacher;
 
 import DB_classes.PdfDatabaseManager;
+import DB_classes.databaseConnection;
 import Gui_classes.Admin.Home_Admin;
 import Gui_classes.pdf_Preview;
 import Other.Converter;
+import static Other.Converter.toEnglishNumerals;
 import static Other.Utility.loadCustomFont;
 import static Other.Utility.setCommonFont;
 import Other.PDFWithImages;
 import Other.Utility;
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -34,10 +46,20 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
-	final int fontSize = 16;
-	final String fontPath = "Fonts/Nikosh.ttf";
+	final int fontSize = 14;
+	final String fontPath = "Fonts/SolaimanLipi_22-02-2012.ttf";
 	final Font customFont = loadCustomFont(fontPath, fontSize);
-	final Font boldCustomFont = Utility.NIKOSH_BOLD;
+	final Font boldCustomFont = loadCustomFont(fontPath, fontSize, Font.BOLD);
+
+	// Variables For Document
+	String DeptName = "<exam name>";
+	String Session;
+	String ExamYear = "<exam year>";
+	String year;
+	String term;
+	int NoQ;
+	int NoAns;
+	int NoPrac;
 
 	public Compose_RemuBill() {
 		initComponents();
@@ -73,160 +95,65 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        examYear = new javax.swing.JComboBox<>();
-        examTerm = new javax.swing.JComboBox<>();
+        examYearCBx = new javax.swing.JComboBox<>();
+        examTermCBx = new javax.swing.JComboBox<>();
         session = new javax.swing.JTextField();
         calendarYear = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        startDate = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        endDate = new javax.swing.JTextField();
+        q1SlLbl = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         cat1Lbl = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        msYear1 = new javax.swing.JComboBox<>();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
-        jLabel22 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        msYear2 = new javax.swing.JComboBox<>();
-        jLabel25 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
-        jLabel26 = new javax.swing.JLabel();
-        jTextField12 = new javax.swing.JTextField();
-        jLabel27 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
-        jLabel28 = new javax.swing.JLabel();
-        jLabel29 = new javax.swing.JLabel();
-        msYear3 = new javax.swing.JComboBox<>();
-        jLabel30 = new javax.swing.JLabel();
-        jTextField14 = new javax.swing.JTextField();
-        jLabel31 = new javax.swing.JLabel();
-        jTextField15 = new javax.swing.JTextField();
-        jLabel32 = new javax.swing.JLabel();
-        jTextField16 = new javax.swing.JTextField();
-        jLabel33 = new javax.swing.JLabel();
-        jLabel34 = new javax.swing.JLabel();
-        msYear4 = new javax.swing.JComboBox<>();
-        jLabel35 = new javax.swing.JLabel();
-        jTextField17 = new javax.swing.JTextField();
-        jLabel36 = new javax.swing.JLabel();
-        jTextField18 = new javax.swing.JTextField();
-        jLabel37 = new javax.swing.JLabel();
-        jTextField19 = new javax.swing.JTextField();
-        jLabel38 = new javax.swing.JLabel();
+        q2SlLbl = new javax.swing.JLabel();
+        q3SlLbl = new javax.swing.JLabel();
+        q4SlLbl = new javax.swing.JLabel();
+        q1NoLbl = new javax.swing.JLabel();
+        q1hrCBx = new javax.swing.JComboBox<>();
+        q1DeptLbl = new javax.swing.JLabel();
+        q1SubLbl = new javax.swing.JLabel();
+        q1CrsCdLbl = new javax.swing.JLabel();
+        q2NoLbl = new javax.swing.JLabel();
+        q2hrCBx = new javax.swing.JComboBox<>();
+        q2DeptLbl = new javax.swing.JLabel();
+        q2SubLbl = new javax.swing.JLabel();
+        q2CrsCdLbl = new javax.swing.JLabel();
+        q3NoLbl = new javax.swing.JLabel();
+        q3hrCBx = new javax.swing.JComboBox<>();
+        q3DeptLbl = new javax.swing.JLabel();
+        q3SubLbl = new javax.swing.JLabel();
+        q3CrsCdLbl = new javax.swing.JLabel();
+        q4NoLbl = new javax.swing.JLabel();
+        q4hrCBx = new javax.swing.JComboBox<>();
+        q4DeptLbl = new javax.swing.JLabel();
+        q4SubLbl = new javax.swing.JLabel();
+        q4CrsCdLbl = new javax.swing.JLabel();
         cat2Lbl = new javax.swing.JLabel();
-        jTextField20 = new javax.swing.JTextField();
-        jLabel39 = new javax.swing.JLabel();
-        jTextField21 = new javax.swing.JTextField();
+        qAdj1DeptLbl = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
         jTextField22 = new javax.swing.JTextField();
         jLabel41 = new javax.swing.JLabel();
         jTextField23 = new javax.swing.JTextField();
         jLabel42 = new javax.swing.JLabel();
         cat3Lbl = new javax.swing.JLabel();
-        cat2Lbl2 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel43 = new javax.swing.JLabel();
-        msYear5 = new javax.swing.JComboBox<>();
-        jLabel44 = new javax.swing.JLabel();
-        jTextField24 = new javax.swing.JTextField();
-        jLabel45 = new javax.swing.JLabel();
-        jTextField25 = new javax.swing.JTextField();
-        jLabel46 = new javax.swing.JLabel();
-        jTextField26 = new javax.swing.JTextField();
-        jLabel47 = new javax.swing.JLabel();
-        jLabel48 = new javax.swing.JLabel();
-        jLabel54 = new javax.swing.JLabel();
-        jLabel60 = new javax.swing.JLabel();
-        jLabel66 = new javax.swing.JLabel();
-        jTextField39 = new javax.swing.JTextField();
-        jTextField40 = new javax.swing.JTextField();
-        jLabel49 = new javax.swing.JLabel();
-        msYear6 = new javax.swing.JComboBox<>();
-        jLabel50 = new javax.swing.JLabel();
-        jTextField27 = new javax.swing.JTextField();
-        jLabel51 = new javax.swing.JLabel();
-        jTextField28 = new javax.swing.JTextField();
-        jLabel52 = new javax.swing.JLabel();
-        jTextField29 = new javax.swing.JTextField();
-        jLabel53 = new javax.swing.JLabel();
-        jTextField41 = new javax.swing.JTextField();
-        jLabel55 = new javax.swing.JLabel();
-        msYear7 = new javax.swing.JComboBox<>();
-        jLabel56 = new javax.swing.JLabel();
-        jTextField30 = new javax.swing.JTextField();
-        jLabel57 = new javax.swing.JLabel();
-        jTextField31 = new javax.swing.JTextField();
-        jLabel58 = new javax.swing.JLabel();
-        jTextField32 = new javax.swing.JTextField();
-        jLabel59 = new javax.swing.JLabel();
-        jTextField42 = new javax.swing.JTextField();
-        jLabel61 = new javax.swing.JLabel();
-        msYear8 = new javax.swing.JComboBox<>();
-        jLabel62 = new javax.swing.JLabel();
-        jTextField33 = new javax.swing.JTextField();
-        jLabel63 = new javax.swing.JLabel();
-        jTextField34 = new javax.swing.JTextField();
-        jLabel64 = new javax.swing.JLabel();
-        jTextField35 = new javax.swing.JTextField();
-        jLabel65 = new javax.swing.JLabel();
-        jTextField43 = new javax.swing.JTextField();
-        jLabel67 = new javax.swing.JLabel();
-        msYear9 = new javax.swing.JComboBox<>();
-        jLabel68 = new javax.swing.JLabel();
-        jTextField36 = new javax.swing.JTextField();
-        jLabel69 = new javax.swing.JLabel();
-        jTextField37 = new javax.swing.JTextField();
-        jLabel70 = new javax.swing.JLabel();
-        jTextField38 = new javax.swing.JTextField();
-        jLabel71 = new javax.swing.JLabel();
-        cat2Lbl3 = new javax.swing.JLabel();
-        cat2Lbl4 = new javax.swing.JLabel();
-        cat2Lbl5 = new javax.swing.JLabel();
-        cat2Lbl6 = new javax.swing.JLabel();
-        jTextField44 = new javax.swing.JTextField();
-        jLabel72 = new javax.swing.JLabel();
-        jTextField45 = new javax.swing.JTextField();
-        jLabel73 = new javax.swing.JLabel();
-        jTextField46 = new javax.swing.JTextField();
-        jLabel74 = new javax.swing.JLabel();
-        jTextField47 = new javax.swing.JTextField();
-        jLabel75 = new javax.swing.JLabel();
-        jTextField53 = new javax.swing.JTextField();
-        jLabel80 = new javax.swing.JLabel();
-        jTextField54 = new javax.swing.JTextField();
-        jLabel81 = new javax.swing.JLabel();
+        cat4Lbl = new javax.swing.JLabel();
+        cat5Lbl = new javax.swing.JLabel();
+        cat6Lbl = new javax.swing.JLabel();
+        cat7Lbl = new javax.swing.JLabel();
+        cat8Lbl = new javax.swing.JLabel();
         jTextField55 = new javax.swing.JTextField();
         jLabel82 = new javax.swing.JLabel();
         jTextField56 = new javax.swing.JTextField();
         jLabel83 = new javax.swing.JLabel();
-        jTextField57 = new javax.swing.JTextField();
-        jLabel84 = new javax.swing.JLabel();
-        jTextField58 = new javax.swing.JTextField();
-        jLabel85 = new javax.swing.JLabel();
         jTextField59 = new javax.swing.JTextField();
         jLabel86 = new javax.swing.JLabel();
         jTextField60 = new javax.swing.JTextField();
         jLabel87 = new javax.swing.JLabel();
-        jTextField61 = new javax.swing.JTextField();
-        jLabel88 = new javax.swing.JLabel();
-        jTextField62 = new javax.swing.JTextField();
-        jLabel89 = new javax.swing.JLabel();
         jTextField63 = new javax.swing.JTextField();
         jLabel90 = new javax.swing.JLabel();
         jTextField64 = new javax.swing.JTextField();
         jLabel91 = new javax.swing.JLabel();
-        cat2Lbl7 = new javax.swing.JLabel();
-        cat2Lbl8 = new javax.swing.JLabel();
+        cat9Lbl = new javax.swing.JLabel();
+        cat10Lbl = new javax.swing.JLabel();
         jLabel76 = new javax.swing.JLabel();
         jLabel77 = new javax.swing.JLabel();
         jLabel78 = new javax.swing.JLabel();
@@ -234,6 +161,96 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jTextField66 = new javax.swing.JTextField();
         jTextField67 = new javax.swing.JTextField();
         deptSelection = new javax.swing.JComboBox<>();
+        NoOfQuestionaire = new javax.swing.JComboBox<>();
+        NoOfAnsSheet = new javax.swing.JComboBox<>();
+        testPanel = new javax.swing.JPanel();
+        prac1YrDeptLbl = new javax.swing.JLabel();
+        jLabel74 = new javax.swing.JLabel();
+        jTextField47 = new javax.swing.JTextField();
+        jLabel75 = new javax.swing.JLabel();
+        prac1CrsNmCBx = new javax.swing.JComboBox<>();
+        ans5Pnl = new javax.swing.JPanel();
+        ans5SlLbl = new javax.swing.JLabel();
+        ans5NoTB = new javax.swing.JTextField();
+        ans5TLbl = new javax.swing.JLabel();
+        ans5hrCBx = new javax.swing.JComboBox<>();
+        ans5DeptLbl = new javax.swing.JLabel();
+        ans5SubLbl = new javax.swing.JLabel();
+        ans5CrsCdLbl = new javax.swing.JLabel();
+        ans5CrsNmCBx = new javax.swing.JComboBox<>();
+        ans5CrsCdCBx = new javax.swing.JComboBox<>();
+        ans1Pnl = new javax.swing.JPanel();
+        ans1SlLbl = new javax.swing.JLabel();
+        ans1NoTB = new javax.swing.JTextField();
+        ans1TLbl = new javax.swing.JLabel();
+        ans1hrCBx = new javax.swing.JComboBox<>();
+        ans1DeptLbl = new javax.swing.JLabel();
+        ans1SubLbl = new javax.swing.JLabel();
+        ans1CrsCdLbl = new javax.swing.JLabel();
+        ans1CrsNmCBx = new javax.swing.JComboBox<>();
+        ans1CrsCdCBx = new javax.swing.JComboBox<>();
+        ans2Pnl = new javax.swing.JPanel();
+        ans2SlLbl = new javax.swing.JLabel();
+        ans2NoTB = new javax.swing.JTextField();
+        ans2TLbl = new javax.swing.JLabel();
+        ans2hrCBx = new javax.swing.JComboBox<>();
+        ans2DeptLbl = new javax.swing.JLabel();
+        ans2SubLbl = new javax.swing.JLabel();
+        ans2CrsCdLbl = new javax.swing.JLabel();
+        ans2CrsNmCBx = new javax.swing.JComboBox<>();
+        ans2CrsCdCBx = new javax.swing.JComboBox<>();
+        ans3Pnl = new javax.swing.JPanel();
+        ans3TLbl = new javax.swing.JLabel();
+        ans3hrCBx = new javax.swing.JComboBox<>();
+        ans3DeptLbl = new javax.swing.JLabel();
+        ans3SubLbl = new javax.swing.JLabel();
+        ans3CrsCdLbl = new javax.swing.JLabel();
+        ans3NoTB = new javax.swing.JTextField();
+        ans3SlLbl = new javax.swing.JLabel();
+        ans3CrsNmCBx = new javax.swing.JComboBox<>();
+        ans3CrsCdCBx = new javax.swing.JComboBox<>();
+        ans4Pnl = new javax.swing.JPanel();
+        ans4SlLbl = new javax.swing.JLabel();
+        ans4NoTB = new javax.swing.JTextField();
+        ans4TLbl = new javax.swing.JLabel();
+        ans4hrCBx = new javax.swing.JComboBox<>();
+        ans4DeptLbl = new javax.swing.JLabel();
+        ans4SubLbl = new javax.swing.JLabel();
+        ans4CrsCdLbl = new javax.swing.JLabel();
+        ans4CrsNmCBx = new javax.swing.JComboBox<>();
+        ans4CrsCdCBx = new javax.swing.JComboBox<>();
+        testPanel2 = new javax.swing.JPanel();
+        jLabel97 = new javax.swing.JLabel();
+        jTextField70 = new javax.swing.JTextField();
+        jLabel98 = new javax.swing.JLabel();
+        prac2YrDeptLbl = new javax.swing.JLabel();
+        prac2CrsNmCBx = new javax.swing.JComboBox<>();
+        testPanel4 = new javax.swing.JPanel();
+        jLabel105 = new javax.swing.JLabel();
+        jTextField68 = new javax.swing.JTextField();
+        jLabel106 = new javax.swing.JLabel();
+        prac3YrDeptLbl = new javax.swing.JLabel();
+        prac3CrsNmCBx = new javax.swing.JComboBox<>();
+        testPanel3 = new javax.swing.JPanel();
+        jLabel101 = new javax.swing.JLabel();
+        jTextField72 = new javax.swing.JTextField();
+        jLabel102 = new javax.swing.JLabel();
+        prac4YrDeptLbl = new javax.swing.JLabel();
+        prac4CrsNmCBx = new javax.swing.JComboBox<>();
+        q1CrsNmCBx = new javax.swing.JComboBox<>();
+        vivaYrDeptLbl = new javax.swing.JLabel();
+        resultYrDeptLbl = new javax.swing.JLabel();
+        ansInsYrDeptLbl = new javax.swing.JLabel();
+        q2CrsNmCBx = new javax.swing.JComboBox<>();
+        q3CrsNmCBx = new javax.swing.JComboBox<>();
+        q4CrsNmCBx = new javax.swing.JComboBox<>();
+        qAdj1CrsNmCBx = new javax.swing.JComboBox<>();
+        q1CrsCdCBx = new javax.swing.JComboBox<>();
+        q2CrsCdCBx = new javax.swing.JComboBox<>();
+        q3CrsCdCBx = new javax.swing.JComboBox<>();
+        q4CrsCdCBx = new javax.swing.JComboBox<>();
+        startDateChooser = new com.toedter.calendar.JDateChooser();
+        endDateChooser = new com.toedter.calendar.JDateChooser();
         submitBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -287,8 +304,8 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel5.setText("সনের পরীক্ষা সমূহের প্রশ্নপত্র প্রণয়ন সমন্বয় সাধন এবং উত্তরপত্র মূল্যায়ন ইত্যাদির জন্য আমার পারিশ্রমিকের দাবীসমূহ নিম্নে সন্নিবেশিত হলো:-");
 
-        teacherName.setFont(customFont);
-        teacherName.setText("স্সা");
+        teacherName.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        teacherName.setText("সাব্বির");
 
         teacherAddress.setFont(customFont);
 
@@ -301,30 +318,37 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel9.setText("শিক্ষাবর্ষ:");
 
-        examYear.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        examYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "১", "২", "৩", "৪" }));
-        examYear.addActionListener(new java.awt.event.ActionListener() {
+        examYearCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        examYearCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "১", "২", "৩", "৪" }));
+        examYearCBx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                examYearActionPerformed(evt);
+                examYearCBxActionPerformed(evt);
             }
         });
 
-        examTerm.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        examTerm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "১", "২" }));
+        examTermCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        examTermCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "১", "২" }));
+        examTermCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                examTermCBxActionPerformed(evt);
+            }
+        });
 
         session.setFont(customFont);
 
         calendarYear.setFont(customFont);
+        calendarYear.setText("2020");
+        calendarYear.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                calendarYearKeyReleased(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel10.setText("পরীক্ষা অনুষ্ঠানের তারিখ:");
 
-        startDate.setFont(customFont);
-
-        jLabel11.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel11.setText("ক.");
-
-        endDate.setFont(customFont);
+        q1SlLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q1SlLbl.setText("ক.");
 
         jLabel12.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel12.setText("পর্যন্ত");
@@ -332,157 +356,87 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         cat1Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
         cat1Lbl.setText("১. প্রশ্নপত্র প্রণয়ন:");
 
-        jTextField8.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField8.setText("dept");
-
         jLabel15.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel15.setText("থেকে");
 
-        jLabel16.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel16.setText("খ.");
+        q2SlLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q2SlLbl.setText("খ.");
 
-        jLabel17.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel17.setText("গ.");
+        q3SlLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q3SlLbl.setText("গ.");
 
-        jLabel18.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel18.setText("ঘ.");
+        q4SlLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q4SlLbl.setText("ঘ.");
 
-        jLabel19.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel19.setText("একটি");
+        q1NoLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q1NoLbl.setText("একটি");
 
-        msYear1.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        msYear1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        msYear1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msYear1ActionPerformed(evt);
-            }
-        });
+        q1hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q1hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+        q1hrCBx.setSelectedIndex(2);
 
-        jLabel20.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel20.setText("ঘন্টা:");
+        q1DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q1DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
 
-        jLabel21.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel21.setText("পরীক্ষার");
+        q1SubLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q1SubLbl.setText("বিষয়");
 
-        jTextField9.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField9.setText("course name");
+        q1CrsCdLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q1CrsCdLbl.setText("কোর্স কোড ।");
 
-        jLabel22.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel22.setText("বিষয়");
+        q2NoLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q2NoLbl.setText("একটি");
 
-        jTextField10.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField10.setText("course code");
+        q2hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q2hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+        q2hrCBx.setSelectedIndex(2);
 
-        jLabel23.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel23.setText("কোর্স কোড ।");
+        q2DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q2DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
 
-        jLabel24.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel24.setText("একটি");
+        q2SubLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q2SubLbl.setText("বিষয়");
 
-        msYear2.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        msYear2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        msYear2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msYear2ActionPerformed(evt);
-            }
-        });
+        q2CrsCdLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q2CrsCdLbl.setText("কোর্স কোড ।");
 
-        jLabel25.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel25.setText("ঘন্টা:");
+        q3NoLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q3NoLbl.setText("একটি");
 
-        jTextField11.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField11.setText("dept");
+        q3hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q3hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+        q3hrCBx.setSelectedIndex(2);
 
-        jLabel26.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel26.setText("পরীক্ষার");
+        q3DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q3DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
 
-        jTextField12.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField12.setText("course name");
+        q3SubLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q3SubLbl.setText("বিষয়");
 
-        jLabel27.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel27.setText("বিষয়");
+        q3CrsCdLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q3CrsCdLbl.setText("কোর্স কোড ।");
 
-        jTextField13.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField13.setText("course code");
+        q4NoLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q4NoLbl.setText("একটি");
 
-        jLabel28.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel28.setText("কোর্স কোড ।");
+        q4hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q4hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+        q4hrCBx.setSelectedIndex(2);
 
-        jLabel29.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel29.setText("একটি");
+        q4DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q4DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
 
-        msYear3.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        msYear3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        msYear3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msYear3ActionPerformed(evt);
-            }
-        });
+        q4SubLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q4SubLbl.setText("বিষয়");
 
-        jLabel30.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel30.setText("ঘন্টা:");
-
-        jTextField14.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField14.setText("dept");
-
-        jLabel31.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel31.setText("পরীক্ষার");
-
-        jTextField15.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField15.setText("course name");
-
-        jLabel32.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel32.setText("বিষয়");
-
-        jTextField16.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField16.setText("course code");
-
-        jLabel33.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel33.setText("কোর্স কোড ।");
-
-        jLabel34.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel34.setText("একটি");
-
-        msYear4.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        msYear4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        msYear4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msYear4ActionPerformed(evt);
-            }
-        });
-
-        jLabel35.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel35.setText("ঘন্টা:");
-
-        jTextField17.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField17.setText("dept");
-
-        jLabel36.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel36.setText("পরীক্ষার");
-
-        jTextField18.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField18.setText("course name");
-
-        jLabel37.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel37.setText("বিষয়");
-
-        jTextField19.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField19.setText("course code");
-
-        jLabel38.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel38.setText("কোর্স কোড ।");
+        q4CrsCdLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        q4CrsCdLbl.setText("কোর্স কোড ।");
 
         cat2Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
         cat2Lbl.setText("২. প্রশ্নপত্র সমন্বয় সাধন:");
 
-        jTextField20.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField20.setText("dept");
-
-        jLabel39.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel39.setText("পরীক্ষার");
-
-        jTextField21.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField21.setText("course name");
+        qAdj1DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        qAdj1DeptLbl.setText("<exam name> পরীক্ষার");
 
         jLabel40.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel40.setText("বিষয়");
@@ -502,238 +456,20 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         cat3Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
         cat3Lbl.setText("৩. ক্লাস টেস্ট/টার্ম পেপার/হোম ওয়ার্ক/এসাইনমেন্ট                 (বিবরণী সংযুক্ত)");
 
-        cat2Lbl2.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
-        cat2Lbl2.setText("৪. উত্তরপত্র মূল্যায়ন:");
+        cat4Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
+        cat4Lbl.setText("৪. উত্তরপত্র মূল্যায়ন:");
 
-        jLabel14.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel14.setText("ক.");
+        cat5Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
+        cat5Lbl.setText("৫. ব্যবহারিক পরীক্ষা:");
 
-        jLabel43.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel43.setText("টি");
+        cat6Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
+        cat6Lbl.setText("৬. মৌখিক পরীক্ষা:");
 
-        msYear5.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        msYear5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        msYear5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msYear5ActionPerformed(evt);
-            }
-        });
+        cat7Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
+        cat7Lbl.setText("৭. পরীক্ষার ফল সন্নিবেশ করণ:");
 
-        jLabel44.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel44.setText("ঘন্টা:");
-
-        jTextField24.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField24.setText("dept");
-
-        jLabel45.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel45.setText("পরীক্ষার");
-
-        jTextField25.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField25.setText("course name");
-
-        jLabel46.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel46.setText("বিষয়");
-
-        jTextField26.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField26.setText("course code");
-
-        jLabel47.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel47.setText("কোর্স কোড ।");
-
-        jLabel48.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel48.setText("খ.");
-
-        jLabel54.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel54.setText("গ.");
-
-        jLabel60.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel60.setText("ঘ.");
-
-        jLabel66.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel66.setText("ঙ.");
-
-        jTextField39.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-
-        jTextField40.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-
-        jLabel49.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel49.setText("টি");
-
-        msYear6.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        msYear6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        msYear6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msYear6ActionPerformed(evt);
-            }
-        });
-
-        jLabel50.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel50.setText("ঘন্টা:");
-
-        jTextField27.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField27.setText("dept");
-
-        jLabel51.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel51.setText("পরীক্ষার");
-
-        jTextField28.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField28.setText("course name");
-
-        jLabel52.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel52.setText("বিষয়");
-
-        jTextField29.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField29.setText("course code");
-
-        jLabel53.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel53.setText("কোর্স কোড ।");
-
-        jTextField41.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-
-        jLabel55.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel55.setText("টি");
-
-        msYear7.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        msYear7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        msYear7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msYear7ActionPerformed(evt);
-            }
-        });
-
-        jLabel56.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel56.setText("ঘন্টা:");
-
-        jTextField30.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField30.setText("dept");
-
-        jLabel57.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel57.setText("পরীক্ষার");
-
-        jTextField31.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField31.setText("course name");
-
-        jLabel58.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel58.setText("বিষয়");
-
-        jTextField32.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField32.setText("course code");
-
-        jLabel59.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel59.setText("কোর্স কোড ।");
-
-        jTextField42.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-
-        jLabel61.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel61.setText("টি");
-
-        msYear8.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        msYear8.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        msYear8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msYear8ActionPerformed(evt);
-            }
-        });
-
-        jLabel62.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel62.setText("ঘন্টা:");
-
-        jTextField33.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField33.setText("dept");
-
-        jLabel63.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel63.setText("পরীক্ষার");
-
-        jTextField34.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField34.setText("course name");
-
-        jLabel64.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel64.setText("বিষয়");
-
-        jTextField35.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField35.setText("course code");
-
-        jLabel65.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel65.setText("কোর্স কোড ।");
-
-        jTextField43.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-
-        jLabel67.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel67.setText("টি");
-
-        msYear9.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        msYear9.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        msYear9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msYear9ActionPerformed(evt);
-            }
-        });
-
-        jLabel68.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel68.setText("ঘন্টা:");
-
-        jTextField36.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField36.setText("dept");
-
-        jLabel69.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel69.setText("পরীক্ষার");
-
-        jTextField37.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField37.setText("course name");
-
-        jLabel70.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel70.setText("বিষয়");
-
-        jTextField38.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField38.setText("course code");
-
-        jLabel71.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel71.setText("কোর্স কোড ।");
-
-        cat2Lbl3.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
-        cat2Lbl3.setText("৫. ব্যাবহারিক পরীক্ষা:");
-
-        cat2Lbl4.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
-        cat2Lbl4.setText("৬. মৌখিক পরীক্ষা:");
-
-        cat2Lbl5.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
-        cat2Lbl5.setText("৭. পরীক্ষার ফল সন্নিবেশ করণ:");
-
-        cat2Lbl6.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
-        cat2Lbl6.setText("৮. উত্তরপত্র নিরীক্ষা:");
-
-        jTextField44.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-
-        jLabel72.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel72.setText("সনের");
-
-        jTextField45.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField45.setText("dept");
-
-        jLabel73.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel73.setText("পরীক্ষার");
-
-        jTextField46.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField46.setText("course name");
-
-        jLabel74.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel74.setText("বিষয়ে");
-
-        jTextField47.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-
-        jLabel75.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel75.setText("দিন ।");
-
-        jTextField53.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-
-        jLabel80.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel80.setText("সনের");
-
-        jTextField54.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField54.setText("dept");
-
-        jLabel81.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel81.setText("পরীক্ষার");
+        cat8Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
+        cat8Lbl.setText("৮. উত্তরপত্র নিরীক্ষা:");
 
         jTextField55.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jTextField55.setText("course name");
@@ -746,17 +482,6 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel83.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel83.setText("জন পরীক্ষার্থীর জন্য ।");
 
-        jTextField57.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-
-        jLabel84.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel84.setText("সনের");
-
-        jTextField58.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField58.setText("dept");
-
-        jLabel85.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel85.setText("পরীক্ষার");
-
         jTextField59.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jTextField59.setText("course name");
 
@@ -767,17 +492,6 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 
         jLabel87.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel87.setText("জন পরীক্ষার্থীর জন্য ।");
-
-        jTextField61.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-
-        jLabel88.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel88.setText("সনের");
-
-        jTextField62.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField62.setText("dept");
-
-        jLabel89.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel89.setText("পরীক্ষার");
 
         jTextField63.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jTextField63.setText("course name");
@@ -790,11 +504,11 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel91.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel91.setText("উত্তরপত্র নিরীক্ষা ।");
 
-        cat2Lbl7.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
-        cat2Lbl7.setText("৯. পরীক্ষা পরিষদের সভাপতি/সদস্য (সম্মানি ভাতা)");
+        cat9Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
+        cat9Lbl.setText("৯. পরীক্ষা পরিষদের সভাপতি/সদস্য (সম্মানি ভাতা)");
 
-        cat2Lbl8.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
-        cat2Lbl8.setText("১০. ডাক মাশুল ও অন্যান্য (রশিদ বিলের সাথে সংযুক্ত করতে হবে): ");
+        cat10Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
+        cat10Lbl.setText("১০. ডাক মাশুল ও অন্যান্য (রশিদ বিলের সাথে সংযুক্ত করতে হবে): ");
 
         jLabel76.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel76.setText("ক.");
@@ -813,56 +527,685 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 
         deptSelection.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         deptSelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select One", "ACCE", "Agriculture", "Applied Mathematics", "Bangla", "BGE", "BMB", "BMS", "Chemistry", "CSTE", "DBA", "EEE", "Economics", "Education", "Educational Administration", "English", "ESDM", "FTNS", "FIMS", "ICE", "LAW", "Microbiology", "MIS", "Oceanography", "Pharmacy", "Physics", "Social Work", "Sociology", "Soil, Water and Environment", "Statistics", "THM", "Zoology" }));
+        deptSelection.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                deptSelectionFocusLost(evt);
+            }
+        });
+        deptSelection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deptSelectionActionPerformed(evt);
+            }
+        });
+
+        NoOfQuestionaire.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        NoOfQuestionaire.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "বাছাই করুন", "১টি", "২টি", "৩টি", "৪টি" }));
+        NoOfQuestionaire.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NoOfQuestionaireActionPerformed(evt);
+            }
+        });
+
+        NoOfAnsSheet.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        NoOfAnsSheet.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "বাছাই করুন", "১টি", "২টি", "৩টি", "৪টি", "৫টি" }));
+        NoOfAnsSheet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NoOfAnsSheetActionPerformed(evt);
+            }
+        });
+
+        prac1YrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac1YrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+
+        jLabel74.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel74.setText("বিষয়ে");
+
+        jTextField47.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+
+        jLabel75.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel75.setText("দিন ।");
+
+        prac1CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        prac1CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prac1CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout testPanelLayout = new javax.swing.GroupLayout(testPanel);
+        testPanel.setLayout(testPanelLayout);
+        testPanelLayout.setHorizontalGroup(
+            testPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testPanelLayout.createSequentialGroup()
+                .addComponent(prac1YrDeptLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(prac1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel74)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField47, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel75)
+                .addContainerGap(148, Short.MAX_VALUE))
+        );
+        testPanelLayout.setVerticalGroup(
+            testPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(testPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(prac1YrDeptLbl)
+                    .addComponent(jLabel74)
+                    .addComponent(jTextField47, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel75)
+                    .addComponent(prac1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        ans5SlLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans5SlLbl.setText("ঙ.");
+
+        ans5NoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+
+        ans5TLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans5TLbl.setText("টি");
+
+        ans5hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans5hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+
+        ans5DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans5DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
+
+        ans5SubLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans5SubLbl.setText("বিষয়");
+
+        ans5CrsCdLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans5CrsCdLbl.setText("কোর্স কোড ।");
+
+        ans5CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ans5CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans5CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        ans5CrsCdCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ans5CrsCdCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans5CrsCdCBxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout ans5PnlLayout = new javax.swing.GroupLayout(ans5Pnl);
+        ans5Pnl.setLayout(ans5PnlLayout);
+        ans5PnlLayout.setHorizontalGroup(
+            ans5PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ans5PnlLayout.createSequentialGroup()
+                .addComponent(ans5SlLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans5NoTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans5TLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans5hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans5DeptLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans5CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans5SubLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans5CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans5CrsCdLbl)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        ans5PnlLayout.setVerticalGroup(
+            ans5PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ans5PnlLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(ans5PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ans5SlLbl)
+                    .addComponent(ans5NoTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans5TLbl)
+                    .addComponent(ans5hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans5DeptLbl)
+                    .addComponent(ans5SubLbl)
+                    .addComponent(ans5CrsCdLbl)
+                    .addComponent(ans5CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans5CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0))
+        );
+
+        ans1SlLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans1SlLbl.setText("ক.");
+
+        ans1NoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+
+        ans1TLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans1TLbl.setText("টি");
+
+        ans1hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans1hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+
+        ans1DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans1DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
+
+        ans1SubLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans1SubLbl.setText("বিষয়");
+
+        ans1CrsCdLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans1CrsCdLbl.setText("কোর্স কোড ।");
+
+        ans1CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ans1CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans1CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        ans1CrsCdCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ans1CrsCdCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans1CrsCdCBxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout ans1PnlLayout = new javax.swing.GroupLayout(ans1Pnl);
+        ans1Pnl.setLayout(ans1PnlLayout);
+        ans1PnlLayout.setHorizontalGroup(
+            ans1PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ans1PnlLayout.createSequentialGroup()
+                .addComponent(ans1SlLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans1NoTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans1TLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans1hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans1DeptLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans1SubLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans1CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans1CrsCdLbl)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        ans1PnlLayout.setVerticalGroup(
+            ans1PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ans1PnlLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(ans1PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ans1SlLbl)
+                    .addComponent(ans1NoTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans1TLbl)
+                    .addComponent(ans1hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans1DeptLbl)
+                    .addComponent(ans1SubLbl)
+                    .addComponent(ans1CrsCdLbl)
+                    .addComponent(ans1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans1CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0))
+        );
+
+        ans2SlLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans2SlLbl.setText("খ.");
+
+        ans2NoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+
+        ans2TLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans2TLbl.setText("টি");
+
+        ans2hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans2hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+
+        ans2DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans2DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
+
+        ans2SubLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans2SubLbl.setText("বিষয়");
+
+        ans2CrsCdLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans2CrsCdLbl.setText("কোর্স কোড ।");
+
+        ans2CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ans2CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans2CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        ans2CrsCdCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ans2CrsCdCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans2CrsCdCBxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout ans2PnlLayout = new javax.swing.GroupLayout(ans2Pnl);
+        ans2Pnl.setLayout(ans2PnlLayout);
+        ans2PnlLayout.setHorizontalGroup(
+            ans2PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ans2PnlLayout.createSequentialGroup()
+                .addComponent(ans2SlLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans2NoTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans2TLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans2hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans2DeptLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans2CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans2SubLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans2CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans2CrsCdLbl)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        ans2PnlLayout.setVerticalGroup(
+            ans2PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ans2PnlLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(ans2PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ans2SlLbl)
+                    .addComponent(ans2NoTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans2TLbl)
+                    .addComponent(ans2hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans2DeptLbl)
+                    .addComponent(ans2SubLbl)
+                    .addComponent(ans2CrsCdLbl)
+                    .addComponent(ans2CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans2CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0))
+        );
+
+        ans3TLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans3TLbl.setText("টি");
+
+        ans3hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans3hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+
+        ans3DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans3DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
+
+        ans3SubLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans3SubLbl.setText("বিষয়");
+
+        ans3CrsCdLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans3CrsCdLbl.setText("কোর্স কোড ।");
+
+        ans3NoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+
+        ans3SlLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans3SlLbl.setText("গ.");
+
+        ans3CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ans3CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans3CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        ans3CrsCdCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ans3CrsCdCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans3CrsCdCBxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout ans3PnlLayout = new javax.swing.GroupLayout(ans3Pnl);
+        ans3Pnl.setLayout(ans3PnlLayout);
+        ans3PnlLayout.setHorizontalGroup(
+            ans3PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ans3PnlLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(ans3SlLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans3NoTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans3TLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans3hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans3DeptLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans3CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans3SubLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans3CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans3CrsCdLbl)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        ans3PnlLayout.setVerticalGroup(
+            ans3PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ans3PnlLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(ans3PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ans3TLbl)
+                    .addComponent(ans3hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans3DeptLbl)
+                    .addComponent(ans3SubLbl)
+                    .addComponent(ans3CrsCdLbl)
+                    .addComponent(ans3NoTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans3SlLbl)
+                    .addComponent(ans3CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans3CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        ans4SlLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans4SlLbl.setText("ঘ.");
+
+        ans4NoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+
+        ans4TLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans4TLbl.setText("টি");
+
+        ans4hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans4hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+
+        ans4DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans4DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
+
+        ans4SubLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans4SubLbl.setText("বিষয়");
+
+        ans4CrsCdLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans4CrsCdLbl.setText("কোর্স কোড ।");
+
+        ans4CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ans4CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans4CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        ans4CrsCdCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ans4CrsCdCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans4CrsCdCBxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout ans4PnlLayout = new javax.swing.GroupLayout(ans4Pnl);
+        ans4Pnl.setLayout(ans4PnlLayout);
+        ans4PnlLayout.setHorizontalGroup(
+            ans4PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ans4PnlLayout.createSequentialGroup()
+                .addComponent(ans4SlLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans4NoTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans4TLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans4hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans4DeptLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans4CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans4SubLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans4CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans4CrsCdLbl)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        ans4PnlLayout.setVerticalGroup(
+            ans4PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ans4PnlLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(ans4PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ans4SlLbl)
+                    .addComponent(ans4NoTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans4TLbl)
+                    .addComponent(ans4hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans4DeptLbl)
+                    .addComponent(ans4SubLbl)
+                    .addComponent(ans4CrsCdLbl)
+                    .addComponent(ans4CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ans4CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0))
+        );
+
+        jLabel97.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel97.setText("বিষয়ে");
+
+        jTextField70.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+
+        jLabel98.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel98.setText("দিন ।");
+
+        prac2YrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac2YrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+
+        prac2CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        prac2CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prac2CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout testPanel2Layout = new javax.swing.GroupLayout(testPanel2);
+        testPanel2.setLayout(testPanel2Layout);
+        testPanel2Layout.setHorizontalGroup(
+            testPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(prac2YrDeptLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(prac2CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel97)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField70, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel98)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        testPanel2Layout.setVerticalGroup(
+            testPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, testPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(testPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(prac2YrDeptLbl)
+                    .addComponent(jLabel97)
+                    .addComponent(jTextField70, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel98)
+                    .addComponent(prac2CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0))
+        );
+
+        jLabel105.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel105.setText("বিষয়ে");
+
+        jTextField68.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+
+        jLabel106.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel106.setText("দিন ।");
+
+        prac3YrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac3YrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+
+        prac3CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        prac3CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prac3CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout testPanel4Layout = new javax.swing.GroupLayout(testPanel4);
+        testPanel4.setLayout(testPanel4Layout);
+        testPanel4Layout.setHorizontalGroup(
+            testPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testPanel4Layout.createSequentialGroup()
+                .addComponent(prac3YrDeptLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(prac3CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel105)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField68, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel106)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        testPanel4Layout.setVerticalGroup(
+            testPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(testPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel105)
+                    .addComponent(jTextField68, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel106)
+                    .addComponent(prac3YrDeptLbl)
+                    .addComponent(prac3CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        jLabel101.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel101.setText("বিষয়ে");
+
+        jTextField72.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+
+        jLabel102.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel102.setText("দিন ।");
+
+        prac4YrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac4YrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+
+        prac4CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        prac4CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prac4CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout testPanel3Layout = new javax.swing.GroupLayout(testPanel3);
+        testPanel3.setLayout(testPanel3Layout);
+        testPanel3Layout.setHorizontalGroup(
+            testPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testPanel3Layout.createSequentialGroup()
+                .addComponent(prac4YrDeptLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(prac4CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel101)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField72, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel102)
+                .addContainerGap(148, Short.MAX_VALUE))
+        );
+        testPanel3Layout.setVerticalGroup(
+            testPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testPanel3Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(testPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel101)
+                    .addComponent(jTextField72, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel102)
+                    .addComponent(prac4YrDeptLbl)
+                    .addComponent(prac4CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        q1CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        q1CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q1CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        vivaYrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        vivaYrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+
+        resultYrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        resultYrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+
+        ansInsYrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ansInsYrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+
+        q2CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        q2CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q2CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        q3CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        q3CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q3CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        q4CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        q4CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q4CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        qAdj1CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        qAdj1CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                qAdj1CrsNmCBxActionPerformed(evt);
+            }
+        });
+
+        q1CrsCdCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        q1CrsCdCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q1CrsCdCBxActionPerformed(evt);
+            }
+        });
+
+        q2CrsCdCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        q2CrsCdCBx.setMinimumSize(new java.awt.Dimension(80, 20));
+        q2CrsCdCBx.setName(""); // NOI18N
+        q2CrsCdCBx.setOpaque(false);
+        q2CrsCdCBx.setPreferredSize(new java.awt.Dimension(80, 20));
+        q2CrsCdCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q2CrsCdCBxActionPerformed(evt);
+            }
+        });
+
+        q3CrsCdCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        q3CrsCdCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q3CrsCdCBxActionPerformed(evt);
+            }
+        });
+
+        q4CrsCdCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        q4CrsCdCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q4CrsCdCBxActionPerformed(evt);
+            }
+        });
+
+        startDateChooser.setDateFormatString("dd-MM-yyyy");
+
+        endDateChooser.setDateFormatString("dd-MM-yyyy");
 
         javax.swing.GroupLayout remuBillDocLayout = new javax.swing.GroupLayout(remuBillDoc);
         remuBillDoc.setLayout(remuBillDocLayout);
         remuBillDocLayout.setHorizontalGroup(
             remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(remuBillDocLayout.createSequentialGroup()
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(30, 30, 30)
+                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(remuBillDocLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1))
-                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(remuBillDocLayout.createSequentialGroup()
-                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(teacherName))
-                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(teacherAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(examYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel8)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(examTerm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(11, 11, 11)
-                                        .addComponent(jLabel9)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(deptSelection, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(34, 34, 34))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(cat2Lbl3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField44, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(744, 744, 744))
-                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
                                         .addComponent(billSerialNoLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -874,85 +1217,19 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
                                         .addComponent(jLabel10)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(startDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel15)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(endDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel12))
-                                    .addComponent(cat1Lbl)
-                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel16)
-                                                .addGap(9, 9, 9)
-                                                .addComponent(jLabel24)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(msYear2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel25)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel26)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel27)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel28))
-                                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel17)
-                                                .addGap(9, 9, 9)
-                                                .addComponent(jLabel29)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(msYear3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel30)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel31)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel32)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel33))
-                                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel18)
-                                                .addGap(9, 9, 9)
-                                                .addComponent(jLabel34)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(msYear4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel35)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel36)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel37)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel38))))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
                                         .addComponent(cat2Lbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(qAdj1DeptLbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel39)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(qAdj1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel40)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -964,165 +1241,14 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel42))
                                     .addComponent(cat3Lbl)
-                                    .addComponent(cat2Lbl2)
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel48)
-                                                .addGap(7, 7, 7)
-                                                .addComponent(jTextField40, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel49)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(msYear6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel50)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField27, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel51)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField28, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel52)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField29, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel53))
-                                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel54)
-                                                .addGap(7, 7, 7)
-                                                .addComponent(jTextField41, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel55)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(msYear7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel56)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField30, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel57)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel58)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel59))
-                                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel60)
-                                                .addGap(8, 8, 8)
-                                                .addComponent(jTextField42, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel61)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(msYear8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel62)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField33, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel63)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField34, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel64)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField35, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel65))
-                                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel14)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField39, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel43)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(msYear5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel44)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel45)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField25, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel46)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField26, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel47))
-                                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(jLabel72)
-                                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                        .addComponent(jLabel66)
-                                                        .addGap(7, 7, 7)
-                                                        .addComponent(jTextField43, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jLabel67)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(msYear9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jLabel68)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jTextField36, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                        .addComponent(jLabel69)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jTextField37, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jLabel70)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jTextField38, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jLabel71))
-                                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                        .addComponent(jTextField45, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jLabel73)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jTextField46, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jLabel74)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jTextField47, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jLabel75))))))
+                                        .addComponent(cat4Lbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(NoOfAnsSheet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(cat2Lbl4)
+                                        .addComponent(cat8Lbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField53, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel80)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField54, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel81)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField55, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel82)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField56, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel83))
-                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(cat2Lbl6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField61, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel88)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField62, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel89)
+                                        .addComponent(ansInsYrDeptLbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jTextField63, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1132,15 +1258,9 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel91))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(cat2Lbl5)
+                                        .addComponent(cat7Lbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField57, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel84)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField58, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel85)
+                                        .addComponent(resultYrDeptLbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jTextField59, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1149,46 +1269,167 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                         .addComponent(jTextField60, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel87))
-                                    .addComponent(cat2Lbl7)
-                                    .addComponent(cat2Lbl8)
+                                    .addComponent(cat9Lbl)
+                                    .addComponent(cat10Lbl)
+                                    .addComponent(cat5Lbl)
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addComponent(cat6Lbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(vivaYrDeptLbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jTextField55, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel82)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jTextField56, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel83))
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addGap(9, 9, 9)
+                                        .addComponent(q1SlLbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(q1NoLbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(q1hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(q1DeptLbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(q1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(q1SubLbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(q1CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(q1CrsCdLbl))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
                                         .addGap(10, 10, 10)
                                         .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(ans2Pnl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(ans1Pnl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(ans4Pnl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(ans3Pnl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(ans5Pnl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                             .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel77)
-                                                .addGap(7, 7, 7)
-                                                .addComponent(jTextField66))
-                                            .addComponent(jLabel76)
-                                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jTextField65))
+                                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, remuBillDocLayout.createSequentialGroup()
+                                                        .addComponent(q4SlLbl)
+                                                        .addGap(9, 9, 9)
+                                                        .addComponent(q4NoLbl)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q4hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q4DeptLbl)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q4CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q4SubLbl)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q4CrsCdCBx, 0, 96, Short.MAX_VALUE))
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, remuBillDocLayout.createSequentialGroup()
+                                                        .addComponent(q3SlLbl)
+                                                        .addGap(9, 9, 9)
+                                                        .addComponent(q3NoLbl)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q3hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q3DeptLbl)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q3CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q3SubLbl)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q3CrsCdCBx, 0, 95, Short.MAX_VALUE))
+                                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                                        .addComponent(q2SlLbl)
+                                                        .addGap(9, 9, 9)
+                                                        .addComponent(q2NoLbl)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q2hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q2DeptLbl)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q2CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q2SubLbl)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q2CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(remuBillDocLayout.createSequentialGroup()
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(q2CrsCdLbl))
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(q3CrsCdLbl)))
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(q4CrsCdLbl))))))
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addComponent(cat1Lbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(NoOfQuestionaire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(124, 124, 124))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
+                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, remuBillDocLayout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addGroup(remuBillDocLayout.createSequentialGroup()
                                                 .addComponent(jLabel78)
-                                                .addGap(6, 6, 6)
-                                                .addComponent(jTextField67))))
-                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addComponent(jLabel11)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel19)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(msYear1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel20)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel21)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel22)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel23)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jTextField67))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
+                                                .addComponent(jLabel77)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jTextField66))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
+                                                .addComponent(jLabel76)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jTextField65, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, remuBillDocLayout.createSequentialGroup()
+                                        .addGap(19, 19, 19)
+                                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(testPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(testPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(testPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(testPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addGap(0, 248, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(remuBillDocLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(teacherName, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(remuBillDocLayout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(teacherAddress)))
+                        .addGap(70, 70, 70)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addGroup(remuBillDocLayout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(examYearCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel8)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(remuBillDocLayout.createSequentialGroup()
+                                .addComponent(examTermCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11)
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(deptSelection, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
+            .addGroup(remuBillDocLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         remuBillDocLayout.setVerticalGroup(
             remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1199,215 +1440,144 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                     .addComponent(billSerialNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(billSlNoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(17, 17, 17)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(teacherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(deptSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel3)
-                    .addComponent(teacherAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9)
-                    .addComponent(examYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(examTerm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel15))
+                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(teacherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(deptSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel3)
+                            .addComponent(teacherAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9)
+                            .addComponent(examYearCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(examTermCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel10)
+                                .addComponent(jLabel12)
+                                .addComponent(jLabel15))
+                            .addComponent(endDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(startDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(calendarYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addGap(32, 32, 32)
-                .addComponent(cat1Lbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(29, 29, 29)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel19)
-                    .addComponent(msYear1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel20)
-                    .addComponent(jLabel21)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel22)
-                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel23))
+                    .addComponent(cat1Lbl)
+                    .addComponent(NoOfQuestionaire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel16)
-                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel24)
-                    .addComponent(msYear2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel25)
-                    .addComponent(jLabel26)
-                    .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel27)
-                    .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel28))
+                    .addComponent(q1SlLbl)
+                    .addComponent(q1NoLbl)
+                    .addComponent(q1hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(q1DeptLbl)
+                    .addComponent(q1SubLbl)
+                    .addComponent(q1CrsCdLbl)
+                    .addComponent(q1CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(q1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel17)
-                    .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel29)
-                    .addComponent(msYear3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel30)
-                    .addComponent(jLabel31)
-                    .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel32)
-                    .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel33))
+                    .addComponent(q2SlLbl)
+                    .addComponent(q2NoLbl)
+                    .addComponent(q2hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(q2DeptLbl)
+                    .addComponent(q2SubLbl)
+                    .addComponent(q2CrsCdLbl)
+                    .addComponent(q2CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(q2CrsCdCBx, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel18)
-                    .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel34)
-                    .addComponent(msYear4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel35)
-                    .addComponent(jLabel36)
-                    .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel37)
-                    .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel38))
+                    .addComponent(q3SlLbl)
+                    .addComponent(q3NoLbl)
+                    .addComponent(q3hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(q3DeptLbl)
+                    .addComponent(q3SubLbl)
+                    .addComponent(q3CrsCdLbl)
+                    .addComponent(q3CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(q3CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(q4SlLbl)
+                    .addComponent(q4NoLbl)
+                    .addComponent(q4hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(q4DeptLbl)
+                    .addComponent(q4SubLbl)
+                    .addComponent(q4CrsCdLbl)
+                    .addComponent(q4CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(q4CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel42))
-                    .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel41))
-                    .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel39)
-                        .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel40))
-                    .addComponent(cat2Lbl))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cat2Lbl)
+                    .addComponent(qAdj1DeptLbl)
+                    .addComponent(jLabel40)
+                    .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel41)
+                    .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel42)
+                    .addComponent(qAdj1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(cat3Lbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cat2Lbl2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel43)
-                    .addComponent(msYear5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel44)
-                    .addComponent(jLabel45)
-                    .addComponent(jTextField25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel46)
-                    .addComponent(jTextField26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel47)
-                    .addComponent(jTextField39, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cat4Lbl)
+                    .addComponent(NoOfAnsSheet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addComponent(ans1Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel48)
-                    .addComponent(jTextField27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel49)
-                    .addComponent(msYear6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel50)
-                    .addComponent(jLabel51)
-                    .addComponent(jTextField28, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel52)
-                    .addComponent(jTextField29, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel53)
-                    .addComponent(jTextField40, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ans2Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel54)
-                    .addComponent(jTextField30, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel55)
-                    .addComponent(msYear7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel56)
-                    .addComponent(jLabel57)
-                    .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel58)
-                    .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel59)
-                    .addComponent(jTextField41, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ans3Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6)
+                .addComponent(ans4Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6)
+                .addComponent(ans5Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(cat5Lbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel60)
-                    .addComponent(jTextField33, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel61)
-                    .addComponent(msYear8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel62)
-                    .addComponent(jLabel63)
-                    .addComponent(jTextField34, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel64)
-                    .addComponent(jTextField35, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel65)
-                    .addComponent(jTextField42, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(testPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel66)
-                    .addComponent(jTextField36, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel67)
-                    .addComponent(msYear9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel68)
-                    .addComponent(jLabel69)
-                    .addComponent(jTextField37, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel70)
-                    .addComponent(jTextField38, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel71)
-                    .addComponent(jTextField43, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cat2Lbl3)
-                    .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField45, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel72)
-                        .addComponent(jLabel73)
-                        .addComponent(jTextField46, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel74)
-                        .addComponent(jTextField47, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel75)
-                        .addComponent(jTextField44, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(testPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(testPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(testPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cat2Lbl4)
-                    .addComponent(jTextField53, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel80)
-                    .addComponent(jTextField54, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel81)
+                    .addComponent(cat6Lbl)
                     .addComponent(jTextField55, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel82)
                     .addComponent(jTextField56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel83))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel83)
+                    .addComponent(vivaYrDeptLbl))
+                .addGap(18, 18, 18)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cat2Lbl5)
-                    .addComponent(jTextField57, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel84)
-                    .addComponent(jTextField58, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel85)
+                    .addComponent(cat7Lbl)
                     .addComponent(jTextField59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel86)
                     .addComponent(jTextField60, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel87))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel87)
+                    .addComponent(resultYrDeptLbl))
+                .addGap(18, 18, 18)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cat2Lbl6)
+                    .addComponent(cat8Lbl)
                     .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField61, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel88)
-                        .addComponent(jTextField62, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel89)
                         .addComponent(jTextField63, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel90)
                         .addComponent(jTextField64, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel91)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cat2Lbl7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cat2Lbl8)
+                        .addComponent(jLabel91)
+                        .addComponent(ansInsYrDeptLbl)))
+                .addGap(18, 18, 18)
+                .addComponent(cat9Lbl)
+                .addGap(18, 18, 18)
+                .addComponent(cat10Lbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel76)
@@ -1417,10 +1587,10 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                     .addComponent(jLabel77)
                     .addComponent(jTextField66, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel78)
                     .addComponent(jTextField67, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(358, Short.MAX_VALUE))
+                .addContainerGap(147, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(remuBillDoc);
@@ -1439,8 +1609,8 @@ public class Compose_RemuBill extends javax.swing.JFrame {
             ExamRemuBillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ExamRemuBillLayout.createSequentialGroup()
                 .addGap(47, 47, 47)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 950, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 969, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55)
                 .addGroup(ExamRemuBillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(submitBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(previewBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1485,16 +1655,219 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 	private void modifyValues() {
 
 		// Setting custom font for all jLabel and jTextField
-		setCommonFont(remuBillDoc, Utility.NIKOSH);
+		setCommonFont(remuBillDoc, customFont);
 
 		// Setting custom Bold Font for some headings
 		cat1Lbl.setFont(boldCustomFont);
 		cat2Lbl.setFont(boldCustomFont);
 		cat3Lbl.setFont(boldCustomFont);
-		cat2Lbl2.setFont(boldCustomFont);
+		cat4Lbl.setFont(boldCustomFont);
+		cat5Lbl.setFont(boldCustomFont);
+		cat6Lbl.setFont(boldCustomFont);
+		cat7Lbl.setFont(boldCustomFont);
+		cat8Lbl.setFont(boldCustomFont);
+		cat9Lbl.setFont(boldCustomFont);
+		cat10Lbl.setFont(boldCustomFont);
+
+		// Disabling Visibility of Questionaires 
+		q1Visibility(false);
+		q2Visibility(false);
+		q3Visibility(false);
+		q4Visibility(false);
+
+		// Disabling Visibility of Ans Sheets 
+		ans1Pnl.setVisible(false);
+		ans2Pnl.setVisible(false);
+		ans3Pnl.setVisible(false);
+		ans4Pnl.setVisible(false);
+		ans5Pnl.setVisible(false);
+
+		//testPanel.setVisible(false);
+	}
+
+	private void q1Visibility(boolean visible) {
+		q1CrsCdLbl.setVisible(visible);
+		q1CrsCdCBx.setVisible(visible);
+		q1CrsNmCBx.setVisible(visible);
+		q1NoLbl.setVisible(visible);
+		q1SlLbl.setVisible(visible);
+		q1SubLbl.setVisible(visible);
+		q1hrCBx.setVisible(visible);
+		q1DeptLbl.setVisible(visible);
+	}
+
+	private void q2Visibility(boolean visible) {
+		q2CrsCdLbl.setVisible(visible);
+		q2CrsCdCBx.setVisible(visible);
+		q2CrsNmCBx.setVisible(visible);
+		q2NoLbl.setVisible(visible);
+		q2SlLbl.setVisible(visible);
+		q2SubLbl.setVisible(visible);
+		q2hrCBx.setVisible(visible);
+		q2DeptLbl.setVisible(visible);
+	}
+
+	private void q3Visibility(boolean visible) {
+		q3CrsCdLbl.setVisible(visible);
+		q3CrsCdCBx.setVisible(visible);
+		q3CrsNmCBx.setVisible(visible);
+		q3NoLbl.setVisible(visible);
+		q3SlLbl.setVisible(visible);
+		q3SubLbl.setVisible(visible);
+		q3hrCBx.setVisible(visible);
+		q3DeptLbl.setVisible(visible);
+	}
+
+	private void q4Visibility(boolean visible) {
+		q4CrsCdLbl.setVisible(visible);
+		q4CrsCdCBx.setVisible(visible);
+		q4CrsNmCBx.setVisible(visible);
+		q4NoLbl.setVisible(visible);
+		q4SlLbl.setVisible(visible);
+		q4SubLbl.setVisible(visible);
+		q4hrCBx.setVisible(visible);
+		q4DeptLbl.setVisible(visible);
 
 	}
 
+	private void setDept() {
+		String text = "ঘন্টা: " + DeptName + " পরীক্ষার";
+		q1DeptLbl.setText(text);
+		q2DeptLbl.setText(text);
+		q3DeptLbl.setText(text);
+		q4DeptLbl.setText(text);
+
+		ans1DeptLbl.setText(text);
+		ans2DeptLbl.setText(text);
+		ans3DeptLbl.setText(text);
+		ans4DeptLbl.setText(text);
+		ans5DeptLbl.setText(text);
+		qAdj1DeptLbl.setText(DeptName + " পরীক্ষার ");
+
+		String text2 = ExamYear + " সনের " + DeptName + " পরীক্ষার ";
+		prac1YrDeptLbl.setText(text2);
+		prac2YrDeptLbl.setText(text2);
+		prac3YrDeptLbl.setText(text2);
+		prac4YrDeptLbl.setText(text2);
+
+		ansInsYrDeptLbl.setText(text2);
+		vivaYrDeptLbl.setText(text2);
+		resultYrDeptLbl.setText(text2);
+	}
+
+	private String[] getCourseNames(String department, String semester) {
+		String courseType = "Theory";
+		String fieldName = "course_title";
+		String[] courseList = getCoursesData(department, semester, courseType, fieldName);
+		return courseList;
+	}
+
+	private String[] getLabNames(String department, String semester) {
+		String courseType = "Lab";
+		String fieldName = "course_title";
+		String[] courseList = getCoursesData(department, semester, courseType, fieldName);
+		return courseList;
+	}
+
+	private String[] getCourseCodes(String department, String semester) {
+		String courseType = "Theory";
+		String fieldName = "course_code";
+		String[] courseList = getCoursesData(department, semester, courseType, fieldName);
+		return courseList;
+	}
+
+	private String[] getLabCodes(String department, String semester) {
+		String courseType = "Lab";
+		String fieldName = "course_code";
+		String[] courseList = getCoursesData(department, semester, courseType, fieldName);
+		return courseList;
+	}
+
+	private String[] getCoursesData(String department, String semester, String courseType, String fieldName) {
+		String[] courseList;
+		String firstItem = "Select a Course";
+		if (fieldName.equals("course_code")) {
+			firstItem = "Select a Code";
+		}
+		String query = "SELECT " + fieldName + " FROM courses WHERE dept = ? AND semester = ? AND type = ?";
+
+		try (Connection connection = databaseConnection.connection();
+			PreparedStatement statement = connection.prepareStatement(query)) {
+			//statement.setString(1, fieldName);
+			statement.setString(1, department);
+			statement.setString(2, semester);
+			statement.setString(3, courseType);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				List<String> courses = new ArrayList<>();
+				courses.add(firstItem);
+				while (resultSet.next()) {
+					courses.add(resultSet.getString(fieldName));
+				}
+				courseList = courses.toArray(new String[0]);
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, "An error occurred while fetching " + fieldName, e);
+			courseList = new String[0]; // Return an empty array in case of an error
+		}
+		return courseList;
+	}
+
+	private void setCourseNames(String[] courseList) {
+		setComboBoxList(q1CrsNmCBx, courseList);
+		setComboBoxList(q2CrsNmCBx, courseList);
+		setComboBoxList(q3CrsNmCBx, courseList);
+		setComboBoxList(q4CrsNmCBx, courseList);
+
+		setComboBoxList(qAdj1CrsNmCBx, courseList);
+
+		setComboBoxList(ans1CrsNmCBx, courseList);
+		setComboBoxList(ans2CrsNmCBx, courseList);
+		setComboBoxList(ans3CrsNmCBx, courseList);
+		setComboBoxList(ans4CrsNmCBx, courseList);
+		setComboBoxList(ans5CrsNmCBx, courseList);
+	}
+
+	private void setCourseCodes(String[] courseList) {
+		setComboBoxList(q1CrsCdCBx, courseList);
+		setComboBoxList(q2CrsCdCBx, courseList);
+		setComboBoxList(q3CrsCdCBx, courseList);
+		setComboBoxList(q4CrsCdCBx, courseList);
+
+		setComboBoxList(ans1CrsCdCBx, courseList);
+		setComboBoxList(ans2CrsCdCBx, courseList);
+		setComboBoxList(ans3CrsCdCBx, courseList);
+		setComboBoxList(ans4CrsCdCBx, courseList);
+		setComboBoxList(ans5CrsCdCBx, courseList);
+	}
+
+	private void setLabNames(String[] courseList) {
+		setComboBoxList(prac1CrsNmCBx, courseList);
+		setComboBoxList(prac2CrsNmCBx, courseList);
+		setComboBoxList(prac3CrsNmCBx, courseList);
+		setComboBoxList(prac4CrsNmCBx, courseList);
+	}
+
+	private void setComboBoxList(JComboBox comboBox, String[] itemList) {
+		comboBox.setModel(new javax.swing.DefaultComboBoxModel<>(itemList));
+		String selected = (String) comboBox.getSelectedItem();
+		if ("Select a Course".equals(selected) || "Select a Code".equals(selected)) {
+			//source.setSelectedIndex(-1); // Clear selection if placeholder is selected
+			comboBox.setForeground(Color.GRAY); // Reset placeholder text color
+		} else {
+			comboBox.setForeground(Color.BLACK); // Reset text color when an actual item is selected
+		}
+	}
+
+	private void setComboBoxPlaceHolderStyle(JComboBox source) {
+		String selected = (String) source.getSelectedItem();
+		int selectedIndex = source.getSelectedIndex();
+		if (selectedIndex == 0) {
+			//source.setSelectedIndex(-1); // Clear selection if placeholder is selected
+			source.setForeground(Color.GRAY); // Reset placeholder text color
+		} else {
+			source.setForeground(Color.BLACK); // Reset text color when an actual item is selected
+		}
+	}
 
     private void cancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelBtnMouseClicked
 		// TODO add your handling code here:
@@ -1563,45 +1936,241 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 		object.setVisible(true);
     }//GEN-LAST:event_submitBtnMouseClicked
 
-    private void examYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_examYearActionPerformed
+    private void NoOfAnsSheetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NoOfAnsSheetActionPerformed
 		// TODO add your handling code here:
-    }//GEN-LAST:event_examYearActionPerformed
+		if (NoOfAnsSheet.getSelectedItem().toString().equals("১টি")) {
+			NoAns = 1;
+			ans1Pnl.setVisible(true);
+			ans2Pnl.setVisible(false);
+			ans3Pnl.setVisible(false);
+			ans4Pnl.setVisible(false);
+			ans5Pnl.setVisible(false);
+		} else if (NoOfAnsSheet.getSelectedItem().toString().equals("২টি")) {
+			NoAns = 2;
+			ans1Pnl.setVisible(true);
+			ans2Pnl.setVisible(true);
+			ans3Pnl.setVisible(false);
+			ans4Pnl.setVisible(false);
+			ans5Pnl.setVisible(false);
+		} else if (NoOfAnsSheet.getSelectedItem().toString().equals("৩টি")) {
+			NoAns = 3;
+			ans1Pnl.setVisible(true);
+			ans2Pnl.setVisible(true);
+			ans3Pnl.setVisible(true);
+			ans4Pnl.setVisible(false);
+			ans5Pnl.setVisible(false);
+		} else if (NoOfAnsSheet.getSelectedItem().toString().equals("৪টি")) {
+			NoAns = 4;
+			ans1Pnl.setVisible(true);
+			ans2Pnl.setVisible(true);
+			ans3Pnl.setVisible(true);
+			ans4Pnl.setVisible(true);
+			ans5Pnl.setVisible(false);
+		} else if (NoOfAnsSheet.getSelectedItem().toString().equals("৫টি")) {
+			NoAns = 5;
+			ans1Pnl.setVisible(true);
+			ans2Pnl.setVisible(true);
+			ans3Pnl.setVisible(true);
+			ans4Pnl.setVisible(true);
+			ans5Pnl.setVisible(true);
+		} else {
+			ans1Pnl.setVisible(false);
+			ans2Pnl.setVisible(false);
+			ans3Pnl.setVisible(false);
+			ans4Pnl.setVisible(false);
+			ans5Pnl.setVisible(false);
+		}
+    }//GEN-LAST:event_NoOfAnsSheetActionPerformed
 
-    private void msYear1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msYear1ActionPerformed
+    private void NoOfQuestionaireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NoOfQuestionaireActionPerformed
 		// TODO add your handling code here:
-    }//GEN-LAST:event_msYear1ActionPerformed
+		if (NoOfQuestionaire.getSelectedItem().toString().equals("১টি")) {
+			NoQ = 1;
+			q1Visibility(true);
+			q2Visibility(false);
+			q3Visibility(false);
+			q4Visibility(false);
+		} else if (NoOfQuestionaire.getSelectedItem().toString().equals("২টি")) {
+			NoQ = 2;
+			q1Visibility(true);
+			q2Visibility(true);
+			q3Visibility(false);
+			q4Visibility(false);
+		} else if (NoOfQuestionaire.getSelectedItem().toString().equals("৩টি")) {
+			NoQ = 3;
+			q1Visibility(true);
+			q2Visibility(true);
+			q3Visibility(true);
+			q4Visibility(false);
+		} else if (NoOfQuestionaire.getSelectedItem().toString().equals("৪টি")) {
+			NoQ = 4;
+			q1Visibility(true);
+			q2Visibility(true);
+			q3Visibility(true);
+			q4Visibility(true);
+		} else {
+			q1Visibility(false);
+			q2Visibility(false);
+			q3Visibility(false);
+			q4Visibility(false);
+		}
+    }//GEN-LAST:event_NoOfQuestionaireActionPerformed
 
-    private void msYear2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msYear2ActionPerformed
+    private void deptSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deptSelectionActionPerformed
 		// TODO add your handling code here:
-    }//GEN-LAST:event_msYear2ActionPerformed
+		DeptName = deptSelection.getSelectedItem().toString();
+		setDept();
+    }//GEN-LAST:event_deptSelectionActionPerformed
 
-    private void msYear3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msYear3ActionPerformed
+    private void deptSelectionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_deptSelectionFocusLost
 		// TODO add your handling code here:
-    }//GEN-LAST:event_msYear3ActionPerformed
+    }//GEN-LAST:event_deptSelectionFocusLost
 
-    private void msYear4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msYear4ActionPerformed
+    private void examYearCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_examYearCBxActionPerformed
 		// TODO add your handling code here:
-    }//GEN-LAST:event_msYear4ActionPerformed
+		year = toEnglishNumerals(examYearCBx.getSelectedItem().toString());
+    }//GEN-LAST:event_examYearCBxActionPerformed
 
-    private void msYear5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msYear5ActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_msYear5ActionPerformed
+    private void examTermCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_examTermCBxActionPerformed
+		// Setting term 
+		term = toEnglishNumerals(examTermCBx.getSelectedItem().toString());
 
-    private void msYear6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msYear6ActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_msYear6ActionPerformed
+		//Setting Course names in Course Comboboxes
+		String[] courses = getCourseNames(DeptName, year + "-" + term);
+		setCourseNames(courses);
 
-    private void msYear7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msYear7ActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_msYear7ActionPerformed
+		//Setting Lab names in Lab Comboboxes
+		String[] labs = getLabNames(DeptName, year + "-" + term);
+		setLabNames(labs);
 
-    private void msYear8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msYear8ActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_msYear8ActionPerformed
+		String[] courseCodes = getCourseCodes(DeptName, year + "-" + term);
+		setCourseCodes(courseCodes);
+    }//GEN-LAST:event_examTermCBxActionPerformed
 
-    private void msYear9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msYear9ActionPerformed
+    private void q1CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q1CrsNmCBxActionPerformed
 		// TODO add your handling code here:
-    }//GEN-LAST:event_msYear9ActionPerformed
+//		String[] courses = getCourseNames(DeptName, year+"-"+term);
+//		jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(courses));
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+		q1CrsCdCBx.setSelectedIndex(source.getSelectedIndex());
+    }//GEN-LAST:event_q1CrsNmCBxActionPerformed
+
+    private void q2CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q2CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_q2CrsNmCBxActionPerformed
+
+    private void q3CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q3CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_q3CrsNmCBxActionPerformed
+
+    private void q4CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q4CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_q4CrsNmCBxActionPerformed
+
+    private void qAdj1CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qAdj1CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_qAdj1CrsNmCBxActionPerformed
+
+    private void ans1CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans1CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_ans1CrsNmCBxActionPerformed
+
+    private void prac4CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prac4CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_prac4CrsNmCBxActionPerformed
+
+    private void ans2CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans2CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_ans2CrsNmCBxActionPerformed
+
+    private void ans3CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans3CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_ans3CrsNmCBxActionPerformed
+
+    private void ans4CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans4CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_ans4CrsNmCBxActionPerformed
+
+    private void prac1CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prac1CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_prac1CrsNmCBxActionPerformed
+
+    private void prac2CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prac2CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_prac2CrsNmCBxActionPerformed
+
+    private void prac3CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prac3CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_prac3CrsNmCBxActionPerformed
+
+    private void ans5CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans5CrsNmCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_ans5CrsNmCBxActionPerformed
+
+    private void q1CrsCdCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q1CrsCdCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_q1CrsCdCBxActionPerformed
+
+    private void q2CrsCdCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q2CrsCdCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_q2CrsCdCBxActionPerformed
+
+    private void q3CrsCdCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q3CrsCdCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_q3CrsCdCBxActionPerformed
+
+    private void q4CrsCdCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q4CrsCdCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_q4CrsCdCBxActionPerformed
+
+    private void ans1CrsCdCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans1CrsCdCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_ans1CrsCdCBxActionPerformed
+
+    private void ans2CrsCdCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans2CrsCdCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_ans2CrsCdCBxActionPerformed
+
+    private void ans3CrsCdCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans3CrsCdCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_ans3CrsCdCBxActionPerformed
+
+    private void ans4CrsCdCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans4CrsCdCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_ans4CrsCdCBxActionPerformed
+
+    private void ans5CrsCdCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans5CrsCdCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
+    }//GEN-LAST:event_ans5CrsCdCBxActionPerformed
+
+    private void calendarYearKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_calendarYearKeyReleased
+        // TODO add your handling code here:
+        ExamYear = calendarYear.getText();
+        setDept();
+    }//GEN-LAST:event_calendarYearKeyReleased
 
 	/**
 	 * @param args the command line
@@ -1646,191 +2215,9 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 		});
 	}
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel ExamRemuBill;
-    private javax.swing.JLabel billSerialNoLabel;
-    private javax.swing.JTextField billSlNoTxt;
-    private javax.swing.JTextField calendarYear;
-    private javax.swing.JButton cancelBtn;
-    private javax.swing.JLabel cat1Lbl;
-    private javax.swing.JLabel cat2Lbl;
-    private javax.swing.JLabel cat2Lbl2;
-    private javax.swing.JLabel cat2Lbl3;
-    private javax.swing.JLabel cat2Lbl4;
-    private javax.swing.JLabel cat2Lbl5;
-    private javax.swing.JLabel cat2Lbl6;
-    private javax.swing.JLabel cat2Lbl7;
-    private javax.swing.JLabel cat2Lbl8;
-    private javax.swing.JLabel cat3Lbl;
-    private javax.swing.JComboBox<String> deptSelection;
-    private javax.swing.JTextField endDate;
-    private javax.swing.JComboBox<String> examTerm;
-    private javax.swing.JComboBox<String> examYear;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel33;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel35;
-    private javax.swing.JLabel jLabel36;
-    private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel39;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel40;
-    private javax.swing.JLabel jLabel41;
-    private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel43;
-    private javax.swing.JLabel jLabel44;
-    private javax.swing.JLabel jLabel45;
-    private javax.swing.JLabel jLabel46;
-    private javax.swing.JLabel jLabel47;
-    private javax.swing.JLabel jLabel48;
-    private javax.swing.JLabel jLabel49;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel50;
-    private javax.swing.JLabel jLabel51;
-    private javax.swing.JLabel jLabel52;
-    private javax.swing.JLabel jLabel53;
-    private javax.swing.JLabel jLabel54;
-    private javax.swing.JLabel jLabel55;
-    private javax.swing.JLabel jLabel56;
-    private javax.swing.JLabel jLabel57;
-    private javax.swing.JLabel jLabel58;
-    private javax.swing.JLabel jLabel59;
-    private javax.swing.JLabel jLabel60;
-    private javax.swing.JLabel jLabel61;
-    private javax.swing.JLabel jLabel62;
-    private javax.swing.JLabel jLabel63;
-    private javax.swing.JLabel jLabel64;
-    private javax.swing.JLabel jLabel65;
-    private javax.swing.JLabel jLabel66;
-    private javax.swing.JLabel jLabel67;
-    private javax.swing.JLabel jLabel68;
-    private javax.swing.JLabel jLabel69;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel70;
-    private javax.swing.JLabel jLabel71;
-    private javax.swing.JLabel jLabel72;
-    private javax.swing.JLabel jLabel73;
-    private javax.swing.JLabel jLabel74;
-    private javax.swing.JLabel jLabel75;
-    private javax.swing.JLabel jLabel76;
-    private javax.swing.JLabel jLabel77;
-    private javax.swing.JLabel jLabel78;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel80;
-    private javax.swing.JLabel jLabel81;
-    private javax.swing.JLabel jLabel82;
-    private javax.swing.JLabel jLabel83;
-    private javax.swing.JLabel jLabel84;
-    private javax.swing.JLabel jLabel85;
-    private javax.swing.JLabel jLabel86;
-    private javax.swing.JLabel jLabel87;
-    private javax.swing.JLabel jLabel88;
-    private javax.swing.JLabel jLabel89;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLabel90;
-    private javax.swing.JLabel jLabel91;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
-    private javax.swing.JTextField jTextField16;
-    private javax.swing.JTextField jTextField17;
-    private javax.swing.JTextField jTextField18;
-    private javax.swing.JTextField jTextField19;
-    private javax.swing.JTextField jTextField20;
-    private javax.swing.JTextField jTextField21;
-    private javax.swing.JTextField jTextField22;
-    private javax.swing.JTextField jTextField23;
-    private javax.swing.JTextField jTextField24;
-    private javax.swing.JTextField jTextField25;
-    private javax.swing.JTextField jTextField26;
-    private javax.swing.JTextField jTextField27;
-    private javax.swing.JTextField jTextField28;
-    private javax.swing.JTextField jTextField29;
-    private javax.swing.JTextField jTextField30;
-    private javax.swing.JTextField jTextField31;
-    private javax.swing.JTextField jTextField32;
-    private javax.swing.JTextField jTextField33;
-    private javax.swing.JTextField jTextField34;
-    private javax.swing.JTextField jTextField35;
-    private javax.swing.JTextField jTextField36;
-    private javax.swing.JTextField jTextField37;
-    private javax.swing.JTextField jTextField38;
-    private javax.swing.JTextField jTextField39;
-    private javax.swing.JTextField jTextField40;
-    private javax.swing.JTextField jTextField41;
-    private javax.swing.JTextField jTextField42;
-    private javax.swing.JTextField jTextField43;
-    private javax.swing.JTextField jTextField44;
-    private javax.swing.JTextField jTextField45;
-    private javax.swing.JTextField jTextField46;
-    private javax.swing.JTextField jTextField47;
-    private javax.swing.JTextField jTextField53;
-    private javax.swing.JTextField jTextField54;
-    private javax.swing.JTextField jTextField55;
-    private javax.swing.JTextField jTextField56;
-    private javax.swing.JTextField jTextField57;
-    private javax.swing.JTextField jTextField58;
-    private javax.swing.JTextField jTextField59;
-    private javax.swing.JTextField jTextField60;
-    private javax.swing.JTextField jTextField61;
-    private javax.swing.JTextField jTextField62;
-    private javax.swing.JTextField jTextField63;
-    private javax.swing.JTextField jTextField64;
-    private javax.swing.JTextField jTextField65;
-    private javax.swing.JTextField jTextField66;
-    private javax.swing.JTextField jTextField67;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
-    private javax.swing.JComboBox<String> msYear1;
-    private javax.swing.JComboBox<String> msYear2;
-    private javax.swing.JComboBox<String> msYear3;
-    private javax.swing.JComboBox<String> msYear4;
-    private javax.swing.JComboBox<String> msYear5;
-    private javax.swing.JComboBox<String> msYear6;
-    private javax.swing.JComboBox<String> msYear7;
-    private javax.swing.JComboBox<String> msYear8;
-    private javax.swing.JComboBox<String> msYear9;
-    private javax.swing.JButton previewBtn;
-    private javax.swing.JPanel remuBillDoc;
-    private javax.swing.JTextField session;
-    private javax.swing.JTextField startDate;
-    private javax.swing.JButton submitBtn;
-    private javax.swing.JTextField teacherAddress;
-    private javax.swing.JTextField teacherName;
-    // End of variables declaration//GEN-END:variables
-
 	private String createPdf() {
 		String fileName = "temp/RemuBill.pdf";
-		int BnFontSize = 11;
+		int BnFontSize = 9;
 		int EnFontSize = 9;
 		try {
 			PDDocument document = new PDDocument();
@@ -1848,18 +2235,18 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 
 			PDFWithImages.addLine(document, page, leftMargin, yPos, BnFontSize, "বিলের ক্রমিক নং : " + billSlNoTxt.getText());
 			//Teacher Name And Address
-			PDFWithImages.addLine(document, page, leftMargin, yPos - 40, BnFontSize, "পরীক্ষকের নাম : ");
-			String teacher = teacherName.getText();
-			if (teacher.matches("[a-zA-Z\\s]+")) {
-				// Input given in English
-				PDFWithImages.addLine(document, page, leftMargin + 60, yPos - 39, EnFontSize, teacher, 'b');
-			} else {
-				// Input given in Bangla
-				PDFWithImages.addLine(document, page, leftMargin + 60, yPos - 40, BnFontSize, teacher, 'b');
-			}
+			PDFWithImages.addLine(document, page, leftMargin, yPos - 40, BnFontSize, "পরীক্ষকের নাম : " + teacherName.getText());
+//			String teacher = teacherName.getText();
+////			if (teacher.matches("[a-zA-Z\\s]+")) {
+////				// Input given in English
+////				PDFWithImages.addLine(document, page, leftMargin + 60, yPos - 39, EnFontSize, teacher, 'b');
+////			} else {
+////				// Input given in Bangla
+////				PDFWithImages.addLine(document, page, leftMargin + 60, yPos - 40, BnFontSize, teacher, 'b');
+////			}
 			PDFWithImages.addLine(document, page, leftMargin, yPos - 60, BnFontSize, "পদবি সহকারে ঠিকানা : ");
 			String address = teacherAddress.getText();
-			if (teacher.matches("[a-zA-Z\\s]+")) {
+			if (address.matches("[a-zA-Z\\s]+")) {
 				// Input given in English
 				PDFWithImages.addLine(document, page, leftMargin + 85, yPos - 59, EnFontSize, address, 'b');
 			} else {
@@ -1867,17 +2254,78 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 				PDFWithImages.addLine(document, page, leftMargin + 85, yPos - 59, BnFontSize, address, 'b');
 			}
 			//Batch Info
-			PDFWithImages.addLine(document, page, (pageWidth / 2) + 70, yPos - 40, BnFontSize, "যে বিভাগের পরীক্ষা : ");
-			PDFWithImages.addLine(document, page, (pageWidth / 2) + 145, yPos - 38, EnFontSize, "" + deptSelection.getSelectedItem());
+			PDFWithImages.addLine(document, page, (pageWidth / 2) + 70, yPos - 40, BnFontSize, "যে বিভাগের পরীক্ষা : "+deptSelection.getSelectedItem());
+			//PDFWithImages.addLine(document, page, (pageWidth / 2) + 145, yPos - 38, EnFontSize, "" + deptSelection.getSelectedItem());
 			PDFWithImages.addLine(document, page, (pageWidth / 2) + 70, yPos - 60, BnFontSize,
-				"বর্ষ : " + examYear.getSelectedItem().toString()
-				+ " টার্ম : " + examTerm.getSelectedItem().toString()
+				"বর্ষ : " + examYearCBx.getSelectedItem().toString()
+				+ " টার্ম : " + examTermCBx.getSelectedItem().toString()
 				+ " শিক্ষাবর্ষ : " + Converter.toBanglaNumerals(session.getText())
 			);
+
+			// Create a SimpleDateFormat object with the desired date pattern
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+			// Format the date using the SimpleDateFormat object
+			String startDate = sdf.format(startDateChooser.getDate());
+			String endDate = sdf.format(endDateChooser.getDate());
 			PDFWithImages.addLine(document, page, leftMargin, yPos - 80, BnFontSize,
-				"পরীক্ষা অনুষ্ঠানের তারিখ : " + Converter.toBanglaNumerals(startDate.getText())
-				+ " থেকে " + Converter.toBanglaNumerals(endDate.getText()) + " পর্যন্ত "
-			);
+				"পরীক্ষা অনুষ্ঠানের তারিখ : " + Converter.toBanglaNumerals(startDate)
+				+ " থেকে " + Converter.toBanglaNumerals(endDate) + " পর্যন্ত ");
+			
+			//ExamYear = String.valueOf(jYearChooser1.getYear());
+			PDFWithImages.addLine(document, page, leftMargin, yPos - 100, BnFontSize, Converter.toBanglaNumerals(ExamYear)
+				+ " সনের পরীক্ষা সমূহের প্রশ্নপত্র প্রণয়ন সমন্বয় সাধন"
+				+ " এবং উত্তরপত্র মূল্যায়ন ইত্যাদির জন্য আমার পারিশ্রমিকের দাবীসমূহ নিম্নে সন্নিবেশিত হলো:-");
+
+			//১. প্রশ্নপত্র প্রণয়ন:
+			PDFWithImages.addLine(document, page, leftMargin, yPos -= 120, BnFontSize + 1, "১. প্রশ্নপত্র প্রণয়ন:", 'b');
+			if (q1DeptLbl.isVisible()) {
+				String txt = "ক. একটি " + q1hrCBx.getSelectedItem() + " " + q1DeptLbl.getText() + " "
+					+ q1CrsNmCBx.getSelectedItem() + " বিষয় " + q1CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= 20, BnFontSize, txt);
+			}
+			if (q2DeptLbl.isVisible()) {
+				String txt = "ক. একটি " + q2hrCBx.getSelectedItem() + " " + q2DeptLbl.getText() + " "
+					+ q2CrsNmCBx.getSelectedItem() + " বিষয় " + q2CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= 20, BnFontSize, txt);
+			}
+			if (q3DeptLbl.isVisible()) {
+				String txt = "ক. একটি " + q3hrCBx.getSelectedItem() + " " + q3DeptLbl.getText() + " "
+					+ q3CrsNmCBx.getSelectedItem() + " বিষয় " + q3CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= 20, BnFontSize, txt);
+			}
+			if (q4DeptLbl.isVisible()) {
+				String txt = "ক. একটি " + q4hrCBx.getSelectedItem() + " " + q4DeptLbl.getText() + " "
+					+ q4CrsNmCBx.getSelectedItem() + " বিষয় " + q4CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= 20, BnFontSize, txt);
+			}
+
+			//২. প্রশ্নপত্র সমন্বয় সাধন:
+			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "২. প্রশ্নপত্র সমন্বয় সাধন:", 'b');
+
+			//৩. ক্লাস টেস্ট/টার্ম পেপার/হোম ওয়ার্ক/এসাইনমেন্ট                 (বিবরণী সংযুক্ত)
+			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৩. ক্লাস টেস্ট/টার্ম পেপার/হোম ওয়ার্ক/এসাইনমেন্ট                 (বিবরণী সংযুক্ত)", 'b');
+
+			//৪. উত্তরপত্র মূল্যায়ন:
+			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৪. উত্তরপত্র মূল্যায়ন:", 'b');
+
+			//৫. ব্যবহারিক পরীক্ষা:
+			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৫. ব্যবহারিক পরীক্ষা:", 'b');
+
+			//৬. মৌখিক পরীক্ষা:
+			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৬. মৌখিক পরীক্ষা:", 'b');
+
+			//৭. পরীক্ষার ফল সন্নিবেশ করণ:
+			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৭. পরীক্ষার ফল সন্নিবেশ করণ:", 'b');
+
+			//৮. উত্তরপত্র নিরীক্ষা:
+			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৮. উত্তরপত্র নিরীক্ষা:", 'b');
+
+			//৯. পরীক্ষা পরিষদের সভাপতি/সদস্য (সম্মানি ভাতা)
+			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৯. পরীক্ষা পরিষদের সভাপতি/সদস্য (সম্মানি ভাতা)", 'b');
+
+			//১০. ডাক মাশুল ও অন্যান্য (রশিদ বিলের সাথে সংযুক্ত করতে হবে): 
+			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "১০. ডাক মাশুল ও অন্যান্য (রশিদ বিলের সাথে সংযুক্ত করতে হবে): ", 'b');
 
 			//Draw Underline 
 //			PDPageContentStream contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, true, true);
@@ -1896,5 +2344,191 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 		}
 		return fileName;
 	}
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel ExamRemuBill;
+    private javax.swing.JComboBox<String> NoOfAnsSheet;
+    private javax.swing.JComboBox<String> NoOfQuestionaire;
+    private javax.swing.JComboBox<String> ans1CrsCdCBx;
+    private javax.swing.JLabel ans1CrsCdLbl;
+    private javax.swing.JComboBox<String> ans1CrsNmCBx;
+    private javax.swing.JLabel ans1DeptLbl;
+    private javax.swing.JTextField ans1NoTB;
+    private javax.swing.JPanel ans1Pnl;
+    private javax.swing.JLabel ans1SlLbl;
+    private javax.swing.JLabel ans1SubLbl;
+    private javax.swing.JLabel ans1TLbl;
+    private javax.swing.JComboBox<String> ans1hrCBx;
+    private javax.swing.JComboBox<String> ans2CrsCdCBx;
+    private javax.swing.JLabel ans2CrsCdLbl;
+    private javax.swing.JComboBox<String> ans2CrsNmCBx;
+    private javax.swing.JLabel ans2DeptLbl;
+    private javax.swing.JTextField ans2NoTB;
+    private javax.swing.JPanel ans2Pnl;
+    private javax.swing.JLabel ans2SlLbl;
+    private javax.swing.JLabel ans2SubLbl;
+    private javax.swing.JLabel ans2TLbl;
+    private javax.swing.JComboBox<String> ans2hrCBx;
+    private javax.swing.JComboBox<String> ans3CrsCdCBx;
+    private javax.swing.JLabel ans3CrsCdLbl;
+    private javax.swing.JComboBox<String> ans3CrsNmCBx;
+    private javax.swing.JLabel ans3DeptLbl;
+    private javax.swing.JTextField ans3NoTB;
+    private javax.swing.JPanel ans3Pnl;
+    private javax.swing.JLabel ans3SlLbl;
+    private javax.swing.JLabel ans3SubLbl;
+    private javax.swing.JLabel ans3TLbl;
+    private javax.swing.JComboBox<String> ans3hrCBx;
+    private javax.swing.JComboBox<String> ans4CrsCdCBx;
+    private javax.swing.JLabel ans4CrsCdLbl;
+    private javax.swing.JComboBox<String> ans4CrsNmCBx;
+    private javax.swing.JLabel ans4DeptLbl;
+    private javax.swing.JTextField ans4NoTB;
+    private javax.swing.JPanel ans4Pnl;
+    private javax.swing.JLabel ans4SlLbl;
+    private javax.swing.JLabel ans4SubLbl;
+    private javax.swing.JLabel ans4TLbl;
+    private javax.swing.JComboBox<String> ans4hrCBx;
+    private javax.swing.JComboBox<String> ans5CrsCdCBx;
+    private javax.swing.JLabel ans5CrsCdLbl;
+    private javax.swing.JComboBox<String> ans5CrsNmCBx;
+    private javax.swing.JLabel ans5DeptLbl;
+    private javax.swing.JTextField ans5NoTB;
+    private javax.swing.JPanel ans5Pnl;
+    private javax.swing.JLabel ans5SlLbl;
+    private javax.swing.JLabel ans5SubLbl;
+    private javax.swing.JLabel ans5TLbl;
+    private javax.swing.JComboBox<String> ans5hrCBx;
+    private javax.swing.JLabel ansInsYrDeptLbl;
+    private javax.swing.JLabel billSerialNoLabel;
+    private javax.swing.JTextField billSlNoTxt;
+    private javax.swing.JTextField calendarYear;
+    private javax.swing.JButton cancelBtn;
+    private javax.swing.JLabel cat10Lbl;
+    private javax.swing.JLabel cat1Lbl;
+    private javax.swing.JLabel cat2Lbl;
+    private javax.swing.JLabel cat3Lbl;
+    private javax.swing.JLabel cat4Lbl;
+    private javax.swing.JLabel cat5Lbl;
+    private javax.swing.JLabel cat6Lbl;
+    private javax.swing.JLabel cat7Lbl;
+    private javax.swing.JLabel cat8Lbl;
+    private javax.swing.JLabel cat9Lbl;
+    private javax.swing.JComboBox<String> deptSelection;
+    private com.toedter.calendar.JDateChooser endDateChooser;
+    private javax.swing.JComboBox<String> examTermCBx;
+    private javax.swing.JComboBox<String> examYearCBx;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel101;
+    private javax.swing.JLabel jLabel102;
+    private javax.swing.JLabel jLabel105;
+    private javax.swing.JLabel jLabel106;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
+    private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel74;
+    private javax.swing.JLabel jLabel75;
+    private javax.swing.JLabel jLabel76;
+    private javax.swing.JLabel jLabel77;
+    private javax.swing.JLabel jLabel78;
+    private javax.swing.JLabel jLabel79;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel82;
+    private javax.swing.JLabel jLabel83;
+    private javax.swing.JLabel jLabel86;
+    private javax.swing.JLabel jLabel87;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabel90;
+    private javax.swing.JLabel jLabel91;
+    private javax.swing.JLabel jLabel92;
+    private javax.swing.JLabel jLabel93;
+    private javax.swing.JLabel jLabel94;
+    private javax.swing.JLabel jLabel97;
+    private javax.swing.JLabel jLabel98;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField22;
+    private javax.swing.JTextField jTextField23;
+    private javax.swing.JTextField jTextField47;
+    private javax.swing.JTextField jTextField48;
+    private javax.swing.JTextField jTextField49;
+    private javax.swing.JTextField jTextField50;
+    private javax.swing.JTextField jTextField51;
+    private javax.swing.JTextField jTextField55;
+    private javax.swing.JTextField jTextField56;
+    private javax.swing.JTextField jTextField59;
+    private javax.swing.JTextField jTextField60;
+    private javax.swing.JTextField jTextField63;
+    private javax.swing.JTextField jTextField64;
+    private javax.swing.JTextField jTextField65;
+    private javax.swing.JTextField jTextField66;
+    private javax.swing.JTextField jTextField67;
+    private javax.swing.JTextField jTextField68;
+    private javax.swing.JTextField jTextField70;
+    private javax.swing.JTextField jTextField72;
+    private javax.swing.JComboBox<String> prac1CrsNmCBx;
+    private javax.swing.JLabel prac1YrDeptLbl;
+    private javax.swing.JComboBox<String> prac2CrsNmCBx;
+    private javax.swing.JLabel prac2YrDeptLbl;
+    private javax.swing.JComboBox<String> prac3CrsNmCBx;
+    private javax.swing.JLabel prac3YrDeptLbl;
+    private javax.swing.JComboBox<String> prac4CrsNmCBx;
+    private javax.swing.JLabel prac4YrDeptLbl;
+    private javax.swing.JButton previewBtn;
+    private javax.swing.JComboBox<String> q1CrsCdCBx;
+    private javax.swing.JLabel q1CrsCdLbl;
+    private javax.swing.JComboBox<String> q1CrsNmCBx;
+    private javax.swing.JLabel q1DeptLbl;
+    private javax.swing.JLabel q1NoLbl;
+    private javax.swing.JLabel q1SlLbl;
+    private javax.swing.JLabel q1SubLbl;
+    private javax.swing.JComboBox<String> q1hrCBx;
+    private javax.swing.JComboBox<String> q2CrsCdCBx;
+    private javax.swing.JLabel q2CrsCdLbl;
+    private javax.swing.JComboBox<String> q2CrsNmCBx;
+    private javax.swing.JLabel q2DeptLbl;
+    private javax.swing.JLabel q2NoLbl;
+    private javax.swing.JLabel q2SlLbl;
+    private javax.swing.JLabel q2SubLbl;
+    private javax.swing.JComboBox<String> q2hrCBx;
+    private javax.swing.JComboBox<String> q3CrsCdCBx;
+    private javax.swing.JLabel q3CrsCdLbl;
+    private javax.swing.JComboBox<String> q3CrsNmCBx;
+    private javax.swing.JLabel q3DeptLbl;
+    private javax.swing.JLabel q3NoLbl;
+    private javax.swing.JLabel q3SlLbl;
+    private javax.swing.JLabel q3SubLbl;
+    private javax.swing.JComboBox<String> q3hrCBx;
+    private javax.swing.JComboBox<String> q4CrsCdCBx;
+    private javax.swing.JLabel q4CrsCdLbl;
+    private javax.swing.JComboBox<String> q4CrsNmCBx;
+    private javax.swing.JLabel q4DeptLbl;
+    private javax.swing.JLabel q4NoLbl;
+    private javax.swing.JLabel q4SlLbl;
+    private javax.swing.JLabel q4SubLbl;
+    private javax.swing.JComboBox<String> q4hrCBx;
+    private javax.swing.JComboBox<String> qAdj1CrsNmCBx;
+    private javax.swing.JLabel qAdj1DeptLbl;
+    private javax.swing.JPanel remuBillDoc;
+    private javax.swing.JLabel resultYrDeptLbl;
+    private javax.swing.JTextField session;
+    private com.toedter.calendar.JDateChooser startDateChooser;
+    private javax.swing.JButton submitBtn;
+    private javax.swing.JTextField teacherAddress;
+    private javax.swing.JTextField teacherName;
+    private javax.swing.JPanel testPanel;
+    private javax.swing.JPanel testPanel1;
+    private javax.swing.JPanel testPanel2;
+    private javax.swing.JPanel testPanel3;
+    private javax.swing.JPanel testPanel4;
+    private javax.swing.JLabel vivaYrDeptLbl;
+    // End of variables declaration//GEN-END:variables
 
 }

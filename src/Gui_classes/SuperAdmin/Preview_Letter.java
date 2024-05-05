@@ -9,6 +9,7 @@ import java.awt.FontFormatException;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -429,6 +430,49 @@ public class Preview_Letter extends javax.swing.JFrame {
 		}
 	}
 
+	private String createPdf() {
+		String fileName = "tem/ModifiedLetter.pdf";
+		String str_date = date.getText();
+		String receipient = personnel.getText();
+		String dept = department.getText();
+		String subject = subject_letter.getText();
+		String bodyText = body_letter.getText();
+		try {
+			PDDocument document = new PDDocument();
+			PDPage page = new PDPage(PDRectangle.A4);
+			document.addPage(page);
+
+			PDFWithImages.addHeader(document, page);
+
+			// Office Letter TopMatter
+			int yPos = (int) page.getMediaBox().getHeight() - 115;
+			int leftMargin = 68;
+
+			PDFWithImages.addLine(document, page, 455, yPos, "তারিখঃ " + str_date);
+			PDFWithImages.addLine(document, page, leftMargin, yPos, "স্মারক নং: " + reference.getText());
+			PDFWithImages.addLine(document, page, leftMargin, yPos - 25, "বরাবর");
+			PDFWithImages.addLine(document, page, leftMargin, yPos - 40, receipient);
+			PDFWithImages.addLine(document, page, leftMargin, yPos - 55, dept);
+			PDFWithImages.addLine(document, page, leftMargin, yPos - 70, "নোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়");
+			PDFWithImages.addLine(document, page, leftMargin, yPos - 85, "নোয়াখালী-৩৮১৪");
+			PDFWithImages.addLine(document, page, leftMargin, yPos - 105, "মাধ্যমঃ যথাযথ কর্তৃপক্ষ");
+			PDFWithImages.addLine(document, page, leftMargin, yPos - 125, 13, "বিষয়ঃ " + subject, 'b');
+
+			//Body text
+			yPos = PDFWithImages.addParagraph(document, page, yPos - 155, bodyText);
+
+			yPos -= 60;
+			PDFWithImages.addDesignation(document, page, yPos);
+
+			//Save file for pdf_Preview
+			document.save(fileName);
+			document.close();
+
+		} catch (Exception ex) {
+			Logger.getLogger(Preview_Letter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return fileName;
+	}
 
     private void backBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backBtnMouseClicked
 		// TODO add your handling code here:
@@ -459,11 +503,35 @@ public class Preview_Letter extends javax.swing.JFrame {
 		String subject = subject_letter.getText();
 		String bodyText = body_letter.getText();
 		if (approveBtn.getText() == "Approve") {
+			try (Connection connection = databaseConnection.connection()) {
+				String insertQuery = "UPDATE doc_as_text SET status = ? WHERE doc_id = ?";
+				PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+
+				// Set values for the prepared statement
+				preparedStatement.setString(1, "Approved");
+				preparedStatement.setInt(2, docId);
+
+				// Execute the query
+				preparedStatement.executeUpdate();
+
+				String sql = "UPDATE pdf_storage SET status = ? WHERE pdf_id = ?";
+				preparedStatement = connection.prepareStatement(sql);
+				// Set values for the prepared statement
+				preparedStatement.setString(1, "Approved");
+				preparedStatement.setInt(2, docId);
+
+				// Execute the query
+				preparedStatement.executeUpdate();
+
+			} catch (SQLException ex) {
+				Logger.getLogger(PdfDatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+			}
 			JOptionPane.showMessageDialog(null, "Document Successfully Forwarded for Processing!", "Success", JOptionPane.INFORMATION_MESSAGE);
 			setVisible(false);
 			Home_SU object = new Home_SU();
 			object.setVisible(true);
 		} else if (approveBtn.getText() == "Update") {
+			
 			try (Connection connection = databaseConnection.connection()) {
 				String insertQuery = "UPDATE doc_as_text Set date = ?, receipient = ?, dept = ?, subject = ?, body = ?, status = ? WHERE doc_id = ?";
 				PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
@@ -480,40 +548,27 @@ public class Preview_Letter extends javax.swing.JFrame {
 				// Execute the query
 				preparedStatement.executeUpdate();
 
-			} catch (SQLException ex) {
-				Logger.getLogger(PdfDatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			try {
-				PDDocument document = new PDDocument();
-				PDPage page = new PDPage(PDRectangle.A4);
-				document.addPage(page);
+				System.out.println("Document id: " + docId + ", is updated in doc as text table.");
+				String sql = "UPDATE pdf_storage "
+					+ "SET byte_pdf = ?, status = ? "
+					+ "WHERE pdf_id = ?";
+				String fileName = createPdf();
+				File pdfFile = new File(fileName);
+				try (FileInputStream fis = new FileInputStream(pdfFile)) {
+					preparedStatement = connection.prepareStatement(sql);
 
-				PDFWithImages.addHeader(document, page);
+					// Set values for the prepared statement
+					preparedStatement.setBinaryStream(1, fis, (int) pdfFile.length());
+					preparedStatement.setString(2, "Approved");
+					preparedStatement.setInt(3, docId);
 
-				// Office Letter TopMatter
-				int yPos = (int) page.getMediaBox().getHeight() - 115;
-				int leftMargin = 68;
+					// Execute the query
+					preparedStatement.executeUpdate();
+					System.out.println("Document id: " + docId + ", is updated in pdf storage table.");
 
-				PDFWithImages.addLine(document, page, 455, yPos, "তারিখঃ " + str_date);
-				PDFWithImages.addLine(document, page, leftMargin, yPos, "স্মারক নং: " + reference.getText());
-				PDFWithImages.addLine(document, page, leftMargin, yPos - 25, "বরাবর");
-				PDFWithImages.addLine(document, page, leftMargin, yPos - 40, receipient);
-				PDFWithImages.addLine(document, page, leftMargin, yPos - 55, dept);
-				PDFWithImages.addLine(document, page, leftMargin, yPos - 70, "নোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়");
-				PDFWithImages.addLine(document, page, leftMargin, yPos - 85, "নোয়াখালী-৩৮১৪");
-				PDFWithImages.addLine(document, page, leftMargin, yPos - 105, "মাধ্যমঃ যথাযথ কর্তৃপক্ষ");
-				PDFWithImages.addLine(document, page, leftMargin, yPos - 125, 13, "বিষয়ঃ " + subject, 'b');
-
-				//Body text
-				yPos = PDFWithImages.addParagraph(document, page, yPos - 155, bodyText);
-
-				yPos -= 60;
-				PDFWithImages.addDesignation(document, page, yPos);
-
-				//Save file for pdf_Preview
-				String fileName = "NewLetter.pdf";
-				document.save(fileName);
-				document.close();
+				} catch (SQLException ex) {
+					Logger.getLogger(PdfDatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+				}
 
 				pdf_Preview object = new pdf_Preview(fileName, this, true);
 				object.setVisible(true);
@@ -523,9 +578,8 @@ public class Preview_Letter extends javax.swing.JFrame {
 			} catch (Exception ex) {
 				Logger.getLogger(Preview_Letter.class.getName()).log(Level.SEVERE, null, ex);
 			}
+
 		}
-
-
     }//GEN-LAST:event_approveBtnMouseClicked
 
     private void approveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approveBtnActionPerformed

@@ -174,13 +174,13 @@ public class PDFWithImages {
 
 		// University Name
 		addLine(document, page, 110, yPos-5, 14, "নোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়", 'B');
-		addLine(document, page, 110, yPos - 15, 8, "Noakhali Science and Technology University", 'B');
-		addLine(document, page, 160, yPos - 27, 8, "সোনাপুর, নোয়াখালী-৩৮১৪", 'B');
+		addLine(document, page, 113, yPos - 15, 10, "Noakhali Science and Technology University", 'B');
+		addLine(document, page, 160, yPos - 27, 9, "সোনাপুর, নোয়াখালী-৩৮১৪", 'B');
 
 		// Contacts
-		addLine(document, page, 335, yPos , 7, "Mobile: 01811 150935");
-		addLine(document, page, 335, yPos - 13, 7, "Email: info.nstu.edu.bd");
-		addLine(document, page, 335, yPos - 26, 7, "Website: www.nstu.edu.bd");
+		addLine(document, page, 335, yPos , 9, "Mobile: 01811 150935");
+		addLine(document, page, 335, yPos - 13, 9, "Email: info.nstu.edu.bd");
+		addLine(document, page, 335, yPos - 26, 9, "Website: www.nstu.edu.bd");
 
 		// Department Name
 		addLine(document, page, 460, yPos - 15, 15, "পরীক্ষা নিয়ন্ত্রক দপ্তর", 'B');

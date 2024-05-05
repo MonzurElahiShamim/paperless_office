@@ -1,15 +1,22 @@
 package Gui_classes.SuperAdmin;
 
 import DB_classes.PdfDatabaseManager;
+import DB_classes.databaseConnection;
 import Gui_classes.Admin.Home_Admin;
 import Gui_classes.pdf_Preview;
 import Other.PDFWithImages;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -29,15 +36,18 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
+	int docId;
+
 	public Preview_Office_Order() {
-		int docId = 4;
+		docId = 4;
 		initComponents();
-		modifyValues(docId);
+		modifyValues();
 	}
 
 	public Preview_Office_Order(int docId) {
+		this.docId = docId;
 		initComponents();
-		modifyValues(docId);
+		modifyValues();
 	}
 
 	/**
@@ -54,7 +64,7 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         previewBtn = new javax.swing.JButton();
-        cancelBtn = new javax.swing.JButton();
+        backBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -67,13 +77,15 @@ public class Preview_Office_Order extends javax.swing.JFrame {
         jTextArea2 = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         designation = new javax.swing.JTextArea();
+        approveBtn = new javax.swing.JButton();
+        editBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Compose", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
 
         previewBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        previewBtn.setText("Preview");
+        previewBtn.setText("PDF Preview");
         previewBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 previewBtnMouseClicked(evt);
@@ -85,16 +97,16 @@ public class Preview_Office_Order extends javax.swing.JFrame {
             }
         });
 
-        cancelBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        cancelBtn.setText("Cancel");
-        cancelBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+        backBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        backBtn.setText("Back");
+        backBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cancelBtnMouseClicked(evt);
+                backBtnMouseClicked(evt);
             }
         });
-        cancelBtn.addActionListener(new java.awt.event.ActionListener() {
+        backBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelBtnActionPerformed(evt);
+                backBtnActionPerformed(evt);
             }
         });
 
@@ -186,30 +198,57 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(jPanel2);
 
+        approveBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        approveBtn.setText("Approve");
+        approveBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                approveBtnMouseClicked(evt);
+            }
+        });
+
+        editBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        editBtn.setText("Edit");
+        editBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                editBtnMouseClicked(evt);
+            }
+        });
+        editBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(52, 52, 52)
+                .addGap(47, 47, 47)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 950, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cancelBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(80, 80, 80))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(approveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(previewBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(previewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
-                .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(567, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(approveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(previewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(462, 462, 462)
+                        .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -232,7 +271,7 @@ public class Preview_Office_Order extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-	private void modifyValues(int docId) {
+	private void modifyValues() {
 		String fontPath = "Fonts/Nikosh.ttf";
 		Font customFont = loadCustomFont(fontPath, 18);
 		Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
@@ -242,16 +281,19 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 			// Access the retrieved data
 			String dateText = rowData[0];
 			String bodyText = rowData[4];
-			
+
 			jLabel2.setFont(customFont);
 			jLabel2.setText("তারিখঃ");
 
 			date.setFont(customFont);
 			date.setText(dateText);
+			date.setEditable(false);
 
 			noticeBody.setFont(loadCustomFont(fontPath, 20));
 			noticeBody.setText(bodyText);
+			noticeBody.setEditable(false);
 			
+
 			designation.setFont(loadCustomFont(fontPath, 20));
 		}
 	}
@@ -275,15 +317,8 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 		}
 	}
 
-    private void cancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelBtnMouseClicked
-		// TODO add your handling code here:
-		setVisible(false);
-		Home_Admin object = new Home_Admin();
-		object.setVisible(true);
-    }//GEN-LAST:event_cancelBtnMouseClicked
-
-    private void previewBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previewBtnMouseClicked
-
+	private String createPdf() {
+		String fileName = "NewOfficeOrder.pdf";
 		try {
 			PDDocument document = new PDDocument();
 			PDPage page = new PDPage(PDRectangle.A4);
@@ -311,24 +346,41 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 			yPos = 640;
 			String bodyText = noticeBody.getText();
 			PDFWithImages.addParagraph(document, page, yPos, bodyText);
-			
+
 			//Designation
 			yPos -= 60;
 			PDFWithImages.addDesignation(document, page, yPos);
 
-			String fileName = "NewOfficeOrder.pdf";
 			document.save(fileName);
 			document.close();
-
-			pdf_Preview object = new pdf_Preview(fileName, this, true);
-			object.setVisible(true);
 		} catch (IOException ex) {
 			Logger.getLogger(Preview_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception ex) {
 			Logger.getLogger(Preview_Office_Order.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		return fileName;
+	}
 
+    private void backBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backBtnMouseClicked
+		// TODO add your handling code here:
+		if (backBtn.getText() == "Back") {
+			setVisible(false);
+			Home_Admin object = new Home_Admin();
+			object.setVisible(true);
+		} else {
+			noticeBody.setEditable(false);
+			date.setEditable(false);
+			editBtn.setVisible(true);
+			approveBtn.setText("Appove");
+			backBtn.setText("Back");
+			modifyValues();
+		}
+    }//GEN-LAST:event_backBtnMouseClicked
 
+    private void previewBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previewBtnMouseClicked
+		String fileName = createPdf();
+		pdf_Preview object = new pdf_Preview(fileName, "super", this, true);
+		object.setVisible(true);
     }//GEN-LAST:event_previewBtnMouseClicked
 
     private void previewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewBtnActionPerformed
@@ -339,9 +391,115 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 		// TODO add your handling code here:
     }//GEN-LAST:event_dateActionPerformed
 
-    private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
+    private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
 		// TODO add your handling code here:
-    }//GEN-LAST:event_cancelBtnActionPerformed
+    }//GEN-LAST:event_backBtnActionPerformed
+
+    private void approveBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_approveBtnMouseClicked
+		// TODO add your handling code here:
+		String str_date = date.getText();
+		String receipient = "";
+		String dept = "";
+		String subject = "";
+		String bodyText = noticeBody.getText();
+		if (approveBtn.getText() == "Approve") {
+			try (Connection connection = databaseConnection.connection()) {
+				String insertQuery = "UPDATE doc_as_text SET status = ? WHERE doc_id = ?";
+				PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+
+				// Set values for the prepared statement
+				preparedStatement.setString(1, "Approved");
+				preparedStatement.setInt(2, docId);
+
+				// Execute the query
+				preparedStatement.executeUpdate();
+
+				String sql = "UPDATE pdf_storage SET status = ? WHERE pdf_id = ?";
+				preparedStatement = connection.prepareStatement(sql);
+				// Set values for the prepared statement
+				preparedStatement.setString(1, "Approved");
+				preparedStatement.setInt(2, docId);
+
+				// Execute the query
+				preparedStatement.executeUpdate();
+
+			} catch (SQLException ex) {
+				Logger.getLogger(PdfDatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			JOptionPane.showMessageDialog(null, "Document Successfully Forwarded for Processing!", "Success", JOptionPane.INFORMATION_MESSAGE);
+			setVisible(false);
+			Home_SU object = new Home_SU();
+			object.setVisible(true);
+		} else if (approveBtn.getText() == "Update") {
+			// Updating pdf content
+			String fileName = createPdf();
+
+			// Updating document data and pdf in database
+			try (Connection connection = databaseConnection.connection()) {
+				//Updating in doc_as_text table
+				String insertQuery = "UPDATE doc_as_text "
+					+ "SET date = ?, receipient = ?, dept = ?, subject = ?, body = ?, status = ? "
+					+ "WHERE doc_id = ?";
+
+				PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+
+				// Set values for the prepared statement
+				preparedStatement.setString(1, str_date);
+				preparedStatement.setString(2, receipient);
+				preparedStatement.setString(3, dept);
+				preparedStatement.setString(4, subject);
+				preparedStatement.setString(5, bodyText);
+				preparedStatement.setString(6, "Approved");
+				preparedStatement.setInt(7, docId);
+				// Execute the query
+				preparedStatement.executeUpdate();
+				System.out.println("Document id: " + docId + ", is updated in doc as text table.");
+
+				// Updating in pdf_storage table
+				String sql = "UPDATE pdf_storage "
+					+ "SET byte_pdf = ?, status = ? "
+					+ "WHERE pdf_id = ?";
+				File pdfFile = new File(fileName);
+				try (FileInputStream fis = new FileInputStream(pdfFile)) {
+					preparedStatement = connection.prepareStatement(sql);
+
+					// Set values for the prepared statement
+					preparedStatement.setBinaryStream(1, fis, (int) pdfFile.length());
+					preparedStatement.setString(2, "Approved");
+					preparedStatement.setInt(3, docId);
+
+					// Execute the query
+					preparedStatement.executeUpdate();
+					System.out.println("Document id: " + docId + ", is updated in pdf storage table.");
+				} catch (FileNotFoundException ex) {
+					Logger.getLogger(Preview_Notice.class.getName()).log(Level.SEVERE, null, ex);
+				} catch (IOException ex) {
+					Logger.getLogger(Preview_Notice.class.getName()).log(Level.SEVERE, null, ex);
+				}
+
+			} catch (SQLException ex) {
+				Logger.getLogger(Preview_Notice.class.getName()).log(Level.SEVERE, null, ex);
+			}
+
+			pdf_Preview object = new pdf_Preview(fileName, "super", this, true);
+			object.setVisible(true);
+			//setVisible(false);
+
+		}
+    }//GEN-LAST:event_approveBtnMouseClicked
+
+    private void editBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editBtnMouseClicked
+		// TODO add your handling code here:
+		noticeBody.setEditable(true);
+		date.setEditable(true);
+		editBtn.setVisible(false);
+		approveBtn.setText("Update");
+		backBtn.setText("Cancel");
+    }//GEN-LAST:event_editBtnMouseClicked
+
+    private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
+		// TODO add your handling code here:
+    }//GEN-LAST:event_editBtnActionPerformed
 
 	/**
 	 * @param args the command line
@@ -387,9 +545,11 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelBtn;
+    private javax.swing.JButton approveBtn;
+    private javax.swing.JButton backBtn;
     private javax.swing.JTextField date;
     private javax.swing.JTextArea designation;
+    private javax.swing.JButton editBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

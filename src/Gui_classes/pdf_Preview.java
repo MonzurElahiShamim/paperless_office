@@ -67,15 +67,18 @@ public class pdf_Preview extends javax.swing.JDialog {
 		this.oldFilePath = fileName;
 		this.userType = userType;
 		initComponents();
-		if(userType.equals("admin") || userType.equals("student")){
+		if (userType.equals("admin") || userType.equals("student")) {
 			submitBtn.setVisible(false);
 			correctionBtn.setVisible(false);
 			//backBtn.setVisible(false);
-		}else if(userType.equals("studen")){
-			submitBtn.setText("Apply");
+		} else if (userType.equals("super")) {
+			submitBtn.setVisible(false);
+			correctionBtn.setVisible(false);
 		}
 		openpdf(fileName);
 	}
+
+	
 
 	/**
 	 * This method is called from within
@@ -326,7 +329,7 @@ public class pdf_Preview extends javax.swing.JDialog {
 //			control.getDocumentViewController().setZoom(1.72f);
 			control.getDocumentViewController().setViewType(2);
 			control.getDocumentViewController().setFitMode(4);
-			
+
 			// Set the preferred size of the viewerCompntpnl
 			viewerCompntpnl.setPreferredSize(new Dimension(800, 600));
 

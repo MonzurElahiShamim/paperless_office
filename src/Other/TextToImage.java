@@ -11,6 +11,14 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class TextToImage {
+	
+//	static String fontPath = "E:/FONTS/Nikosh.ttf";
+	static String fontPath = "E:/FONTS/SolaimanLipi_22-02-2012.ttf";
+//	static String fontPath = "E:/FONTS/vrinda.ttf";
+	
+//	static int fontSize = 60; // For Nikosh
+	static int fontSize = 53; // For SolaimanLipi
+//	static int fontSize = ; // For Vrinda
 
 	public static void main(String[] args) throws IOException, Exception {
 		// Example usage
@@ -21,8 +29,7 @@ public class TextToImage {
 	// Takes only text and generates plain font image
 	public static BufferedImage generateImage(String text) throws Exception {
 		BufferedImage tempImage;
-		String fontPath = "E:/FONTS/Nikosh.ttf";
-		Font font = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(Font.PLAIN, 60);
+		Font font = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(Font.PLAIN, fontSize);
 		tempImage = generateImage(text, font);
 		return tempImage;
 	}
@@ -30,13 +37,12 @@ public class TextToImage {
 	// Takes text and font-style (bold or other)
 	public static BufferedImage generateImage(String text, char ch) throws Exception {
 		BufferedImage tempImage;
-		String fontPath = "E:/FONTS/Nikosh.ttf";
 		if (ch == 'B' || ch == 'b') {
-			Font font = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(Font.BOLD, 60);
+			Font font = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(Font.BOLD, fontSize);
 			tempImage = generateImage(text, font);
 			return tempImage;
 		}
-		Font font = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(Font.PLAIN, 60);
+		Font font = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath)).deriveFont(Font.PLAIN, fontSize);
 		tempImage = generateImage(text, font);
 		return tempImage;
 	}
