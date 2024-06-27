@@ -3,9 +3,10 @@ package Gui_classes;
 import Gui_classes.Student.Home_Stu;
 import static DB_classes.DatabaseOperations.retrieveUserDataFromDatabase;
 import DB_classes.PdfDatabaseManager;
+import Gui_classes.Admin.ReceipientSelection;
+import static Other.PDFPrinter.printPDF;
 import Other.UserInfo;
 import Other.UserSession;
-import Other.Converter;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.icepdf.ri.common.ComponentKeyBinding;
 import org.icepdf.ri.common.SwingController;
@@ -67,13 +66,18 @@ public class pdf_Preview extends javax.swing.JDialog {
 		this.oldFilePath = fileName;
 		this.userType = userType;
 		initComponents();
-		if (userType.equals("admin") || userType.equals("student")) {
+		if (userType.equalsIgnoreCase("admin")){
 			submitBtn.setVisible(false);
 			correctionBtn.setVisible(false);
-			//backBtn.setVisible(false);
+			publishBtn.setVisible(true);
+		} else if(userType.equalsIgnoreCase("student") || userType.equalsIgnoreCase("teacher")) {
+			submitBtn.setVisible(false);
+			correctionBtn.setVisible(false);
+			publishBtn.setVisible(false);
 		} else if (userType.equals("super")) {
 			submitBtn.setVisible(false);
 			correctionBtn.setVisible(false);
+			publishBtn.setVisible(false);
 		}
 		openpdf(fileName);
 	}
@@ -97,6 +101,8 @@ public class pdf_Preview extends javax.swing.JDialog {
         submitBtn = new javax.swing.JButton();
         correctionBtn = new javax.swing.JButton();
         backBtn = new javax.swing.JButton();
+        printBtn = new javax.swing.JButton();
+        publishBtn = new javax.swing.JButton();
 
         setSize(new java.awt.Dimension(1300, 700));
 
@@ -126,18 +132,46 @@ public class pdf_Preview extends javax.swing.JDialog {
             }
         });
 
+        printBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        printBtn.setText("Print");
+        printBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                printBtnMouseClicked(evt);
+            }
+        });
+        printBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printBtnActionPerformed(evt);
+            }
+        });
+
+        publishBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        publishBtn.setText("Publish");
+        publishBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                publishBtnMouseClicked(evt);
+            }
+        });
+        publishBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                publishBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1060, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(submitBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1063, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(submitBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                     .addComponent(correctionBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(printBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                    .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(publishBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -147,7 +181,11 @@ public class pdf_Preview extends javax.swing.JDialog {
                 .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(correctionBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 506, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(publishBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 380, Short.MAX_VALUE)
+                .addComponent(printBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(jScrollPane2)
@@ -273,6 +311,26 @@ public class pdf_Preview extends javax.swing.JDialog {
 		parentFrame.setEnabled(true); // Enable the caller frame
     }//GEN-LAST:event_backBtnMouseClicked
 
+    private void printBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_printBtnMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_printBtnMouseClicked
+
+    private void printBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printBtnActionPerformed
+        // TODO add your handling code here:
+		printPDF(oldFilePath);
+    }//GEN-LAST:event_printBtnActionPerformed
+
+    private void publishBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_publishBtnMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_publishBtnMouseClicked
+
+    private void publishBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publishBtnActionPerformed
+        // TODO add your handling code here:
+		ReceipientSelection object = new ReceipientSelection();
+		object.setVisible(true);
+		this.setVisible(false);
+    }//GEN-LAST:event_publishBtnActionPerformed
+
 	/**
 	 * @param args the command line
 	 * arguments
@@ -345,6 +403,8 @@ public class pdf_Preview extends javax.swing.JDialog {
     private javax.swing.JButton correctionBtn;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton printBtn;
+    private javax.swing.JButton publishBtn;
     private javax.swing.JButton submitBtn;
     // End of variables declaration//GEN-END:variables
 }

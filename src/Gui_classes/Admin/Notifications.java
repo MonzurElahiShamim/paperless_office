@@ -7,6 +7,7 @@ import DB_classes.PdfDatabaseManager;
 import DB_classes.databaseConnection;
 import Gui_classes.Approval;
 import Gui_classes.login;
+import Gui_classes.pdf_Preview;
 import Other.UserSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,8 +26,10 @@ public class Notifications extends javax.swing.JFrame {
 
 	private DefaultListModel<Notification> listModel;
 	private List<Notification> notifications;
+	
 
 	public Notifications() {
+		Notifications parent = this;
 		this.notifications = getNotifications();
 		listModel = new DefaultListModel<>();
 
@@ -44,21 +47,24 @@ public class Notifications extends javax.swing.JFrame {
 					PdfDatabaseManager.retrievePdfFromDatabase(selectedNotification.getPdfId(), selectedNotification.getFilePath());
 					String fileName = selectedNotification.getFilePath();
 
-					int docId = selectedNotification.getPdfId();
-					String[] docInfo = PdfDatabaseManager.retrieveDocAsText(docId);
-					if (docInfo[5].equals("letter")) {
-						Preview_Letter object = new Preview_Letter(docId);
-						object.setVisible(true);
-					} else if (docInfo[5].equals("Notice")) {
-						Preview_Notice object = new Preview_Notice(docId);
-						object.setVisible(true);
-					} else if (docInfo[5].equals("Office Order")) {
-						Preview_Office_Order object = new Preview_Office_Order(docId);
-						object.setVisible(true);
-					} else {
-						Approval object = new Approval(fileName);
-						object.setVisible(true);
-					}
+					pdf_Preview object = new pdf_Preview(fileName, "admin", parent, true);
+					object.setVisible(true);
+
+//					int docId = selectedNotification.getPdfId();
+//					String[] docInfo = PdfDatabaseManager.retrieveDocAsText(docId);
+//					if (docInfo[5].equals("letter")) {
+//						Preview_Letter object = new Preview_Letter(docId);
+//						object.setVisible(true);
+//					} else if (docInfo[5].equals("Notice")) {
+//						Preview_Notice object = new Preview_Notice(docId);
+//						object.setVisible(true);
+//					} else if (docInfo[5].equals("Office Order")) {
+//						Preview_Office_Order object = new Preview_Office_Order(docId);
+//						object.setVisible(true);
+//					} else {
+//						Approval object = new Approval(fileName);
+//						object.setVisible(true);
+//					}
 
 					//                    Approval object = new Approval(fileName);
 					//                    object.setVisible(true);
@@ -121,7 +127,7 @@ public class Notifications extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Home", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Notifications", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
 
         notificationList.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         notificationList.setModel(listModel);

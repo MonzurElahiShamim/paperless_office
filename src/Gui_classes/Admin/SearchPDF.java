@@ -12,9 +12,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -226,26 +223,26 @@ public class SearchPDF extends javax.swing.JFrame {
 			System.out.println(docId);
 			PdfDatabaseManager.retrievePdfFromDatabase(docId, "temp/ " + fileName);
 			filePath = "temp/ " + fileName;
-			pdf_Preview object = new pdf_Preview(filePath, this, true);
+			pdf_Preview object = new pdf_Preview(filePath, "admin", this, true);
 			object.setVisible(true);
 
 			// Create a File object representing the file to be deleted
-			File fileToDelete = new File(filePath);
-
-			// Check if the file exists before attempting to delete
-			if (fileToDelete.exists()) {
-				// Attempt to delete the file
-				boolean deletionResult = fileToDelete.delete();
-
-				// Check if the file was successfully deleted
-				if (deletionResult) {
-					System.out.println("File deleted successfully.");
-				} else {
-					System.out.println("Failed to delete the file.");
-				}
-			} else {
-				System.out.println("File does not exist.");
-			}
+//			File fileToDelete = new File(filePath);
+//
+//			// Check if the file exists before attempting to delete
+//			if (fileToDelete.exists()) {
+//				// Attempt to delete the file
+//				boolean deletionResult = fileToDelete.delete();
+//
+//				// Check if the file was successfully deleted
+//				if (deletionResult) {
+//					System.out.println("File deleted successfully.");
+//				} else {
+//					System.out.println("Failed to delete the file.");
+//				}
+//			} else {
+//				System.out.println("File does not exist.");
+//			}
 		}
 
 

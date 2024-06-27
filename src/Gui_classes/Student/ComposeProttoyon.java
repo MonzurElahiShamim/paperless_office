@@ -7,6 +7,7 @@ import Other.UserSession;
 import static Other.Utility.loadCustomFont;
 import Other.Converter;
 import Other.PDFWithImages;
+import Other.Utility;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
@@ -31,7 +32,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
  */
 public class ComposeProttoyon extends javax.swing.JFrame {
 
-	final String fontPath = "Fonts/Nikosh.ttf";
+	final String fontPath = Utility.SOLAIMANLIPI_FONT_PATH;
 	final Font customFont = loadCustomFont(fontPath, 18);
 	final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 

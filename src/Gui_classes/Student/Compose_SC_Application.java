@@ -33,7 +33,7 @@ public class Compose_SC_Application extends javax.swing.JFrame {
 	 * Creates new form compose
 	 */
 	final int fontSize = 13;
-	final String fontPath = "Fonts/Nikosh.ttf";
+	final String fontPath = Utility.NIKOSH_FONT_PATH;
 	final Font customFont = loadCustomFont(fontPath, fontSize);
 	final Font boldCustomFont = Utility.NIKOSH_BOLD;
 
@@ -93,7 +93,7 @@ public class Compose_SC_Application extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        ProgClubApplication.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Programming Club", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
+        ProgClubApplication.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Sports Club", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
 
         previewBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         previewBtn.setText("Preview");

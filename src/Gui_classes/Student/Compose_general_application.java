@@ -6,14 +6,13 @@ import static Other.Utility.createPlaceholderText;
 import static Other.Utility.loadCustomFont;
 import Other.PDFWithImages;
 import Other.UserSession;
+import Other.Utility;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -32,7 +31,7 @@ public class Compose_general_application extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
-	final String fontPath = "Fonts/Nikosh.ttf";
+	final String fontPath = Utility.SOLAIMANLIPI_FONT_PATH;
 	final Font customFont = loadCustomFont(fontPath, 18);
 	final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 
@@ -404,10 +403,10 @@ public class Compose_general_application extends javax.swing.JFrame {
 			Logger.getLogger(pdf_Preview.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		System.out.println("Save as file: " + savePath);
-		String pdfType = "Letter";
+		String pdfType = "Student Application";
 
 		int docId = PdfDatabaseManager.savePDFToDatabase(savePath, pdfType, "Unread");
-		PdfDatabaseManager.saveDocAsText(docId, str_date, receipient, dept, subject, bodyText, "letter", "Unread");
+		PdfDatabaseManager.saveDocAsText(docId, str_date, receipient, dept, subject, bodyText, pdfType, "Unread");
 
 		JOptionPane.showMessageDialog(null, "Document Successfully Saved & Submitted!", "Success", JOptionPane.INFORMATION_MESSAGE);
 		this.setVisible(false);

@@ -1,11 +1,10 @@
 package Gui_classes.Teacher;
 
-import Gui_classes.Admin.*;
-import DB_classes.PdfDatabaseManager;
 import Gui_classes.pdf_Preview;
 import static Other.Utility.createPlaceholderText;
 import static Other.Utility.loadCustomFont;
 import Other.PDFWithImages;
+import Other.Utility;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class Compose_Application extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
-	final String fontPath = "Fonts/Nikosh.ttf";
+	final String fontPath = Utility.SOLAIMANLIPI_FONT_PATH;
 	final Font customFont = loadCustomFont(fontPath, 18);
 	final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 
@@ -193,7 +192,6 @@ public class Compose_Application extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel3)
-                    .addComponent(uni_name, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,7 +202,8 @@ public class Compose_Application extends javax.swing.JFrame {
                             .addComponent(subject_letter, javax.swing.GroupLayout.PREFERRED_SIZE, 731, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(department, javax.swing.GroupLayout.PREFERRED_SIZE, 770, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(medium, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(uni_name, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(89, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(

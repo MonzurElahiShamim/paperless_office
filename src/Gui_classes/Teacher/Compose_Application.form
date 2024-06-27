@@ -157,7 +157,6 @@
                                   <Component id="date" min="-2" pref="101" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <Component id="uni_name" alignment="0" min="-2" pref="240" max="-2" attributes="0"/>
                               <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                                   <Component id="jScrollPane3" alignment="0" max="32767" attributes="0"/>
@@ -171,6 +170,7 @@
                               <Component id="department" alignment="0" min="-2" pref="770" max="-2" attributes="0"/>
                               <Component id="medium" alignment="0" min="-2" pref="154" max="-2" attributes="0"/>
                               <Component id="jScrollPane5" alignment="0" min="-2" pref="337" max="-2" attributes="0"/>
+                              <Component id="uni_name" alignment="0" min="-2" pref="270" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="89" max="32767" attributes="0"/>
                       </Group>

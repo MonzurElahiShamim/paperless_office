@@ -49,8 +49,21 @@ public class ReceipientSelection extends javax.swing.JFrame {
 			return false; // Make all cells non-editable
 		}
 	};
+	
+	String fileName;
 
 	public ReceipientSelection() {
+		initComponents();
+		refreshPdfList();
+		setTable1Layout();
+		setTable2Layout();
+		setTable3Layout();
+		getSession();
+
+	}
+	
+	public ReceipientSelection(String fileName) {
+		this.fileName = fileName;
 		initComponents();
 		refreshPdfList();
 		setTable1Layout();

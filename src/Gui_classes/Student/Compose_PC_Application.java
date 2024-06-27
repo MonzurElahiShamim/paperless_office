@@ -34,7 +34,7 @@ public class Compose_PC_Application extends javax.swing.JFrame {
 	 * Creates new form compose
 	 */
 	final int fontSize = 13;
-	final String fontPath = "Fonts/Nikosh.ttf";
+	final String fontPath = Utility.NIKOSH_FONT_PATH;
 	final Font customFont = loadCustomFont(fontPath, fontSize);
 	final Font boldCustomFont = Utility.NIKOSH_BOLD;
 

@@ -2,23 +2,50 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="26a25a27-74a0-48ba-8001-d98564047448" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/NewLetter.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/NewLetter.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewNotice.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/NewNotice.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewOfficeOrder.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/NewOfficeOrder.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Office_order_Template.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Office_order_Template.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Gui_classes/Teacher/NOCApplication.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Gui_classes/Teacher/NOCApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PaperlessOffice-L4J.xml" beforeDir="false" afterPath="$PROJECT_DIR$/PaperlessOffice-L4J.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Doc_classes/LetterTemplate.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Doc_classes/NoticeTemplate.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Letter.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Letter.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Letter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Letter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Notice.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Notice.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Notice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Notice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Office_Order.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Office_Order.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Compose_Office_Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Compose_Office_Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Preview.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Preview.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Preview.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Preview.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Test_classes/PDFWithImages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Test_classes/PDFWithImages.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Test_classes/TextToJpeg.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/Audience_Selection.form" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/Audience_Selection.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/Compose_Letter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Admin/Compose_Letter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/Compose_Notice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Admin/Compose_Notice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/Compose_Office_Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Admin/Compose_Office_Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/Home_Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Admin/Home_Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/Notifications.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Admin/Notifications.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/Notifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Admin/Notifications.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/ReceipientSelection.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Admin/ReceipientSelection.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/ReceipientSelection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Admin/ReceipientSelection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Admin/SearchPDF.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Admin/SearchPDF.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/ComposeApplicationMarksheet.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/ComposeApplicationMarksheet.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/ComposeApplicationMarksheet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/ComposeApplicationMarksheet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/ComposeProshongsha.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/ComposeProshongsha.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/ComposeProttoyon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/ComposeProttoyon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/Compose_PC_Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/Compose_PC_Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/Compose_SC_Application.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/Compose_SC_Application.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/Compose_SC_Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/Compose_SC_Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/Compose_general_application.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/Compose_general_application.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/Compose_general_application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/Compose_general_application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/Home_Stu.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/Home_Stu.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Student/Home_Stu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Student/Home_Stu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/SuperAdmin/Preview_Letter.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/SuperAdmin/Preview_Letter.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/SuperAdmin/Preview_Letter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/SuperAdmin/Preview_Letter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/SuperAdmin/Preview_Notice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/SuperAdmin/Preview_Notice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/SuperAdmin/Preview_Office_Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/SuperAdmin/Preview_Office_Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Teacher/Compose_Application.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Teacher/Compose_Application.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Teacher/Compose_Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Teacher/Compose_Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Teacher/Compose_RemuBill.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Teacher/Compose_RemuBill.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Teacher/Compose_RemuBill.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Teacher/Compose_RemuBill.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Teacher/Home_Teacher.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Teacher/Home_Teacher.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Teacher/Home_Teacher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Teacher/Home_Teacher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/Teacher/ProfileTeacher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/Teacher/ProfileTeacher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/pdf_Preview.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/pdf_Preview.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Gui_classes/pdf_Preview.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Gui_classes/pdf_Preview.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Other/PDFWithImages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Other/PDFWithImages.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Other/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Other/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,13 +66,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-  </component>
-  <component name="RunManager">
-    <configuration name="Unnamed" type="AntRunConfiguration" nameIsGenerated="true">
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../StringIndx.java" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

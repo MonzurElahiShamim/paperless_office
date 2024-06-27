@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>E:\PaperlessOffice\dist\PaperlessOffice.jar</jar>
-  <outfile>E:\PaperlessOffice\dist\PaperlessOffice.exe</outfile>
+  <outfile>E:\PaperlessOffice\dist\Paperless Office.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir></chdir>

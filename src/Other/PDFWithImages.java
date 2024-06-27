@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
 
 public class PDFWithImages {
 
-	private static final String BENGALI_FONT_PATH = "Fonts/Nikosh.ttf";  // Adjust the path
+	private static final String BENGALI_FONT_PATH = "E:/Fonts/Nikosh.ttf";  // Adjust the path
 	private static final PDFont FONT;
 
 	static {

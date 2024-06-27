@@ -7,6 +7,8 @@ import Other.UserSession;
 import static Other.Utility.loadCustomFont;
 import Other.Converter;
 import Other.PDFWithImages;
+import Other.Utility;
+import static Other.Utility.setCommonFont;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
@@ -31,13 +33,15 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
  */
 public class ComposeApplicationMarksheet extends javax.swing.JFrame {
 
-	final String fontPath = "Fonts/Nikosh.ttf";
-	final Font customFont = loadCustomFont(fontPath, 18);
-	final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
+	final String fontPath = Utility.SOLAIMANLIPI_FONT_PATH;
+	final int fontSize = 14;
+	final Font customFont = loadCustomFont(fontPath, fontSize);
+	final Font boldCustomFont = loadCustomFont(fontPath, fontSize, Font.BOLD);
 
 
 	public ComposeApplicationMarksheet() {
 		initComponents();
+		setCommonFont(jPanel1, customFont);
 	}
 
 	/**
@@ -75,7 +79,8 @@ public class ComposeApplicationMarksheet extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Application for Marksheet", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 1, 18))); // NOI18N
 
-        jLabel1.setText("Marksheet of  Year");
+        jLabel1.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel1.setText("যে সেমিস্টারের মার্কশিট:  বর্ষ");
 
         msYear.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         msYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "১", "২", "৩", "৪" }));
@@ -85,7 +90,8 @@ public class ComposeApplicationMarksheet extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Term");
+        jLabel2.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel2.setText("টার্ম");
 
         msTerm.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         msTerm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "১", "২" }));
@@ -98,18 +104,21 @@ public class ComposeApplicationMarksheet extends javax.swing.JFrame {
         oldChkBox.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         oldChkBox.setText("পুনরায়");
 
-        jLabel3.setText("Your Current  Year");
+        jLabel3.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel3.setText("বর্তমান সেমিস্টার:  বর্ষ");
 
         currentYear.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
         currentYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "১", "২", "৩", "৪" }));
         currentYear.setToolTipText("");
 
-        jLabel4.setText("Term");
+        jLabel4.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel4.setText("টার্ম");
 
         currentTerm.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
         currentTerm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "১", "২" }));
 
-        jLabel8.setText("Bank Receipt No");
+        jLabel8.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel8.setText("ব্যাংক রশিদ নং:");
 
         bankReceiptNo.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
 
@@ -130,7 +139,8 @@ public class ComposeApplicationMarksheet extends javax.swing.JFrame {
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/student-grades.png"))); // NOI18N
         jLabel9.setText("jLabel9");
 
-        jLabel10.setText("Mark Sheet Type");
+        jLabel10.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        jLabel10.setText("মার্কশিটের ধরন:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -145,11 +155,11 @@ public class ComposeApplicationMarksheet extends javax.swing.JFrame {
                         .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(msYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(msTerm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel10)
@@ -164,7 +174,7 @@ public class ComposeApplicationMarksheet extends javax.swing.JFrame {
                             .addComponent(bankReceiptNo))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(currentYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(jLabel4)

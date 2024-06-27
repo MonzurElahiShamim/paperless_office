@@ -1,16 +1,18 @@
 package Gui_classes.Teacher;
 
+import static DB_classes.DatabaseOperations.retrieveTeacherDataFromDatabase;
 import DB_classes.PdfDatabaseManager;
 import DB_classes.databaseConnection;
-import Gui_classes.Admin.Home_Admin;
 import Gui_classes.pdf_Preview;
 import Other.Converter;
 import static Other.Converter.toEnglishNumerals;
+import Other.NumberToWordsConverter;
 import static Other.Utility.loadCustomFont;
 import static Other.Utility.setCommonFont;
 import Other.PDFWithImages;
-import Other.Utility;
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+import Other.Teacher;
+import Other.UserSession;
+import static Other.Utility.createPlaceholderText;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
@@ -19,7 +21,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,10 +28,13 @@ import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -46,8 +50,10 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
+	private Teacher teacher;
+
 	final int fontSize = 14;
-	final String fontPath = "Fonts/SolaimanLipi_22-02-2012.ttf";
+	final String fontPath = "G:/Fonts/SolaimanLipi_22-02-2012.ttf";
 	final Font customFont = loadCustomFont(fontPath, fontSize);
 	final Font boldCustomFont = loadCustomFont(fontPath, fontSize, Font.BOLD);
 
@@ -62,6 +68,13 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 	int NoPrac;
 
 	public Compose_RemuBill() {
+		this.teacher = retrieveTeacherDataFromDatabase(UserSession.getInstance().getUser());
+		initComponents();
+		modifyValues();
+	}
+
+	public Compose_RemuBill(String email) {
+		this.teacher = retrieveTeacherDataFromDatabase(email);
 		initComponents();
 		modifyValues();
 	}
@@ -130,9 +143,9 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         cat2Lbl = new javax.swing.JLabel();
         qAdj1DeptLbl = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
-        jTextField22 = new javax.swing.JTextField();
+        qAdjNoTB = new javax.swing.JTextField();
         jLabel41 = new javax.swing.JLabel();
-        jTextField23 = new javax.swing.JTextField();
+        qAdjNoPTB = new javax.swing.JTextField();
         jLabel42 = new javax.swing.JLabel();
         cat3Lbl = new javax.swing.JLabel();
         cat4Lbl = new javax.swing.JLabel();
@@ -140,33 +153,33 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         cat6Lbl = new javax.swing.JLabel();
         cat7Lbl = new javax.swing.JLabel();
         cat8Lbl = new javax.swing.JLabel();
-        jTextField55 = new javax.swing.JTextField();
+        vivaCrsNmTB = new javax.swing.JTextField();
         jLabel82 = new javax.swing.JLabel();
-        jTextField56 = new javax.swing.JTextField();
+        vivaNoOfStTB = new javax.swing.JTextField();
         jLabel83 = new javax.swing.JLabel();
-        jTextField59 = new javax.swing.JTextField();
+        resultCrsNmTB = new javax.swing.JTextField();
         jLabel86 = new javax.swing.JLabel();
-        jTextField60 = new javax.swing.JTextField();
+        resultNoOfStTB = new javax.swing.JTextField();
         jLabel87 = new javax.swing.JLabel();
-        jTextField63 = new javax.swing.JTextField();
+        ansInsCrsNmTB = new javax.swing.JTextField();
         jLabel90 = new javax.swing.JLabel();
-        jTextField64 = new javax.swing.JTextField();
+        ansInsNoOfSheetsTB = new javax.swing.JTextField();
         jLabel91 = new javax.swing.JLabel();
         cat9Lbl = new javax.swing.JLabel();
         cat10Lbl = new javax.swing.JLabel();
         jLabel76 = new javax.swing.JLabel();
         jLabel77 = new javax.swing.JLabel();
         jLabel78 = new javax.swing.JLabel();
-        jTextField65 = new javax.swing.JTextField();
-        jTextField66 = new javax.swing.JTextField();
-        jTextField67 = new javax.swing.JTextField();
+        others1TB = new javax.swing.JTextField();
+        others2TB = new javax.swing.JTextField();
+        others3TB = new javax.swing.JTextField();
         deptSelection = new javax.swing.JComboBox<>();
         NoOfQuestionaire = new javax.swing.JComboBox<>();
         NoOfAnsSheet = new javax.swing.JComboBox<>();
-        testPanel = new javax.swing.JPanel();
+        prac1Pnl = new javax.swing.JPanel();
         prac1YrDeptLbl = new javax.swing.JLabel();
         jLabel74 = new javax.swing.JLabel();
-        jTextField47 = new javax.swing.JTextField();
+        prac1NoOfDutyTB = new javax.swing.JTextField();
         jLabel75 = new javax.swing.JLabel();
         prac1CrsNmCBx = new javax.swing.JComboBox<>();
         ans5Pnl = new javax.swing.JPanel();
@@ -219,21 +232,21 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         ans4CrsCdLbl = new javax.swing.JLabel();
         ans4CrsNmCBx = new javax.swing.JComboBox<>();
         ans4CrsCdCBx = new javax.swing.JComboBox<>();
-        testPanel2 = new javax.swing.JPanel();
+        prac2Pnl = new javax.swing.JPanel();
         jLabel97 = new javax.swing.JLabel();
-        jTextField70 = new javax.swing.JTextField();
+        prac2NoOfDutyTB = new javax.swing.JTextField();
         jLabel98 = new javax.swing.JLabel();
         prac2YrDeptLbl = new javax.swing.JLabel();
         prac2CrsNmCBx = new javax.swing.JComboBox<>();
-        testPanel4 = new javax.swing.JPanel();
+        prac3Pnl = new javax.swing.JPanel();
         jLabel105 = new javax.swing.JLabel();
-        jTextField68 = new javax.swing.JTextField();
+        prac3NoOfDutyTB = new javax.swing.JTextField();
         jLabel106 = new javax.swing.JLabel();
         prac3YrDeptLbl = new javax.swing.JLabel();
         prac3CrsNmCBx = new javax.swing.JComboBox<>();
-        testPanel3 = new javax.swing.JPanel();
+        prac4Pnl = new javax.swing.JPanel();
         jLabel101 = new javax.swing.JLabel();
-        jTextField72 = new javax.swing.JTextField();
+        prac4NoOfDutyTB = new javax.swing.JTextField();
         jLabel102 = new javax.swing.JLabel();
         prac4YrDeptLbl = new javax.swing.JLabel();
         prac4CrsNmCBx = new javax.swing.JComboBox<>();
@@ -249,8 +262,38 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         q2CrsCdCBx = new javax.swing.JComboBox<>();
         q3CrsCdCBx = new javax.swing.JComboBox<>();
         q4CrsCdCBx = new javax.swing.JComboBox<>();
-        startDateChooser = new com.toedter.calendar.JDateChooser();
-        endDateChooser = new com.toedter.calendar.JDateChooser();
+        amountPanel = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        q1Amount = new javax.swing.JTextField();
+        q2Amount = new javax.swing.JTextField();
+        q4Amount = new javax.swing.JTextField();
+        q3Amount = new javax.swing.JTextField();
+        ans1Amount = new javax.swing.JTextField();
+        ans2Amount = new javax.swing.JTextField();
+        ans3Amount = new javax.swing.JTextField();
+        ans4Amount = new javax.swing.JTextField();
+        qAdj1Amount = new javax.swing.JTextField();
+        ans5Amount = new javax.swing.JTextField();
+        ct1Amount = new javax.swing.JTextField();
+        prac1AmountTB = new javax.swing.JTextField();
+        prac2AmountTB = new javax.swing.JTextField();
+        prac3AmountTB = new javax.swing.JTextField();
+        prac4AmountTB = new javax.swing.JTextField();
+        vivaAmount = new javax.swing.JTextField();
+        resultAmount = new javax.swing.JTextField();
+        ansInsAmount = new javax.swing.JTextField();
+        honoriumAmount = new javax.swing.JTextField();
+        others1Amount = new javax.swing.JTextField();
+        others2Amount = new javax.swing.JTextField();
+        others3Amount = new javax.swing.JTextField();
+        grandTotal = new javax.swing.JTextField();
+        ctDescTB = new javax.swing.JTextField();
+        NoOfPrac = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        inSentence = new javax.swing.JTextField();
+        startDate = new javax.swing.JTextField();
+        endDate = new javax.swing.JTextField();
         submitBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -284,7 +327,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         });
 
         remuBillDoc.setBackground(new java.awt.Color(255, 255, 255));
-        remuBillDoc.setPreferredSize(new java.awt.Dimension(930, 1315));
+        remuBillDoc.setPreferredSize(new java.awt.Dimension(930, 1400));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Photos/ExamControl_Pad_Header.png"))); // NOI18N
 
@@ -337,7 +380,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         session.setFont(customFont);
 
         calendarYear.setFont(customFont);
-        calendarYear.setText("2020");
+        calendarYear.setText("২০২৩");
         calendarYear.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 calendarYearKeyReleased(evt);
@@ -372,8 +415,13 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         q1NoLbl.setText("একটি");
 
         q1hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        q1hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        q1hrCBx.setSelectedIndex(2);
+        q1hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "৩", "৪" }));
+        q1hrCBx.setToolTipText("");
+        q1hrCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q1hrCBxActionPerformed(evt);
+            }
+        });
 
         q1DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         q1DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
@@ -388,8 +436,13 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         q2NoLbl.setText("একটি");
 
         q2hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        q2hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        q2hrCBx.setSelectedIndex(2);
+        q2hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "৩", "৪" }));
+        q2hrCBx.setToolTipText("");
+        q2hrCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q2hrCBxActionPerformed(evt);
+            }
+        });
 
         q2DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         q2DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
@@ -404,8 +457,13 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         q3NoLbl.setText("একটি");
 
         q3hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        q3hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        q3hrCBx.setSelectedIndex(2);
+        q3hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "৩", "৪" }));
+        q3hrCBx.setToolTipText("");
+        q3hrCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q3hrCBxActionPerformed(evt);
+            }
+        });
 
         q3DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         q3DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
@@ -420,8 +478,13 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         q4NoLbl.setText("একটি");
 
         q4hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        q4hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
-        q4hrCBx.setSelectedIndex(2);
+        q4hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "৩", "৪" }));
+        q4hrCBx.setToolTipText("");
+        q4hrCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                q4hrCBxActionPerformed(evt);
+            }
+        });
 
         q4DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         q4DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
@@ -441,20 +504,18 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel40.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel40.setText("বিষয়");
 
-        jTextField22.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField22.setText("সংখ্যা");
+        qAdjNoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
 
         jLabel41.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel41.setText("টা প্রশ্নপত্র");
 
-        jTextField23.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField23.setText("সংখ্যা");
+        qAdjNoPTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
 
         jLabel42.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel42.setText("জন সদস্য করেন ।");
 
         cat3Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
-        cat3Lbl.setText("৩. ক্লাস টেস্ট/টার্ম পেপার/হোম ওয়ার্ক/এসাইনমেন্ট                 (বিবরণী সংযুক্ত)");
+        cat3Lbl.setText("৩. ক্লাস টেস্ট/টার্ম পেপার/হোম ওয়ার্ক/এসাইনমেন্ট    (বিবরণী সংযুক্ত)");
 
         cat4Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
         cat4Lbl.setText("৪. উত্তরপত্র মূল্যায়ন:");
@@ -471,35 +532,45 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         cat8Lbl.setFont(new java.awt.Font("Siyam Rupali", 1, 11)); // NOI18N
         cat8Lbl.setText("৮. উত্তরপত্র নিরীক্ষা:");
 
-        jTextField55.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField55.setText("course name");
+        vivaCrsNmTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        vivaCrsNmTB.setText("course name");
 
         jLabel82.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel82.setText("বিষয়ে");
 
-        jTextField56.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        vivaNoOfStTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        vivaNoOfStTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                vivaNoOfStTBKeyReleased(evt);
+            }
+        });
 
         jLabel83.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel83.setText("জন পরীক্ষার্থীর জন্য ।");
 
-        jTextField59.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField59.setText("course name");
+        resultCrsNmTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        resultCrsNmTB.setText("course name");
 
         jLabel86.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel86.setText("বিষয়ে");
 
-        jTextField60.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        resultNoOfStTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        resultNoOfStTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                resultNoOfStTBKeyReleased(evt);
+            }
+        });
 
         jLabel87.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jLabel87.setText("জন পরীক্ষার্থীর জন্য ।");
+        jLabel87.setText("জন পরীক্ষার্থীর জন্য।");
 
-        jTextField63.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        jTextField63.setText("course name");
+        ansInsCrsNmTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ansInsCrsNmTB.setText("course name");
 
         jLabel90.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel90.setText("বিষয়ের");
 
-        jTextField64.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ansInsNoOfSheetsTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
 
         jLabel91.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel91.setText("উত্তরপত্র নিরীক্ষা ।");
@@ -519,19 +590,16 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel78.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel78.setText("গ.");
 
-        jTextField65.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        others1TB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
 
-        jTextField66.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        others2TB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
 
-        jTextField67.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        others3TB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
 
         deptSelection.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         deptSelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select One", "ACCE", "Agriculture", "Applied Mathematics", "Bangla", "BGE", "BMB", "BMS", "Chemistry", "CSTE", "DBA", "EEE", "Economics", "Education", "Educational Administration", "English", "ESDM", "FTNS", "FIMS", "ICE", "LAW", "Microbiology", "MIS", "Oceanography", "Pharmacy", "Physics", "Social Work", "Sociology", "Soil, Water and Environment", "Statistics", "THM", "Zoology" }));
-        deptSelection.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                deptSelectionFocusLost(evt);
-            }
-        });
+        deptSelection.setSelectedIndex(19);
+        deptSelection.setToolTipText("");
         deptSelection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deptSelectionActionPerformed(evt);
@@ -555,12 +623,17 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         });
 
         prac1YrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        prac1YrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+        prac1YrDeptLbl.setText("ক. <exam year> সনের <exam name> পরীক্ষার");
 
         jLabel74.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel74.setText("বিষয়ে");
 
-        jTextField47.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac1NoOfDutyTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac1NoOfDutyTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                prac1NoOfDutyTBKeyReleased(evt);
+            }
+        });
 
         jLabel75.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel75.setText("দিন ।");
@@ -572,30 +645,30 @@ public class Compose_RemuBill extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout testPanelLayout = new javax.swing.GroupLayout(testPanel);
-        testPanel.setLayout(testPanelLayout);
-        testPanelLayout.setHorizontalGroup(
-            testPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(testPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout prac1PnlLayout = new javax.swing.GroupLayout(prac1Pnl);
+        prac1Pnl.setLayout(prac1PnlLayout);
+        prac1PnlLayout.setHorizontalGroup(
+            prac1PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(prac1PnlLayout.createSequentialGroup()
                 .addComponent(prac1YrDeptLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(prac1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel74)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField47, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(prac1NoOfDutyTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel75)
                 .addContainerGap(148, Short.MAX_VALUE))
         );
-        testPanelLayout.setVerticalGroup(
-            testPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(testPanelLayout.createSequentialGroup()
+        prac1PnlLayout.setVerticalGroup(
+            prac1PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(prac1PnlLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(testPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(prac1PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(prac1YrDeptLbl)
                     .addComponent(jLabel74)
-                    .addComponent(jTextField47, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(prac1NoOfDutyTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel75)
                     .addComponent(prac1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
@@ -604,12 +677,28 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         ans5SlLbl.setText("ঙ.");
 
         ans5NoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans5NoTB.setText("0");
+        ans5NoTB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ans5NoTBMouseClicked(evt);
+            }
+        });
+        ans5NoTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                ans5NoTBKeyReleased(evt);
+            }
+        });
 
         ans5TLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         ans5TLbl.setText("টি");
 
         ans5hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        ans5hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+        ans5hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "৩", "৪" }));
+        ans5hrCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans5hrCBxActionPerformed(evt);
+            }
+        });
 
         ans5DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         ans5DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
@@ -679,12 +768,33 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         ans1SlLbl.setText("ক.");
 
         ans1NoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans1NoTB.setText("0");
+        ans1NoTB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ans1NoTBMouseClicked(evt);
+            }
+        });
+        ans1NoTB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans1NoTBActionPerformed(evt);
+            }
+        });
+        ans1NoTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                ans1NoTBKeyReleased(evt);
+            }
+        });
 
         ans1TLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         ans1TLbl.setText("টি");
 
         ans1hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        ans1hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+        ans1hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "৩", "৪" }));
+        ans1hrCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans1hrCBxActionPerformed(evt);
+            }
+        });
 
         ans1DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         ans1DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
@@ -754,12 +864,28 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         ans2SlLbl.setText("খ.");
 
         ans2NoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans2NoTB.setText("0");
+        ans2NoTB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ans2NoTBMouseClicked(evt);
+            }
+        });
+        ans2NoTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                ans2NoTBKeyReleased(evt);
+            }
+        });
 
         ans2TLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         ans2TLbl.setText("টি");
 
         ans2hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        ans2hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+        ans2hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "৩", "৪" }));
+        ans2hrCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans2hrCBxActionPerformed(evt);
+            }
+        });
 
         ans2DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         ans2DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
@@ -829,7 +955,12 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         ans3TLbl.setText("টি");
 
         ans3hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        ans3hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+        ans3hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "৩", "৪" }));
+        ans3hrCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans3hrCBxActionPerformed(evt);
+            }
+        });
 
         ans3DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         ans3DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
@@ -841,6 +972,17 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         ans3CrsCdLbl.setText("কোর্স কোড ।");
 
         ans3NoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans3NoTB.setText("0");
+        ans3NoTB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ans3NoTBMouseClicked(evt);
+            }
+        });
+        ans3NoTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                ans3NoTBKeyReleased(evt);
+            }
+        });
 
         ans3SlLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         ans3SlLbl.setText("গ.");
@@ -904,12 +1046,29 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         ans4SlLbl.setText("ঘ.");
 
         ans4NoTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        ans4NoTB.setText("0");
+        ans4NoTB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ans4NoTBMouseClicked(evt);
+            }
+        });
+        ans4NoTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                ans4NoTBKeyReleased(evt);
+            }
+        });
 
         ans4TLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         ans4TLbl.setText("টি");
 
         ans4hrCBx.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        ans4hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "২", "৩", "৪" }));
+        ans4hrCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "৩", "৪" }));
+        ans4hrCBx.setToolTipText("");
+        ans4hrCBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ans4hrCBxActionPerformed(evt);
+            }
+        });
 
         ans4DeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         ans4DeptLbl.setText("ঘন্টা: <exam name> পরীক্ষার");
@@ -978,13 +1137,18 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel97.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel97.setText("বিষয়ে");
 
-        jTextField70.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac2NoOfDutyTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac2NoOfDutyTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                prac2NoOfDutyTBKeyReleased(evt);
+            }
+        });
 
         jLabel98.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel98.setText("দিন ।");
 
         prac2YrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        prac2YrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+        prac2YrDeptLbl.setText("খ. <exam year> সনের <exam name> পরীক্ষার");
 
         prac2CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         prac2CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
@@ -993,11 +1157,11 @@ public class Compose_RemuBill extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout testPanel2Layout = new javax.swing.GroupLayout(testPanel2);
-        testPanel2.setLayout(testPanel2Layout);
-        testPanel2Layout.setHorizontalGroup(
-            testPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(testPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout prac2PnlLayout = new javax.swing.GroupLayout(prac2Pnl);
+        prac2Pnl.setLayout(prac2PnlLayout);
+        prac2PnlLayout.setHorizontalGroup(
+            prac2PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(prac2PnlLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(prac2YrDeptLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1005,19 +1169,19 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel97)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField70, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(prac2NoOfDutyTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel98)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        testPanel2Layout.setVerticalGroup(
-            testPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, testPanel2Layout.createSequentialGroup()
+        prac2PnlLayout.setVerticalGroup(
+            prac2PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, prac2PnlLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(testPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(prac2PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(prac2YrDeptLbl)
                     .addComponent(jLabel97)
-                    .addComponent(jTextField70, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(prac2NoOfDutyTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel98)
                     .addComponent(prac2CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0))
@@ -1026,13 +1190,18 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel105.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel105.setText("বিষয়ে");
 
-        jTextField68.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac3NoOfDutyTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac3NoOfDutyTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                prac3NoOfDutyTBKeyReleased(evt);
+            }
+        });
 
         jLabel106.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel106.setText("দিন ।");
 
         prac3YrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        prac3YrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+        prac3YrDeptLbl.setText("গ. <exam year> সনের <exam name> পরীক্ষার");
 
         prac3CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         prac3CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
@@ -1041,29 +1210,29 @@ public class Compose_RemuBill extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout testPanel4Layout = new javax.swing.GroupLayout(testPanel4);
-        testPanel4.setLayout(testPanel4Layout);
-        testPanel4Layout.setHorizontalGroup(
-            testPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(testPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout prac3PnlLayout = new javax.swing.GroupLayout(prac3Pnl);
+        prac3Pnl.setLayout(prac3PnlLayout);
+        prac3PnlLayout.setHorizontalGroup(
+            prac3PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(prac3PnlLayout.createSequentialGroup()
                 .addComponent(prac3YrDeptLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(prac3CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel105)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField68, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(prac3NoOfDutyTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel106)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        testPanel4Layout.setVerticalGroup(
-            testPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(testPanel4Layout.createSequentialGroup()
+        prac3PnlLayout.setVerticalGroup(
+            prac3PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(prac3PnlLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(testPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(prac3PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel105)
-                    .addComponent(jTextField68, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(prac3NoOfDutyTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel106)
                     .addComponent(prac3YrDeptLbl)
                     .addComponent(prac3CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1072,13 +1241,18 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         jLabel101.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel101.setText("বিষয়ে");
 
-        jTextField72.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac4NoOfDutyTB.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        prac4NoOfDutyTB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                prac4NoOfDutyTBKeyReleased(evt);
+            }
+        });
 
         jLabel102.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
         jLabel102.setText("দিন ।");
 
         prac4YrDeptLbl.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
-        prac4YrDeptLbl.setText("<exam year> সনের <exam name> পরীক্ষার");
+        prac4YrDeptLbl.setText("ঘ. <exam year> সনের <exam name> পরীক্ষার");
 
         prac4CrsNmCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         prac4CrsNmCBx.addActionListener(new java.awt.event.ActionListener() {
@@ -1087,29 +1261,29 @@ public class Compose_RemuBill extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout testPanel3Layout = new javax.swing.GroupLayout(testPanel3);
-        testPanel3.setLayout(testPanel3Layout);
-        testPanel3Layout.setHorizontalGroup(
-            testPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(testPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout prac4PnlLayout = new javax.swing.GroupLayout(prac4Pnl);
+        prac4Pnl.setLayout(prac4PnlLayout);
+        prac4PnlLayout.setHorizontalGroup(
+            prac4PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(prac4PnlLayout.createSequentialGroup()
                 .addComponent(prac4YrDeptLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(prac4CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel101)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField72, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(prac4NoOfDutyTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel102)
                 .addContainerGap(148, Short.MAX_VALUE))
         );
-        testPanel3Layout.setVerticalGroup(
-            testPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(testPanel3Layout.createSequentialGroup()
+        prac4PnlLayout.setVerticalGroup(
+            prac4PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(prac4PnlLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(testPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(prac4PnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel101)
-                    .addComponent(jTextField72, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(prac4NoOfDutyTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel102)
                     .addComponent(prac4YrDeptLbl)
                     .addComponent(prac4CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1169,7 +1343,6 @@ public class Compose_RemuBill extends javax.swing.JFrame {
         q2CrsCdCBx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         q2CrsCdCBx.setMinimumSize(new java.awt.Dimension(80, 20));
         q2CrsCdCBx.setName(""); // NOI18N
-        q2CrsCdCBx.setOpaque(false);
         q2CrsCdCBx.setPreferredSize(new java.awt.Dimension(80, 20));
         q2CrsCdCBx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1191,9 +1364,205 @@ public class Compose_RemuBill extends javax.swing.JFrame {
             }
         });
 
-        startDateChooser.setDateFormatString("dd-MM-yyyy");
+        amountPanel.setBackground(new java.awt.Color(255, 255, 255));
+        amountPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        endDateChooser.setDateFormatString("dd-MM-yyyy");
+        jLabel6.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        jLabel6.setText("         টাকা");
+        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        q1Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        q1Amount.setText("১৩৫০");
+
+        q2Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        q2Amount.setText("১৩৫০");
+
+        q4Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        q4Amount.setText("১৩৫০");
+        q4Amount.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                q4AmountPropertyChange(evt);
+            }
+        });
+
+        q3Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        q3Amount.setText("১৩৫০");
+
+        ans1Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        ans1Amount.setText("০");
+
+        ans2Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        ans2Amount.setText("০");
+
+        ans3Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        ans3Amount.setText("০");
+
+        ans4Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        ans4Amount.setText("০");
+
+        qAdj1Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+
+        ans5Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        ans5Amount.setText("০");
+        ans5Amount.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                ans5AmountPropertyChange(evt);
+            }
+        });
+
+        ct1Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+
+        prac1AmountTB.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        prac1AmountTB.setText("০");
+
+        prac2AmountTB.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        prac2AmountTB.setText("০");
+
+        prac3AmountTB.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        prac3AmountTB.setText("০");
+
+        prac4AmountTB.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        prac4AmountTB.setText("০");
+
+        vivaAmount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        vivaAmount.setText("০");
+
+        resultAmount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        resultAmount.setText("০");
+        resultAmount.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                resultAmountMouseClicked(evt);
+            }
+        });
+
+        ansInsAmount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        ansInsAmount.setText("০");
+
+        honoriumAmount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        honoriumAmount.setText("০");
+
+        others1Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        others1Amount.setText("০");
+
+        others2Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        others2Amount.setText("০");
+
+        others3Amount.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        others3Amount.setText("০");
+
+        grandTotal.setFont(new java.awt.Font("Siyam Rupali", 0, 12)); // NOI18N
+        grandTotal.setText("০");
+        grandTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                grandTotalActionPerformed(evt);
+            }
+        });
+        grandTotal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                grandTotalKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout amountPanelLayout = new javax.swing.GroupLayout(amountPanel);
+        amountPanel.setLayout(amountPanelLayout);
+        amountPanelLayout.setHorizontalGroup(
+            amountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+            .addComponent(q1Amount)
+            .addComponent(q2Amount)
+            .addComponent(q3Amount)
+            .addComponent(q4Amount)
+            .addComponent(ans1Amount)
+            .addComponent(ans2Amount)
+            .addComponent(ans3Amount)
+            .addComponent(ans4Amount)
+            .addComponent(ans5Amount)
+            .addComponent(qAdj1Amount)
+            .addComponent(ct1Amount)
+            .addComponent(prac1AmountTB)
+            .addComponent(prac2AmountTB)
+            .addComponent(prac3AmountTB)
+            .addComponent(prac4AmountTB)
+            .addComponent(vivaAmount)
+            .addComponent(resultAmount)
+            .addComponent(ansInsAmount)
+            .addComponent(honoriumAmount)
+            .addComponent(others1Amount)
+            .addComponent(others2Amount)
+            .addComponent(others3Amount)
+            .addComponent(grandTotal)
+        );
+        amountPanelLayout.setVerticalGroup(
+            amountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(amountPanelLayout.createSequentialGroup()
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(q1Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(q2Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(q3Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(q4Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(qAdj1Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(ct1Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47)
+                .addComponent(ans1Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans2Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans3Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans4Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ans5Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42)
+                .addComponent(prac1AmountTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(prac2AmountTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(prac3AmountTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(prac4AmountTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(vivaAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(resultAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(ansInsAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(honoriumAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47)
+                .addComponent(others1Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(others2Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(others3Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addComponent(grandTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        ctDescTB.setPreferredSize(new java.awt.Dimension(286, 20));
+
+        NoOfPrac.setFont(new java.awt.Font("Siyam Rupali", 0, 11)); // NOI18N
+        NoOfPrac.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "বাছাই করুন", "১টি", "২টি", "৩টি", "৪টি" }));
+        NoOfPrac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NoOfPracActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setFont(new java.awt.Font("Siyam Rupali", 1, 12)); // NOI18N
+        jLabel11.setText("মোট =");
+
+        jLabel13.setFont(new java.awt.Font("Siyam Rupali", 1, 12)); // NOI18N
+        jLabel13.setText("কথায়:");
+
+        inSentence.setFont(new java.awt.Font("Siyam Rupali", 1, 12)); // NOI18N
 
         javax.swing.GroupLayout remuBillDocLayout = new javax.swing.GroupLayout(remuBillDoc);
         remuBillDoc.setLayout(remuBillDocLayout);
@@ -1203,27 +1572,63 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(remuBillDocLayout.createSequentialGroup()
-                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(remuBillDocLayout.createSequentialGroup()
+                                .addComponent(billSerialNoLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(billSlNoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(remuBillDocLayout.createSequentialGroup()
+                                .addComponent(calendarYear, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5))
+                            .addGroup(remuBillDocLayout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel12))
+                            .addGroup(remuBillDocLayout.createSequentialGroup()
+                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(teacherName, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(teacherAddress)))
+                                .addGap(70, 70, 70)
+                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(examYearCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel8)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addComponent(examTermCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(11, 11, 11)
+                                        .addComponent(jLabel9)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(deptSelection, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(remuBillDocLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inSentence, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(remuBillDocLayout.createSequentialGroup()
                                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(billSerialNoLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(billSlNoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(calendarYear, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel5))
-                                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(jLabel10)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(startDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel15)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(endDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel12))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
                                         .addComponent(cat2Lbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1233,14 +1638,13 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel40)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(qAdjNoTB, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel41)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(qAdjNoPTB, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel42))
-                                    .addComponent(cat3Lbl)
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
                                         .addComponent(cat4Lbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1250,11 +1654,11 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(ansInsYrDeptLbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField63, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(ansInsCrsNmTB, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel90)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField64, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(ansInsNoOfSheetsTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel91))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
@@ -1262,26 +1666,29 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(resultYrDeptLbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField59, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(resultCrsNmTB, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel86)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField60, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(resultNoOfStTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel87))
                                     .addComponent(cat9Lbl)
                                     .addComponent(cat10Lbl)
-                                    .addComponent(cat5Lbl)
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addComponent(cat5Lbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(NoOfPrac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
                                         .addComponent(cat6Lbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(vivaYrDeptLbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField55, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(vivaCrsNmTB, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel82)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField56, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(vivaNoOfStTB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel83))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
@@ -1301,6 +1708,29 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                         .addComponent(q1CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(q1CrsCdLbl))
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addComponent(cat1Lbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(NoOfQuestionaire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(remuBillDocLayout.createSequentialGroup()
+                                                .addComponent(jLabel78)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(others3TB, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
+                                                .addComponent(jLabel77)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(others2TB, javax.swing.GroupLayout.PREFERRED_SIZE, 665, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
+                                                .addComponent(jLabel76)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(others1TB, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addComponent(cat3Lbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(ctDescTB, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
                                         .addGap(10, 10, 10)
                                         .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1325,7 +1755,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                         .addComponent(q4SubLbl)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(q4CrsCdCBx, 0, 96, Short.MAX_VALUE))
+                                                        .addComponent(q4CrsCdCBx, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, remuBillDocLayout.createSequentialGroup()
                                                         .addComponent(q3SlLbl)
                                                         .addGap(9, 9, 9)
@@ -1339,7 +1769,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                         .addComponent(q3SubLbl)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(q3CrsCdCBx, 0, 95, Short.MAX_VALUE))
+                                                        .addComponent(q3CrsCdCBx, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                                     .addGroup(remuBillDocLayout.createSequentialGroup()
                                                         .addComponent(q2SlLbl)
                                                         .addGap(9, 9, 9)
@@ -1354,78 +1784,26 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                                                         .addComponent(q2SubLbl)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                         .addComponent(q2CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                            .addComponent(q2CrsCdLbl))
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
-                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                            .addComponent(q3CrsCdLbl)))
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(q4CrsCdLbl))))))
+                                                        .addComponent(q2CrsCdLbl)
+                                                        .addComponent(q3CrsCdLbl, javax.swing.GroupLayout.Alignment.TRAILING))
+                                                    .addComponent(q4CrsCdLbl, javax.swing.GroupLayout.Alignment.TRAILING)))))
                                     .addGroup(remuBillDocLayout.createSequentialGroup()
-                                        .addComponent(cat1Lbl)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(NoOfQuestionaire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(124, 124, 124))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
-                                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, remuBillDocLayout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel78)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField67))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel77)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField66))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, remuBillDocLayout.createSequentialGroup()
-                                                .addComponent(jLabel76)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField65, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, remuBillDocLayout.createSequentialGroup()
                                         .addGap(19, 19, 19)
                                         .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(testPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(prac1Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(testPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(testPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(testPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                                .addGap(0, 248, Short.MAX_VALUE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
+                                                .addComponent(prac4Pnl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(prac2Pnl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(prac3Pnl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jLabel11)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(teacherName, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(teacherAddress)))
-                        .addGap(70, 70, 70)
-                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(examYearCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel8)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(remuBillDocLayout.createSequentialGroup()
-                                .addComponent(examTermCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(11, 11, 11)
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(deptSelection, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
+                                .addComponent(amountPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(54, 54, 54))))
             .addGroup(remuBillDocLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
@@ -1440,157 +1818,169 @@ public class Compose_RemuBill extends javax.swing.JFrame {
                     .addComponent(billSerialNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(billSlNoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(17, 17, 17)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(remuBillDocLayout.createSequentialGroup()
-                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(teacherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
-                            .addComponent(deptSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel3)
-                            .addComponent(teacherAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9)
-                            .addComponent(examYearCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(examTermCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel10)
-                                .addComponent(jLabel12)
-                                .addComponent(jLabel15))
-                            .addComponent(endDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(startDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(teacherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(deptSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel3)
+                    .addComponent(teacherAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9)
+                    .addComponent(examYearCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(examTermCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(session, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel15)
+                    .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(calendarYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(29, 29, 29)
+                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                        .addComponent(amountPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40))
+                    .addGroup(remuBillDocLayout.createSequentialGroup()
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cat1Lbl)
+                            .addComponent(NoOfQuestionaire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(q1SlLbl)
+                            .addComponent(q1NoLbl)
+                            .addComponent(q1hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(q1DeptLbl)
+                            .addComponent(q1SubLbl)
+                            .addComponent(q1CrsCdLbl)
+                            .addComponent(q1CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(q1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(q2SlLbl)
+                            .addComponent(q2NoLbl)
+                            .addComponent(q2hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(q2DeptLbl)
+                            .addComponent(q2SubLbl)
+                            .addComponent(q2CrsCdLbl)
+                            .addComponent(q2CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(q2CrsCdCBx, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(q3SlLbl)
+                            .addComponent(q3NoLbl)
+                            .addComponent(q3hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(q3DeptLbl)
+                            .addComponent(q3SubLbl)
+                            .addComponent(q3CrsCdLbl)
+                            .addComponent(q3CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(q3CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(q4SlLbl)
+                            .addComponent(q4NoLbl)
+                            .addComponent(q4hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(q4DeptLbl)
+                            .addComponent(q4SubLbl)
+                            .addComponent(q4CrsCdLbl)
+                            .addComponent(q4CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(q4CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cat2Lbl)
+                            .addComponent(qAdj1DeptLbl)
+                            .addComponent(jLabel40)
+                            .addComponent(qAdjNoTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel41)
+                            .addComponent(qAdjNoPTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel42)
+                            .addComponent(qAdj1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cat3Lbl)
+                            .addComponent(ctDescTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cat4Lbl)
+                            .addComponent(NoOfAnsSheet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ans1Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ans2Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ans3Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ans4Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ans5Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cat5Lbl)
+                            .addComponent(NoOfPrac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(prac1Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(prac2Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(prac3Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(prac4Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cat6Lbl)
+                            .addComponent(vivaCrsNmTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel82)
+                            .addComponent(vivaNoOfStTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel83)
+                            .addComponent(vivaYrDeptLbl))
+                        .addGap(18, 18, 18)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cat7Lbl)
+                            .addComponent(resultCrsNmTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel86)
+                            .addComponent(resultNoOfStTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel87)
+                            .addComponent(resultYrDeptLbl))
+                        .addGap(18, 18, 18)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cat8Lbl)
+                            .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ansInsCrsNmTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel90)
+                                .addComponent(ansInsNoOfSheetsTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel91)
+                                .addComponent(ansInsYrDeptLbl)))
+                        .addGap(18, 18, 18)
+                        .addComponent(cat9Lbl)
+                        .addGap(18, 18, 18)
+                        .addComponent(cat10Lbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel76)
+                            .addComponent(others1TB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel77)
+                            .addComponent(others2TB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel78)
+                            .addComponent(others3TB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel11)
+                        .addGap(60, 60, 60)))
                 .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cat1Lbl)
-                    .addComponent(NoOfQuestionaire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(q1SlLbl)
-                    .addComponent(q1NoLbl)
-                    .addComponent(q1hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(q1DeptLbl)
-                    .addComponent(q1SubLbl)
-                    .addComponent(q1CrsCdLbl)
-                    .addComponent(q1CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(q1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(q2SlLbl)
-                    .addComponent(q2NoLbl)
-                    .addComponent(q2hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(q2DeptLbl)
-                    .addComponent(q2SubLbl)
-                    .addComponent(q2CrsCdLbl)
-                    .addComponent(q2CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(q2CrsCdCBx, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(q3SlLbl)
-                    .addComponent(q3NoLbl)
-                    .addComponent(q3hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(q3DeptLbl)
-                    .addComponent(q3SubLbl)
-                    .addComponent(q3CrsCdLbl)
-                    .addComponent(q3CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(q3CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(q4SlLbl)
-                    .addComponent(q4NoLbl)
-                    .addComponent(q4hrCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(q4DeptLbl)
-                    .addComponent(q4SubLbl)
-                    .addComponent(q4CrsCdLbl)
-                    .addComponent(q4CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(q4CrsCdCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cat2Lbl)
-                    .addComponent(qAdj1DeptLbl)
-                    .addComponent(jLabel40)
-                    .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel41)
-                    .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel42)
-                    .addComponent(qAdj1CrsNmCBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(cat3Lbl)
-                .addGap(18, 18, 18)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cat4Lbl)
-                    .addComponent(NoOfAnsSheet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6)
-                .addComponent(ans1Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ans2Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ans3Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(ans4Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(ans5Pnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(cat5Lbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(testPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(testPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(testPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(testPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cat6Lbl)
-                    .addComponent(jTextField55, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel82)
-                    .addComponent(jTextField56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel83)
-                    .addComponent(vivaYrDeptLbl))
-                .addGap(18, 18, 18)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cat7Lbl)
-                    .addComponent(jTextField59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel86)
-                    .addComponent(jTextField60, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel87)
-                    .addComponent(resultYrDeptLbl))
-                .addGap(18, 18, 18)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cat8Lbl)
-                    .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField63, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel90)
-                        .addComponent(jTextField64, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel91)
-                        .addComponent(ansInsYrDeptLbl)))
-                .addGap(18, 18, 18)
-                .addComponent(cat9Lbl)
-                .addGap(18, 18, 18)
-                .addComponent(cat10Lbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel76)
-                    .addComponent(jTextField65, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel77)
-                    .addComponent(jTextField66, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(remuBillDocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel78)
-                    .addComponent(jTextField67, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(147, Short.MAX_VALUE))
+                    .addComponent(jLabel13)
+                    .addComponent(inSentence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(remuBillDoc);
@@ -1609,22 +1999,22 @@ public class Compose_RemuBill extends javax.swing.JFrame {
             ExamRemuBillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ExamRemuBillLayout.createSequentialGroup()
                 .addGap(47, 47, 47)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 969, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(55, 55, 55)
-                .addGroup(ExamRemuBillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(submitBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(previewBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(50, 50, 50))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1046, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(ExamRemuBillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(previewBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(submitBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cancelBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         ExamRemuBillLayout.setVerticalGroup(
             ExamRemuBillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ExamRemuBillLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(previewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addGap(18, 18, 18)
                 .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addGap(18, 18, 18)
                 .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(ExamRemuBillLayout.createSequentialGroup()
@@ -1653,7 +2043,9 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void modifyValues() {
-
+		// Setting Teacher Information
+		teacherName.setText(teacher.getNameBn());
+		teacherAddress.setText(teacher.getDesignation() + ", Dept. of " + teacher.getDept() + ", NSTU");
 		// Setting custom font for all jLabel and jTextField
 		setCommonFont(remuBillDoc, customFont);
 
@@ -1677,11 +2069,30 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 
 		// Disabling Visibility of Ans Sheets 
 		ans1Pnl.setVisible(false);
+		ans1Amount.setVisible(false);
 		ans2Pnl.setVisible(false);
+		ans2Amount.setVisible(false);
 		ans3Pnl.setVisible(false);
+		ans3Amount.setVisible(false);
 		ans4Pnl.setVisible(false);
+		ans4Amount.setVisible(false);
 		ans5Pnl.setVisible(false);
+		ans5Amount.setVisible(false);
 
+		// Disabling Visibility of Practicals
+		prac1Pnl.setVisible(false);
+		prac1AmountTB.setVisible(false);
+		prac2Pnl.setVisible(false);
+		prac2AmountTB.setVisible(false);
+		prac3Pnl.setVisible(false);
+		prac3AmountTB.setVisible(false);
+		prac4Pnl.setVisible(false);
+		prac4AmountTB.setVisible(false);
+
+		setDept();
+		createPlaceholderText(vivaCrsNmTB, "Enter Course Name");
+		createPlaceholderText(resultCrsNmTB, "Enter Course Name");
+		createPlaceholderText(ansInsCrsNmTB, "Enter Course Name");
 		//testPanel.setVisible(false);
 	}
 
@@ -1694,6 +2105,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 		q1SubLbl.setVisible(visible);
 		q1hrCBx.setVisible(visible);
 		q1DeptLbl.setVisible(visible);
+		q1Amount.setVisible(visible);
 	}
 
 	private void q2Visibility(boolean visible) {
@@ -1705,6 +2117,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 		q2SubLbl.setVisible(visible);
 		q2hrCBx.setVisible(visible);
 		q2DeptLbl.setVisible(visible);
+		q2Amount.setVisible(visible);
 	}
 
 	private void q3Visibility(boolean visible) {
@@ -1716,6 +2129,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 		q3SubLbl.setVisible(visible);
 		q3hrCBx.setVisible(visible);
 		q3DeptLbl.setVisible(visible);
+		q3Amount.setVisible(visible);
 	}
 
 	private void q4Visibility(boolean visible) {
@@ -1727,10 +2141,12 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 		q4SubLbl.setVisible(visible);
 		q4hrCBx.setVisible(visible);
 		q4DeptLbl.setVisible(visible);
-
+		q4Amount.setVisible(visible);
 	}
 
 	private void setDept() {
+		ExamYear = calendarYear.getText();
+		DeptName = deptSelection.getSelectedItem().toString();
 		String text = "ঘন্টা: " + DeptName + " পরীক্ষার";
 		q1DeptLbl.setText(text);
 		q2DeptLbl.setText(text);
@@ -1744,11 +2160,11 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 		ans5DeptLbl.setText(text);
 		qAdj1DeptLbl.setText(DeptName + " পরীক্ষার ");
 
-		String text2 = ExamYear + " সনের " + DeptName + " পরীক্ষার ";
-		prac1YrDeptLbl.setText(text2);
-		prac2YrDeptLbl.setText(text2);
-		prac3YrDeptLbl.setText(text2);
-		prac4YrDeptLbl.setText(text2);
+		String text2 = Converter.toBanglaNumerals(String.valueOf(ExamYear)) + " সনের " + DeptName + " পরীক্ষার ";
+		prac1YrDeptLbl.setText("ক. " + text2);
+		prac2YrDeptLbl.setText("খ. " + text2);
+		prac3YrDeptLbl.setText("গ. " + text2);
+		prac4YrDeptLbl.setText("ঘ. " + text2);
 
 		ansInsYrDeptLbl.setText(text2);
 		vivaYrDeptLbl.setText(text2);
@@ -1791,8 +2207,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 		}
 		String query = "SELECT " + fieldName + " FROM courses WHERE dept = ? AND semester = ? AND type = ?";
 
-		try (Connection connection = databaseConnection.connection();
-			PreparedStatement statement = connection.prepareStatement(query)) {
+		try (Connection connection = databaseConnection.connection(); PreparedStatement statement = connection.prepareStatement(query)) {
 			//statement.setString(1, fieldName);
 			statement.setString(1, department);
 			statement.setString(2, semester);
@@ -1806,9 +2221,10 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 				courseList = courses.toArray(new String[0]);
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, "An error occurred while fetching " + fieldName, e);
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occurred while fetching " + fieldName, e);
 			courseList = new String[0]; // Return an empty array in case of an error
 		}
+
 		return courseList;
 	}
 
@@ -1878,7 +2294,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 
     private void previewBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previewBtnMouseClicked
 		String fileName = createPdf();
-		pdf_Preview object = new pdf_Preview(fileName, "admin", this, true);
+		pdf_Preview object = new pdf_Preview(fileName, "teacher", this, true);
 		object.setVisible(true);
     }//GEN-LAST:event_previewBtnMouseClicked
 
@@ -1932,76 +2348,73 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 		JOptionPane.showMessageDialog(null, "Document Successfully Saved & Submitted!", "Success", JOptionPane.INFORMATION_MESSAGE);
 		this.setVisible(false);
 
-		Home_Admin object = new Home_Admin();
+		Home_Teacher object = new Home_Teacher();
 		object.setVisible(true);
     }//GEN-LAST:event_submitBtnMouseClicked
 
     private void NoOfAnsSheetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NoOfAnsSheetActionPerformed
-		// TODO add your handling code here:
-		if (NoOfAnsSheet.getSelectedItem().toString().equals("১টি")) {
-			NoAns = 1;
-			ans1Pnl.setVisible(true);
-			ans2Pnl.setVisible(false);
-			ans3Pnl.setVisible(false);
-			ans4Pnl.setVisible(false);
-			ans5Pnl.setVisible(false);
-		} else if (NoOfAnsSheet.getSelectedItem().toString().equals("২টি")) {
-			NoAns = 2;
-			ans1Pnl.setVisible(true);
-			ans2Pnl.setVisible(true);
-			ans3Pnl.setVisible(false);
-			ans4Pnl.setVisible(false);
-			ans5Pnl.setVisible(false);
-		} else if (NoOfAnsSheet.getSelectedItem().toString().equals("৩টি")) {
-			NoAns = 3;
-			ans1Pnl.setVisible(true);
-			ans2Pnl.setVisible(true);
-			ans3Pnl.setVisible(true);
-			ans4Pnl.setVisible(false);
-			ans5Pnl.setVisible(false);
-		} else if (NoOfAnsSheet.getSelectedItem().toString().equals("৪টি")) {
-			NoAns = 4;
-			ans1Pnl.setVisible(true);
-			ans2Pnl.setVisible(true);
-			ans3Pnl.setVisible(true);
-			ans4Pnl.setVisible(true);
-			ans5Pnl.setVisible(false);
-		} else if (NoOfAnsSheet.getSelectedItem().toString().equals("৫টি")) {
-			NoAns = 5;
-			ans1Pnl.setVisible(true);
-			ans2Pnl.setVisible(true);
-			ans3Pnl.setVisible(true);
-			ans4Pnl.setVisible(true);
-			ans5Pnl.setVisible(true);
-		} else {
-			ans1Pnl.setVisible(false);
-			ans2Pnl.setVisible(false);
-			ans3Pnl.setVisible(false);
-			ans4Pnl.setVisible(false);
-			ans5Pnl.setVisible(false);
+		JPanel[] ansPnl = {ans1Pnl, ans2Pnl, ans3Pnl, ans4Pnl, ans5Pnl};
+		JTextField[] ansAmount = {ans1Amount, ans2Amount, ans3Amount, ans4Amount, ans5Amount};
+
+		// Get the selected item from the combo box
+		String selectedOption = NoOfAnsSheet.getSelectedItem().toString();
+
+		// Determine the number of answer sheets based on the selected option
+		int selectedAns;
+		switch (selectedOption) {
+			case "১টি":
+				selectedAns = 1;
+				break;
+			case "২টি":
+				selectedAns = 2;
+				break;
+			case "৩টি":
+				selectedAns = 3;
+				break;
+			case "৪টি":
+				selectedAns = 4;
+				break;
+			case "৫টি":
+				selectedAns = 5;
+				break;
+			default:
+				selectedAns = 0; // Handle any other case
+		};
+
+		// Set visibility based on the number of answer sheets
+		for (int i = 0; i < 5; i++) {
+			ansPnl[i].setVisible(i < selectedAns);
+			ansAmount[i].setVisible(i < selectedAns);
 		}
     }//GEN-LAST:event_NoOfAnsSheetActionPerformed
 
     private void NoOfQuestionaireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NoOfQuestionaireActionPerformed
-		// TODO add your handling code here:
+//		Dimension currentSize = amountPanel.getPreferredSize();
 		if (NoOfQuestionaire.getSelectedItem().toString().equals("১টি")) {
 			NoQ = 1;
 			q1Visibility(true);
 			q2Visibility(false);
 			q3Visibility(false);
 			q4Visibility(false);
+//			currentSize.height -= 60; // Reduce height by 30 pixels (optional)
+			//amountPanel.setPreferredSize(currentSize);
+
 		} else if (NoOfQuestionaire.getSelectedItem().toString().equals("২টি")) {
 			NoQ = 2;
 			q1Visibility(true);
 			q2Visibility(true);
 			q3Visibility(false);
 			q4Visibility(false);
+//			currentSize.height -= 40; // Reduce height by 30 pixels (optional)
+			//amountPanel.setPreferredSize(currentSize);
 		} else if (NoOfQuestionaire.getSelectedItem().toString().equals("৩টি")) {
 			NoQ = 3;
 			q1Visibility(true);
 			q2Visibility(true);
 			q3Visibility(true);
 			q4Visibility(false);
+//			currentSize.height -= 20; // Reduce height by 30 pixels (optional)
+			//amountPanel.setPreferredSize(currentSize);
 		} else if (NoOfQuestionaire.getSelectedItem().toString().equals("৪টি")) {
 			NoQ = 4;
 			q1Visibility(true);
@@ -2013,18 +2426,18 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 			q2Visibility(false);
 			q3Visibility(false);
 			q4Visibility(false);
+			//currentSize.height -= 80; // Reduce height by 30 pixels (optional)
+//			amountPanel.setPreferredSize(currentSize);
 		}
     }//GEN-LAST:event_NoOfQuestionaireActionPerformed
 
     private void deptSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deptSelectionActionPerformed
 		// TODO add your handling code here:
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		setComboBoxPlaceHolderStyle(source);
 		DeptName = deptSelection.getSelectedItem().toString();
 		setDept();
     }//GEN-LAST:event_deptSelectionActionPerformed
-
-    private void deptSelectionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_deptSelectionFocusLost
-		// TODO add your handling code here:
-    }//GEN-LAST:event_deptSelectionFocusLost
 
     private void examYearCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_examYearCBxActionPerformed
 		// TODO add your handling code here:
@@ -2059,16 +2472,19 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private void q2CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q2CrsNmCBxActionPerformed
 		JComboBox<String> source = (JComboBox<String>) evt.getSource();
 		setComboBoxPlaceHolderStyle(source);
+		q2CrsCdCBx.setSelectedIndex(source.getSelectedIndex());
     }//GEN-LAST:event_q2CrsNmCBxActionPerformed
 
     private void q3CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q3CrsNmCBxActionPerformed
 		JComboBox<String> source = (JComboBox<String>) evt.getSource();
 		setComboBoxPlaceHolderStyle(source);
+		q3CrsCdCBx.setSelectedIndex(source.getSelectedIndex());
     }//GEN-LAST:event_q3CrsNmCBxActionPerformed
 
     private void q4CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q4CrsNmCBxActionPerformed
 		JComboBox<String> source = (JComboBox<String>) evt.getSource();
 		setComboBoxPlaceHolderStyle(source);
+		q4CrsCdCBx.setSelectedIndex(source.getSelectedIndex());
     }//GEN-LAST:event_q4CrsNmCBxActionPerformed
 
     private void qAdj1CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qAdj1CrsNmCBxActionPerformed
@@ -2079,6 +2495,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private void ans1CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans1CrsNmCBxActionPerformed
 		JComboBox<String> source = (JComboBox<String>) evt.getSource();
 		setComboBoxPlaceHolderStyle(source);
+		ans1CrsCdCBx.setSelectedIndex(source.getSelectedIndex());
     }//GEN-LAST:event_ans1CrsNmCBxActionPerformed
 
     private void prac4CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prac4CrsNmCBxActionPerformed
@@ -2089,16 +2506,19 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private void ans2CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans2CrsNmCBxActionPerformed
 		JComboBox<String> source = (JComboBox<String>) evt.getSource();
 		setComboBoxPlaceHolderStyle(source);
+		ans2CrsCdCBx.setSelectedIndex(source.getSelectedIndex());
     }//GEN-LAST:event_ans2CrsNmCBxActionPerformed
 
     private void ans3CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans3CrsNmCBxActionPerformed
 		JComboBox<String> source = (JComboBox<String>) evt.getSource();
 		setComboBoxPlaceHolderStyle(source);
+		ans3CrsCdCBx.setSelectedIndex(source.getSelectedIndex());
     }//GEN-LAST:event_ans3CrsNmCBxActionPerformed
 
     private void ans4CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans4CrsNmCBxActionPerformed
 		JComboBox<String> source = (JComboBox<String>) evt.getSource();
 		setComboBoxPlaceHolderStyle(source);
+		ans4CrsCdCBx.setSelectedIndex(source.getSelectedIndex());
     }//GEN-LAST:event_ans4CrsNmCBxActionPerformed
 
     private void prac1CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prac1CrsNmCBxActionPerformed
@@ -2119,6 +2539,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private void ans5CrsNmCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans5CrsNmCBxActionPerformed
 		JComboBox<String> source = (JComboBox<String>) evt.getSource();
 		setComboBoxPlaceHolderStyle(source);
+		ans5CrsCdCBx.setSelectedIndex(source.getSelectedIndex());
     }//GEN-LAST:event_ans5CrsNmCBxActionPerformed
 
     private void q1CrsCdCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q1CrsCdCBxActionPerformed
@@ -2167,10 +2588,326 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     }//GEN-LAST:event_ans5CrsCdCBxActionPerformed
 
     private void calendarYearKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_calendarYearKeyReleased
-        // TODO add your handling code here:
-        ExamYear = calendarYear.getText();
-        setDept();
+		// TODO add your handling code here:
+		calendarYear.setText(Converter.toBanglaNumerals(String.valueOf(calendarYear.getText())));
+		setDept();
     }//GEN-LAST:event_calendarYearKeyReleased
+
+    private void q1hrCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q1hrCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		if (source.getSelectedItem().toString().equals("৩")) {
+			q1Amount.setText("১৩৫০");
+		} else if (source.getSelectedItem().toString().equals("৪")) {
+			q1Amount.setText("১৫০০");
+		}
+    }//GEN-LAST:event_q1hrCBxActionPerformed
+
+    private void q2hrCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q2hrCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		if (source.getSelectedItem().toString().equals("৩")) {
+			q2Amount.setText("১৩৫০");
+		} else if (source.getSelectedItem().toString().equals("৪")) {
+			q2Amount.setText("১৫০০");
+		}
+    }//GEN-LAST:event_q2hrCBxActionPerformed
+
+    private void q3hrCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q3hrCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		if (source.getSelectedItem().toString().equals("৩")) {
+			q3Amount.setText("১৩৫০");
+		} else if (source.getSelectedItem().toString().equals("৪")) {
+			q3Amount.setText("১৫০০");
+		}
+    }//GEN-LAST:event_q3hrCBxActionPerformed
+
+    private void q4hrCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_q4hrCBxActionPerformed
+		JComboBox<String> source = (JComboBox<String>) evt.getSource();
+		if (source.getSelectedItem().toString().equals("৩")) {
+			q4Amount.setText("১৩৫০");
+		} else if (source.getSelectedItem().toString().equals("৪")) {
+			q4Amount.setText("১৫০০");
+		}
+    }//GEN-LAST:event_q4hrCBxActionPerformed
+
+    private void ans1NoTBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans1NoTBActionPerformed
+		// TODO add your handling code here:
+
+    }//GEN-LAST:event_ans1NoTBActionPerformed
+
+	int ans1Bill, ans2Bill, ans3Bill, ans4Bill, ans5Bill;
+
+	private void setAns1Bill() {
+		String txt;
+		int rate = 120;
+		if (ans1hrCBx.getSelectedItem().equals("৩")) {
+			rate = 90;
+		}
+		try {
+			int noOfAnsSheet = Integer.valueOf(Converter.toEnglishNumerals(ans1NoTB.getText()));
+			ans1Bill = rate * noOfAnsSheet;
+			if (ans1Bill < 300) {
+				ans1Bill = 300;
+			}
+			txt = Converter.toBanglaNumerals(String.valueOf(ans1Bill));
+			ans1Amount.setText(txt);
+		} catch (Exception ex) {
+			ans1Amount.setText("০");
+		}
+	}
+
+	private void setAns2Bill() {
+		String txt;
+		int rate = 120;
+		if (ans2hrCBx.getSelectedItem().equals("৩")) {
+			rate = 90;
+		}
+		try {
+			int noOfAnsSheet = Integer.valueOf(Converter.toEnglishNumerals(ans2NoTB.getText()));
+			ans2Bill = rate * noOfAnsSheet;
+			if (ans2Bill < 300) {
+				ans2Bill = 300;
+			}
+			txt = Converter.toBanglaNumerals(String.valueOf(ans2Bill));
+			ans2Amount.setText(txt);
+		} catch (Exception ex) {
+			ans2Amount.setText("০");
+		}
+	}
+
+	private void setAns3Bill() {
+		String txt;
+		int rate = 120;
+		if (ans3hrCBx.getSelectedItem().equals("৩")) {
+			rate = 90;
+		}
+		try {
+			int noOfAnsSheet = Integer.valueOf(Converter.toEnglishNumerals(ans3NoTB.getText()));
+			ans3Bill = rate * noOfAnsSheet;
+			if (ans3Bill < 300) {
+				ans3Bill = 300;
+			}
+			txt = Converter.toBanglaNumerals(String.valueOf(ans3Bill));
+			ans3Amount.setText(txt);
+		} catch (Exception ex) {
+			ans3Amount.setText("০");
+		}
+	}
+
+	private void setAns4Bill() {
+		String txt;
+		int rate = 120;
+		if (ans4hrCBx.getSelectedItem().equals("৩")) {
+			rate = 90;
+		}
+		try {
+			int noOfAnsSheet = Integer.valueOf(Converter.toEnglishNumerals(ans4NoTB.getText()));
+			ans4Bill = rate * noOfAnsSheet;
+			if (ans4Bill < 300) {
+				ans4Bill = 300;
+			}
+			txt = Converter.toBanglaNumerals(String.valueOf(ans4Bill));
+			ans4Amount.setText(txt);
+		} catch (Exception ex) {
+			ans4Amount.setText("০");
+		}
+	}
+
+	private void setAns5Bill() {
+		String txt;
+		int rate = 120;
+		if (ans5hrCBx.getSelectedItem().equals("৩")) {
+			rate = 90;
+		}
+		try {
+			int noOfAnsSheet = Integer.valueOf(Converter.toEnglishNumerals(ans5NoTB.getText()));
+			ans5Bill = rate * noOfAnsSheet;
+			if (ans5Bill < 300) {
+				ans5Bill = 300;
+			}
+			txt = Converter.toBanglaNumerals(String.valueOf(ans5Bill));
+			ans5Amount.setText(txt);
+		} catch (Exception ex) {
+			ans5Amount.setText("০");
+		}
+	}
+
+	private static String removeLeadingZero(String str) {
+		if (str.startsWith("0") || str.startsWith("০")) {
+			return str.substring(1);
+		}
+		return str;
+	}
+
+    private void ans1NoTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ans1NoTBKeyReleased
+		ans1NoTB.setText(removeLeadingZero(ans1NoTB.getText()));
+		setAns1Bill();
+    }//GEN-LAST:event_ans1NoTBKeyReleased
+
+    private void ans2NoTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ans2NoTBKeyReleased
+		ans2NoTB.setText(removeLeadingZero(ans2NoTB.getText()));
+		setAns2Bill();
+    }//GEN-LAST:event_ans2NoTBKeyReleased
+
+    private void ans3NoTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ans3NoTBKeyReleased
+		ans3NoTB.setText(removeLeadingZero(ans3NoTB.getText()));
+		setAns3Bill();
+    }//GEN-LAST:event_ans3NoTBKeyReleased
+
+    private void ans4NoTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ans4NoTBKeyReleased
+		ans4NoTB.setText(removeLeadingZero(ans4NoTB.getText()));
+		setAns4Bill();
+    }//GEN-LAST:event_ans4NoTBKeyReleased
+
+    private void ans5NoTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ans5NoTBKeyReleased
+		ans5NoTB.setText(removeLeadingZero(ans5NoTB.getText()));
+		setAns5Bill();
+    }//GEN-LAST:event_ans5NoTBKeyReleased
+
+    private void ans1hrCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans1hrCBxActionPerformed
+		setAns1Bill();
+    }//GEN-LAST:event_ans1hrCBxActionPerformed
+
+    private void ans2hrCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans2hrCBxActionPerformed
+		setAns2Bill();
+    }//GEN-LAST:event_ans2hrCBxActionPerformed
+
+    private void ans3hrCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans3hrCBxActionPerformed
+		setAns3Bill();
+    }//GEN-LAST:event_ans3hrCBxActionPerformed
+
+    private void ans4hrCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans4hrCBxActionPerformed
+		setAns4Bill();
+    }//GEN-LAST:event_ans4hrCBxActionPerformed
+
+    private void ans5hrCBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ans5hrCBxActionPerformed
+		setAns5Bill();
+    }//GEN-LAST:event_ans5hrCBxActionPerformed
+
+    private void NoOfPracActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NoOfPracActionPerformed
+		JPanel[] pracPnl = {prac1Pnl, prac2Pnl, prac3Pnl, prac4Pnl};
+		JTextField[] pracAmount = {prac1AmountTB, prac2AmountTB, prac3AmountTB, prac4AmountTB};
+
+		// Get the selected item from the combo box
+		String selectedOption = NoOfPrac.getSelectedItem().toString();
+
+		// Determine the number of answer sheets based on the selected option
+		int selectedAns;
+		switch (selectedOption) {
+			case "১টি":
+				selectedAns = 1;
+				break;
+			case "২টি":
+				selectedAns = 2;
+				break;
+			case "৩টি":
+				selectedAns = 3;
+				break;
+			case "৪টি":
+				selectedAns = 4;
+				break;
+			default:
+				selectedAns = 0; // Handle any other case
+		};
+
+		// Set visibility based on the number of answer sheets
+		for (int i = 0; i < 4; i++) {
+			pracPnl[i].setVisible(i < selectedAns);
+			pracAmount[i].setVisible(i < selectedAns);
+		}
+    }//GEN-LAST:event_NoOfPracActionPerformed
+
+    private void ans1NoTBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ans1NoTBMouseClicked
+		ans1NoTB.setText(removeLeadingZero(ans1NoTB.getText()));
+    }//GEN-LAST:event_ans1NoTBMouseClicked
+
+    private void ans2NoTBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ans2NoTBMouseClicked
+		ans2NoTB.setText(removeLeadingZero(ans2NoTB.getText()));
+    }//GEN-LAST:event_ans2NoTBMouseClicked
+
+    private void ans3NoTBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ans3NoTBMouseClicked
+		ans3NoTB.setText(removeLeadingZero(ans3NoTB.getText()));
+    }//GEN-LAST:event_ans3NoTBMouseClicked
+
+    private void ans4NoTBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ans4NoTBMouseClicked
+		ans4NoTB.setText(removeLeadingZero(ans4NoTB.getText()));
+    }//GEN-LAST:event_ans4NoTBMouseClicked
+
+    private void ans5NoTBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ans5NoTBMouseClicked
+		ans5NoTB.setText(removeLeadingZero(ans5NoTB.getText()));
+    }//GEN-LAST:event_ans5NoTBMouseClicked
+
+	int vivaBill = 0;
+    private void vivaNoOfStTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_vivaNoOfStTBKeyReleased
+		// TODO add your handling code here:
+		String txt;
+		int rate = 60;
+
+		try {
+			int noOfSt = Integer.valueOf(Converter.toEnglishNumerals(vivaNoOfStTB.getText()));
+			vivaBill = rate * noOfSt;
+			if (vivaBill < 600) {
+				vivaBill = 600;
+			}
+			txt = Converter.toBanglaNumerals(String.valueOf(vivaBill));
+			vivaAmount.setText(txt);
+		} catch (Exception ex) {
+			vivaAmount.setText("০");
+		}
+    }//GEN-LAST:event_vivaNoOfStTBKeyReleased
+
+    private void resultNoOfStTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_resultNoOfStTBKeyReleased
+		// TODO add your handling code here:
+    }//GEN-LAST:event_resultNoOfStTBKeyReleased
+
+    private void resultAmountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultAmountMouseClicked
+		resultAmount.setText(removeLeadingZero(resultAmount.getText()));
+    }//GEN-LAST:event_resultAmountMouseClicked
+
+    private void prac1NoOfDutyTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_prac1NoOfDutyTBKeyReleased
+		prac1NoOfDutyTB.setText(removeLeadingZero(prac1NoOfDutyTB.getText()));
+		setPrac1Bill();
+    }//GEN-LAST:event_prac1NoOfDutyTBKeyReleased
+
+    private void prac2NoOfDutyTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_prac2NoOfDutyTBKeyReleased
+		prac2NoOfDutyTB.setText(removeLeadingZero(prac2NoOfDutyTB.getText()));
+		setPrac2Bill();
+    }//GEN-LAST:event_prac2NoOfDutyTBKeyReleased
+
+    private void prac3NoOfDutyTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_prac3NoOfDutyTBKeyReleased
+		prac3NoOfDutyTB.setText(removeLeadingZero(prac3NoOfDutyTB.getText()));
+		setPrac3Bill();
+    }//GEN-LAST:event_prac3NoOfDutyTBKeyReleased
+
+    private void prac4NoOfDutyTBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_prac4NoOfDutyTBKeyReleased
+		prac4NoOfDutyTB.setText(removeLeadingZero(prac4NoOfDutyTB.getText()));
+		setPrac4Bill();
+    }//GEN-LAST:event_prac4NoOfDutyTBKeyReleased
+
+    private void q4AmountPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_q4AmountPropertyChange
+		// TODO add your handling code here:
+		//grandTotal.setText("Hello");
+    }//GEN-LAST:event_q4AmountPropertyChange
+
+    private void ans5AmountPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_ans5AmountPropertyChange
+		// TODO add your handling code here:
+		grandTotal.setText(ans5Amount.getText());
+    }//GEN-LAST:event_ans5AmountPropertyChange
+
+    private void grandTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grandTotalActionPerformed
+		// TODO add your handling code here:
+//		inSentence.setText(NumberToWordsConverter.convertToWords(Integer.valueOf(Converter.toEnglishNumerals(grandTotal.getText()))));
+    }//GEN-LAST:event_grandTotalActionPerformed
+
+    private void grandTotalKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_grandTotalKeyReleased
+		// TODO add your handling code here:
+		if (!grandTotal.getText().equals("")) {
+			String totalBill = grandTotal.getText();
+			int integerGrandTotal = Integer.valueOf(Converter.toEnglishNumerals(totalBill));
+			String totalInWords = NumberToWordsConverter.convertToWords(integerGrandTotal);
+			inSentence.setText(totalInWords + " টাকা মাত্র।");
+		}
+
+    }//GEN-LAST:event_grandTotalKeyReleased
 
 	/**
 	 * @param args the command line
@@ -2210,132 +2947,249 @@ public class Compose_RemuBill extends javax.swing.JFrame {
 //                } else {
 //                    new Compose_Notice().setVisible(true);
 //                }
-				new Compose_RemuBill().setVisible(true);
+				new Compose_RemuBill("sabbirejaz.ice@nstu.edu.bd").setVisible(true);
 			}
 		});
 	}
 
 	private String createPdf() {
-		String fileName = "temp/RemuBill.pdf";
-		int BnFontSize = 9;
-		int EnFontSize = 9;
+		String fileName = "E:/PaperlessOffice/temp/RemuBill.pdf";
+		int FontSize = 9;
+		int tableTop, tableLeft, tableBottom, tableRight;
 		try {
-			PDDocument document = new PDDocument();
-			PDPage page = new PDPage(PDRectangle.LEGAL);
-			document.addPage(page);
+			try (PDDocument document = new PDDocument()) {
+				PDPage page = new PDPage(PDRectangle.LEGAL);
+				document.addPage(page);
 
-			int pageHeight = (int) page.getMediaBox().getHeight();
-			int pageWidth = (int) page.getMediaBox().getWidth();
-			// adding header
-			PDFWithImages.addRemuHeader(document, page);
+				int pageHeight = (int) page.getMediaBox().getHeight();
+				int pageWidth = (int) page.getMediaBox().getWidth();
+				// adding header
+				PDFWithImages.addRemuHeader(document, page);
 
-			// add Date
-			int yPos = pageHeight - 100;
-			int leftMargin = 30;
+				// add Date
+				int yPos = pageHeight - 80;
+				int leftMargin = 30;
+				int rightMargin = pageWidth - leftMargin - 20;
+				int lineOffSet = 15;
+				int subListIndent = 10;
 
-			PDFWithImages.addLine(document, page, leftMargin, yPos, BnFontSize, "বিলের ক্রমিক নং : " + billSlNoTxt.getText());
-			//Teacher Name And Address
-			PDFWithImages.addLine(document, page, leftMargin, yPos - 40, BnFontSize, "পরীক্ষকের নাম : " + teacherName.getText());
-//			String teacher = teacherName.getText();
-////			if (teacher.matches("[a-zA-Z\\s]+")) {
-////				// Input given in English
-////				PDFWithImages.addLine(document, page, leftMargin + 60, yPos - 39, EnFontSize, teacher, 'b');
-////			} else {
-////				// Input given in Bangla
-////				PDFWithImages.addLine(document, page, leftMargin + 60, yPos - 40, BnFontSize, teacher, 'b');
-////			}
-			PDFWithImages.addLine(document, page, leftMargin, yPos - 60, BnFontSize, "পদবি সহকারে ঠিকানা : ");
-			String address = teacherAddress.getText();
-			if (address.matches("[a-zA-Z\\s]+")) {
-				// Input given in English
-				PDFWithImages.addLine(document, page, leftMargin + 85, yPos - 59, EnFontSize, address, 'b');
-			} else {
-				// Input given in Bangla
-				PDFWithImages.addLine(document, page, leftMargin + 85, yPos - 59, BnFontSize, address, 'b');
+				PDFWithImages.addLine(document, page, leftMargin, yPos, FontSize, "বিলের ক্রমিক নং : " + billSlNoTxt.getText());
+				//Teacher Name And Address
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 10, FontSize, "পরীক্ষকের নাম : " + teacherName.getText());
+				PDFWithImages.addLine(document, page, (pageWidth / 2) + 70, yPos, FontSize, "যে বিভাগের পরীক্ষা : " + deptSelection.getSelectedItem());
+
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, "পদবি সহকারে ঠিকানা : " + teacherAddress.getText());
+				PDFWithImages.addLine(document, page, (pageWidth / 2) + 70, yPos, FontSize,
+					"বর্ষ : " + examYearCBx.getSelectedItem().toString()
+					+ "  টার্ম : " + examTermCBx.getSelectedItem().toString()
+					+ "  শিক্ষাবর্ষ : " + Converter.toBanglaNumerals(session.getText())
+				);
+
+				// Create a SimpleDateFormat object with the desired date pattern
+//				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+				// Format the date using the SimpleDateFormat object
+				String sDate = startDate.getText();
+				String eDate = endDate.getText();
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize,
+					"পরীক্ষা অনুষ্ঠানের তারিখ : " + Converter.toBanglaNumerals(sDate)
+					+ " থেকে " + Converter.toBanglaNumerals(eDate) + " পর্যন্ত ");
+
+//ExamYear = String.valueOf(jYearChooser1.getYear());
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, Converter.toBanglaNumerals(ExamYear)
+					+ " সনের পরীক্ষা সমূহের প্রশ্নপত্র প্রণয়ন সমন্বয় সাধন"
+					+ " এবং উত্তরপত্র মূল্যায়ন ইত্যাদির জন্য আমার পারিশ্রমিকের দাবীসমূহ নিম্নে সন্নিবেশিত হলো:-");
+
+//১. প্রশ্নপত্র প্রণয়ন:
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 10, FontSize + 1, "১. প্রশ্নপত্র প্রণয়ন:", 'b');
+				tableTop = yPos + 20;
+				if (q1DeptLbl.isVisible()) {
+					String txt = "ক. একটি " + q1hrCBx.getSelectedItem() + " " + q1DeptLbl.getText() + " "
+						+ q1CrsNmCBx.getSelectedItem() + " বিষয় " + q1CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(q1Amount.getText()));
+				}
+				if (q2DeptLbl.isVisible()) {
+					String txt = "খ. একটি " + q2hrCBx.getSelectedItem() + " " + q2DeptLbl.getText() + " "
+						+ q2CrsNmCBx.getSelectedItem() + " বিষয় " + q2CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(q2Amount.getText()));
+				}
+				if (q3DeptLbl.isVisible()) {
+					String txt = "গ. একটি " + q3hrCBx.getSelectedItem() + " " + q3DeptLbl.getText() + " "
+						+ q3CrsNmCBx.getSelectedItem() + " বিষয় " + q3CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(q3Amount.getText()));
+				}
+				if (q4DeptLbl.isVisible()) {
+					String txt = "ঘ. একটি " + q4hrCBx.getSelectedItem() + " " + q4DeptLbl.getText() + " "
+						+ q4CrsNmCBx.getSelectedItem() + " বিষয় " + q4CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(q4Amount.getText()));
+				}
+
+//২. প্রশ্নপত্র সমন্বয় সাধন:
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 5, FontSize + 1, "২. প্রশ্নপত্র সমন্বয় সাধন:", 'b');
+				if (!qAdjNoTB.getText().equals("")) {
+					PDFWithImages.addLine(document, page, leftMargin + 90, yPos, FontSize + 1, qAdj1DeptLbl.getText() + " "
+						+ qAdj1CrsNmCBx.getSelectedItem() + " বিষয় " + qAdjNoTB.getText() + " টা প্রশ্নপত্র " + qAdjNoPTB.getText() + " জন সদস্য করেন।");
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(qAdj1Amount.getText()));
+				}
+//৩. ক্লাস টেস্ট/টার্ম পেপার/হোম ওয়ার্ক/এসাইনমেন্ট
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 5, FontSize + 1, cat3Lbl.getText(), 'b');
+				PDFWithImages.addLine(document, page, leftMargin + 260, yPos, FontSize + 1, ctDescTB.getText());
+				PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(ct1Amount.getText()));
+
+//৪. উত্তরপত্র মূল্যায়ন:
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 5, FontSize + 1, "৪. উত্তরপত্র মূল্যায়ন:", 'b');
+				if (ans1Pnl.isVisible()) {
+					String txt = "ক. " + ans1NoTB.getText() + " টি " + ans1hrCBx.getSelectedItem() + " " + ans1DeptLbl.getText() + " "
+						+ ans1CrsNmCBx.getSelectedItem() + " বিষয় " + ans1CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(ans1Amount.getText()));
+				}
+				if (ans2Pnl.isVisible()) {
+					String txt = "খ. " + ans2NoTB.getText() + " টি " + ans2hrCBx.getSelectedItem() + " " + ans2DeptLbl.getText() + " "
+						+ ans2CrsNmCBx.getSelectedItem() + " বিষয় " + ans2CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(ans2Amount.getText()));
+				}
+				if (ans3Pnl.isVisible()) {
+					String txt = "গ. " + ans3NoTB.getText() + " টি " + ans3hrCBx.getSelectedItem() + " " + ans3DeptLbl.getText() + " "
+						+ ans3CrsNmCBx.getSelectedItem() + " বিষয় " + ans3CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(ans3Amount.getText()));
+				}
+				if (ans4Pnl.isVisible()) {
+					String txt = "ঘ. " + ans4NoTB.getText() + " টি " + ans4hrCBx.getSelectedItem() + " " + ans4DeptLbl.getText() + " "
+						+ ans4CrsNmCBx.getSelectedItem() + " বিষয় " + ans4CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(ans4Amount.getText()));
+				}
+				if (ans5Pnl.isVisible()) {
+					String txt = "ঙ. " + ans5NoTB.getText() + " টি " + ans5hrCBx.getSelectedItem() + " " + ans5DeptLbl.getText() + " "
+						+ ans5CrsNmCBx.getSelectedItem() + " বিষয় " + ans5CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(ans5Amount.getText()));
+				}
+
+//৫. ব্যবহারিক পরীক্ষা:
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 5, FontSize + 1, "৫. ব্যবহারিক পরীক্ষা:", 'b');
+				if (prac1Pnl.isVisible()) {
+					String txt = prac1YrDeptLbl.getText() + prac1CrsNmCBx.getSelectedItem() + " বিষয় " + prac1NoOfDutyTB.getText() + " দিন।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(prac1AmountTB.getText()));
+				}
+				if (prac2Pnl.isVisible()) {
+					String txt = prac2YrDeptLbl.getText() + prac2CrsNmCBx.getSelectedItem() + " বিষয় " + prac2NoOfDutyTB.getText() + " দিন।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(prac2AmountTB.getText()));
+				}
+				if (prac3Pnl.isVisible()) {
+					String txt = prac3YrDeptLbl.getText() + prac3CrsNmCBx.getSelectedItem() + " বিষয় " + prac3NoOfDutyTB.getText() + " দিন।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(prac3AmountTB.getText()));
+				}
+				if (prac4Pnl.isVisible()) {
+					String txt = prac4YrDeptLbl.getText() + prac4CrsNmCBx.getSelectedItem() + " বিষয় " + prac4NoOfDutyTB.getText() + " দিন।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(prac4AmountTB.getText()));
+				}
+
+//৬. মৌখিক পরীক্ষা:
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 5, FontSize + 1, "৬. মৌখিক পরীক্ষা:", 'b');
+				if (!vivaAmount.getText().equals("০")) {
+					String txt = vivaYrDeptLbl.getText() + " " + vivaCrsNmTB.getText() + " বিষয়ে " + Converter.toBanglaNumerals(vivaNoOfStTB.getText()) + " জন পরীক্ষার্থীর জন্য।";
+					PDFWithImages.addLine(document, page, leftMargin + 70, yPos, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(vivaAmount.getText()));
+				}
+
+//৭. পরীক্ষার ফল সন্নিবেশ করণ:
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 5, FontSize + 1, "৭. পরীক্ষার ফল সন্নিবেশ করণ:", 'b');
+				if (!resultAmount.getText().equals("০")) {
+					String txt = resultYrDeptLbl.getText() + " " + resultCrsNmTB.getText() + " বিষয়ে " + Converter.toBanglaNumerals(resultNoOfStTB.getText()) + " জন পরীক্ষার্থীর জন্য।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(resultAmount.getText()));
+				}
+
+//৮. উত্তরপত্র নিরীক্ষা:
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 5, FontSize + 1, "৮. উত্তরপত্র নিরীক্ষা:", 'b');
+				if (!ansInsAmount.getText().equals("০")) {
+					String txt = ansInsYrDeptLbl.getText() + " " + ansInsCrsNmTB.getText() + " বিষয়ের " + Converter.toBanglaNumerals(ansInsNoOfSheetsTB.getText()) + " উত্তরপত্র নিরীক্ষা।";
+					PDFWithImages.addLine(document, page, leftMargin + subListIndent, yPos -= lineOffSet, FontSize, txt);
+					PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(ansInsAmount.getText()));
+				}
+
+//৯. পরীক্ষা পরিষদের সভাপতি/সদস্য (সম্মানি ভাতা)
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 5, FontSize + 1, "৯. পরীক্ষা পরিষদের সভাপতি/সদস্য (সম্মানি ভাতা)", 'b');
+				PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(honoriumAmount.getText()));
+
+//১০. ডাক মাশুল ও অন্যান্য (রশিদ বিলের সাথে সংযুক্ত করতে হবে):
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 5, FontSize + 1, "১০. ডাক মাশুল ও অন্যান্য (রশিদ বিলের সাথে সংযুক্ত করতে হবে): ", 'b');
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, "ক. " + others1TB.getText());
+				PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(others1Amount.getText()));
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, "খ. " + others2TB.getText());
+				PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(others2Amount.getText()));
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, "গ. " + others3TB.getText());
+				PDFWithImages.addLine(document, page, rightMargin - 50, yPos, FontSize, Converter.toBanglaNumerals(others3Amount.getText()));
+
+				tableBottom = yPos - 40; // depends on yPos
+				tableLeft = rightMargin - 50;
+				tableRight = rightMargin;
+// Drawing Table for bill Amounts
+				
+				PDFWithImages.drawRect(document, page, tableLeft, tableTop, tableRight, tableBottom, 1f);
+				PDFWithImages.addLine(document, page, tableLeft + 15, tableTop - 15, FontSize + 1, "টাকা", 'b');
+				PDFWithImages.drawLine(document, page, tableLeft, tableTop - 15, tableRight, tableTop - 15, 1f);
+				PDFWithImages.addLine(document, page, rightMargin - 80, tableBottom, FontSize + 1, "মোট =");
+				PDFWithImages.addLine(document, page, tableLeft, tableBottom, FontSize + 1, Converter.toBanglaNumerals(grandTotal.getText()));
+				PDFWithImages.drawLine(document, page, tableLeft, tableBottom + 15, tableRight, tableBottom + 15, 1f);
+
+				PDFWithImages.addLine(document, page, rightMargin - 200, tableBottom - 40, FontSize + 1, "কথায়: " + inSentence.getText() + " টাকা মাত্র।", 'b');
+
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 20, FontSize, "প্রত্যয়ন করা যাচ্ছে যে, উপর্যুক্ত বিবরণী"
+					+ " আমার জানামতে সঠিক। বিল পরিশোধ করা যেতে পারে।");
+
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 20, FontSize, "...................................");
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, "        স্বাক্ষর (সীল সহ)");
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, "পরীক্ষা পরিষদের সভাপতি");
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, DeptName + " বিভাগ");
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, "বর্ষ: 0" + year + ", টার্ম: 0" + term);
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, "প্রত্যয়ন করা যাচ্ছে যে অত্র বিলের টাকা পূর্বে গ্রহণ করা হয়নি");
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, "অতিরিক্ত কোন অর্থ উত্তোলন করলে ফেরত দিতে বাধ্য থাকব।");
+
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 20, FontSize, "..............................");
+				PDFWithImages.drawRect(document, page, leftMargin + 120, yPos + 10, leftMargin + 160, yPos - 30, 2f);
+				PDFWithImages.addLine(document, page, leftMargin + 180, yPos, FontSize, "বিল সমূহ নিরীক্ষান্তে পরিশোধ করা যেতে পারে।");
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet, FontSize, "প্রাপকের স্বাক্ষর ও তারিখ");
+				PDFWithImages.addLine(document, page, leftMargin + 130, yPos, FontSize, "রাজস্ব");
+
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 20, FontSize, "...............................");
+				PDFWithImages.addLine(document, page, leftMargin + 180, yPos, FontSize, "....................................................");
+				PDFWithImages.addLine(document, page, leftMargin + 350, yPos, FontSize, ".........................");
+				PDFWithImages.addLine(document, page, leftMargin + 490, yPos, FontSize, "....................");
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet - 5, FontSize, "   অফিস সহকারী");
+				PDFWithImages.addLine(document, page, leftMargin + 180, yPos, FontSize, "সেকশন অফিসার/সহকারী পরীক্ষা নিয়ন্ত্রক");
+				PDFWithImages.addLine(document, page, leftMargin + 350, yPos, FontSize, "উপ-পরীক্ষা নিয়ন্ত্রক");
+				PDFWithImages.addLine(document, page, leftMargin + 490, yPos, FontSize, " পরীক্ষা নিয়ন্ত্রক");
+
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet - 5, FontSize, "----------------------------------------"
+					+ "-------------------------------------------------------------------------------------------------------------------------"
+					+ "------------------------------------------");
+				PDFWithImages.addLine(document, page, leftMargin + 200, yPos -= lineOffSet + 5, FontSize + 5, "হিসাব বিভাগের ব্যবহারের জন্য", 'b');
+				PDFWithImages.drawLine(document, page, leftMargin + 200, yPos + 5, leftMargin + 360, yPos + 5, 1f);
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 10, FontSize, "পরীক্ষান্তে বর্ণিত পারিতোষিক বিল বাবদ .........................................,"
+					+ " কথায় (............................................................................................................) মাত্র পরিশোধ করা হলো।");
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 15, FontSize, "..................................................");
+				PDFWithImages.addLine(document, page, leftMargin + 220, yPos, FontSize, ".............................................");
+				PDFWithImages.addLine(document, page, leftMargin + 450, yPos, FontSize, ".................................");
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet - 5, FontSize, "সেকশন অফিসার/সহকারী হিসা পরিচালক");
+				PDFWithImages.addLine(document, page, leftMargin + 220, yPos, FontSize, "             উপ-পরিচালক");
+				PDFWithImages.addLine(document, page, leftMargin + 450, yPos, FontSize, "           পরিচালক");
+				PDFWithImages.addLine(document, page, leftMargin, yPos -= lineOffSet + 10, FontSize, "ব্যাংক এ্যাডভাইস/চেক নং ............................................................ তারিখ:...................................");
+
+//Save document for preview
+				document.save(fileName);
 			}
-			//Batch Info
-			PDFWithImages.addLine(document, page, (pageWidth / 2) + 70, yPos - 40, BnFontSize, "যে বিভাগের পরীক্ষা : "+deptSelection.getSelectedItem());
-			//PDFWithImages.addLine(document, page, (pageWidth / 2) + 145, yPos - 38, EnFontSize, "" + deptSelection.getSelectedItem());
-			PDFWithImages.addLine(document, page, (pageWidth / 2) + 70, yPos - 60, BnFontSize,
-				"বর্ষ : " + examYearCBx.getSelectedItem().toString()
-				+ " টার্ম : " + examTermCBx.getSelectedItem().toString()
-				+ " শিক্ষাবর্ষ : " + Converter.toBanglaNumerals(session.getText())
-			);
-
-			// Create a SimpleDateFormat object with the desired date pattern
-			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-
-			// Format the date using the SimpleDateFormat object
-			String startDate = sdf.format(startDateChooser.getDate());
-			String endDate = sdf.format(endDateChooser.getDate());
-			PDFWithImages.addLine(document, page, leftMargin, yPos - 80, BnFontSize,
-				"পরীক্ষা অনুষ্ঠানের তারিখ : " + Converter.toBanglaNumerals(startDate)
-				+ " থেকে " + Converter.toBanglaNumerals(endDate) + " পর্যন্ত ");
-			
-			//ExamYear = String.valueOf(jYearChooser1.getYear());
-			PDFWithImages.addLine(document, page, leftMargin, yPos - 100, BnFontSize, Converter.toBanglaNumerals(ExamYear)
-				+ " সনের পরীক্ষা সমূহের প্রশ্নপত্র প্রণয়ন সমন্বয় সাধন"
-				+ " এবং উত্তরপত্র মূল্যায়ন ইত্যাদির জন্য আমার পারিশ্রমিকের দাবীসমূহ নিম্নে সন্নিবেশিত হলো:-");
-
-			//১. প্রশ্নপত্র প্রণয়ন:
-			PDFWithImages.addLine(document, page, leftMargin, yPos -= 120, BnFontSize + 1, "১. প্রশ্নপত্র প্রণয়ন:", 'b');
-			if (q1DeptLbl.isVisible()) {
-				String txt = "ক. একটি " + q1hrCBx.getSelectedItem() + " " + q1DeptLbl.getText() + " "
-					+ q1CrsNmCBx.getSelectedItem() + " বিষয় " + q1CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
-				PDFWithImages.addLine(document, page, leftMargin, yPos -= 20, BnFontSize, txt);
-			}
-			if (q2DeptLbl.isVisible()) {
-				String txt = "ক. একটি " + q2hrCBx.getSelectedItem() + " " + q2DeptLbl.getText() + " "
-					+ q2CrsNmCBx.getSelectedItem() + " বিষয় " + q2CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
-				PDFWithImages.addLine(document, page, leftMargin, yPos -= 20, BnFontSize, txt);
-			}
-			if (q3DeptLbl.isVisible()) {
-				String txt = "ক. একটি " + q3hrCBx.getSelectedItem() + " " + q3DeptLbl.getText() + " "
-					+ q3CrsNmCBx.getSelectedItem() + " বিষয় " + q3CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
-				PDFWithImages.addLine(document, page, leftMargin, yPos -= 20, BnFontSize, txt);
-			}
-			if (q4DeptLbl.isVisible()) {
-				String txt = "ক. একটি " + q4hrCBx.getSelectedItem() + " " + q4DeptLbl.getText() + " "
-					+ q4CrsNmCBx.getSelectedItem() + " বিষয় " + q4CrsCdCBx.getSelectedItem() + " কোর্স কোড।";
-				PDFWithImages.addLine(document, page, leftMargin, yPos -= 20, BnFontSize, txt);
-			}
-
-			//২. প্রশ্নপত্র সমন্বয় সাধন:
-			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "২. প্রশ্নপত্র সমন্বয় সাধন:", 'b');
-
-			//৩. ক্লাস টেস্ট/টার্ম পেপার/হোম ওয়ার্ক/এসাইনমেন্ট                 (বিবরণী সংযুক্ত)
-			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৩. ক্লাস টেস্ট/টার্ম পেপার/হোম ওয়ার্ক/এসাইনমেন্ট                 (বিবরণী সংযুক্ত)", 'b');
-
-			//৪. উত্তরপত্র মূল্যায়ন:
-			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৪. উত্তরপত্র মূল্যায়ন:", 'b');
-
-			//৫. ব্যবহারিক পরীক্ষা:
-			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৫. ব্যবহারিক পরীক্ষা:", 'b');
-
-			//৬. মৌখিক পরীক্ষা:
-			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৬. মৌখিক পরীক্ষা:", 'b');
-
-			//৭. পরীক্ষার ফল সন্নিবেশ করণ:
-			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৭. পরীক্ষার ফল সন্নিবেশ করণ:", 'b');
-
-			//৮. উত্তরপত্র নিরীক্ষা:
-			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৮. উত্তরপত্র নিরীক্ষা:", 'b');
-
-			//৯. পরীক্ষা পরিষদের সভাপতি/সদস্য (সম্মানি ভাতা)
-			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "৯. পরীক্ষা পরিষদের সভাপতি/সদস্য (সম্মানি ভাতা)", 'b');
-
-			//১০. ডাক মাশুল ও অন্যান্য (রশিদ বিলের সাথে সংযুক্ত করতে হবে): 
-			PDFWithImages.addLine(document, page, leftMargin, yPos -= 30, BnFontSize + 1, "১০. ডাক মাশুল ও অন্যান্য (রশিদ বিলের সাথে সংযুক্ত করতে হবে): ", 'b');
-
-			//Draw Underline 
-//			PDPageContentStream contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, true, true);
-//			contentStream.moveTo(270, yPos - 55);   // moves "pencil" to a position
-//			contentStream.lineTo(325, yPos - 55);     // creates an invisible line to another position
-//			contentStream.stroke();
-//			contentStream.close();
-			//Save document for preview
-			document.save(fileName);
-			document.close();
 		} catch (IOException ex) {
 			Logger.getLogger(Compose_RemuBill.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception ex) {
@@ -2348,7 +3202,10 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ExamRemuBill;
     private javax.swing.JComboBox<String> NoOfAnsSheet;
+    private javax.swing.JComboBox<String> NoOfPrac;
     private javax.swing.JComboBox<String> NoOfQuestionaire;
+    private javax.swing.JPanel amountPanel;
+    private javax.swing.JTextField ans1Amount;
     private javax.swing.JComboBox<String> ans1CrsCdCBx;
     private javax.swing.JLabel ans1CrsCdLbl;
     private javax.swing.JComboBox<String> ans1CrsNmCBx;
@@ -2359,6 +3216,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel ans1SubLbl;
     private javax.swing.JLabel ans1TLbl;
     private javax.swing.JComboBox<String> ans1hrCBx;
+    private javax.swing.JTextField ans2Amount;
     private javax.swing.JComboBox<String> ans2CrsCdCBx;
     private javax.swing.JLabel ans2CrsCdLbl;
     private javax.swing.JComboBox<String> ans2CrsNmCBx;
@@ -2369,6 +3227,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel ans2SubLbl;
     private javax.swing.JLabel ans2TLbl;
     private javax.swing.JComboBox<String> ans2hrCBx;
+    private javax.swing.JTextField ans3Amount;
     private javax.swing.JComboBox<String> ans3CrsCdCBx;
     private javax.swing.JLabel ans3CrsCdLbl;
     private javax.swing.JComboBox<String> ans3CrsNmCBx;
@@ -2379,6 +3238,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel ans3SubLbl;
     private javax.swing.JLabel ans3TLbl;
     private javax.swing.JComboBox<String> ans3hrCBx;
+    private javax.swing.JTextField ans4Amount;
     private javax.swing.JComboBox<String> ans4CrsCdCBx;
     private javax.swing.JLabel ans4CrsCdLbl;
     private javax.swing.JComboBox<String> ans4CrsNmCBx;
@@ -2389,6 +3249,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel ans4SubLbl;
     private javax.swing.JLabel ans4TLbl;
     private javax.swing.JComboBox<String> ans4hrCBx;
+    private javax.swing.JTextField ans5Amount;
     private javax.swing.JComboBox<String> ans5CrsCdCBx;
     private javax.swing.JLabel ans5CrsCdLbl;
     private javax.swing.JComboBox<String> ans5CrsNmCBx;
@@ -2399,6 +3260,9 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel ans5SubLbl;
     private javax.swing.JLabel ans5TLbl;
     private javax.swing.JComboBox<String> ans5hrCBx;
+    private javax.swing.JTextField ansInsAmount;
+    private javax.swing.JTextField ansInsCrsNmTB;
+    private javax.swing.JTextField ansInsNoOfSheetsTB;
     private javax.swing.JLabel ansInsYrDeptLbl;
     private javax.swing.JLabel billSerialNoLabel;
     private javax.swing.JTextField billSlNoTxt;
@@ -2414,17 +3278,24 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel cat7Lbl;
     private javax.swing.JLabel cat8Lbl;
     private javax.swing.JLabel cat9Lbl;
+    private javax.swing.JTextField ct1Amount;
+    private javax.swing.JTextField ctDescTB;
     private javax.swing.JComboBox<String> deptSelection;
-    private com.toedter.calendar.JDateChooser endDateChooser;
+    private javax.swing.JTextField endDate;
     private javax.swing.JComboBox<String> examTermCBx;
     private javax.swing.JComboBox<String> examYearCBx;
+    private javax.swing.JTextField grandTotal;
+    private javax.swing.JTextField honoriumAmount;
+    private javax.swing.JTextField inSentence;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel101;
     private javax.swing.JLabel jLabel102;
     private javax.swing.JLabel jLabel105;
     private javax.swing.JLabel jLabel106;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -2433,13 +3304,13 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel74;
     private javax.swing.JLabel jLabel75;
     private javax.swing.JLabel jLabel76;
     private javax.swing.JLabel jLabel77;
     private javax.swing.JLabel jLabel78;
-    private javax.swing.JLabel jLabel79;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel82;
     private javax.swing.JLabel jLabel83;
@@ -2448,40 +3319,37 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabel90;
     private javax.swing.JLabel jLabel91;
-    private javax.swing.JLabel jLabel92;
-    private javax.swing.JLabel jLabel93;
-    private javax.swing.JLabel jLabel94;
     private javax.swing.JLabel jLabel97;
     private javax.swing.JLabel jLabel98;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField22;
-    private javax.swing.JTextField jTextField23;
-    private javax.swing.JTextField jTextField47;
-    private javax.swing.JTextField jTextField48;
-    private javax.swing.JTextField jTextField49;
-    private javax.swing.JTextField jTextField50;
-    private javax.swing.JTextField jTextField51;
-    private javax.swing.JTextField jTextField55;
-    private javax.swing.JTextField jTextField56;
-    private javax.swing.JTextField jTextField59;
-    private javax.swing.JTextField jTextField60;
-    private javax.swing.JTextField jTextField63;
-    private javax.swing.JTextField jTextField64;
-    private javax.swing.JTextField jTextField65;
-    private javax.swing.JTextField jTextField66;
-    private javax.swing.JTextField jTextField67;
-    private javax.swing.JTextField jTextField68;
-    private javax.swing.JTextField jTextField70;
-    private javax.swing.JTextField jTextField72;
+    private javax.swing.JTextField others1Amount;
+    private javax.swing.JTextField others1TB;
+    private javax.swing.JTextField others2Amount;
+    private javax.swing.JTextField others2TB;
+    private javax.swing.JTextField others3Amount;
+    private javax.swing.JTextField others3TB;
+    private javax.swing.JTextField prac1AmountTB;
     private javax.swing.JComboBox<String> prac1CrsNmCBx;
+    private javax.swing.JTextField prac1NoOfDutyTB;
+    private javax.swing.JPanel prac1Pnl;
     private javax.swing.JLabel prac1YrDeptLbl;
+    private javax.swing.JTextField prac2AmountTB;
     private javax.swing.JComboBox<String> prac2CrsNmCBx;
+    private javax.swing.JTextField prac2NoOfDutyTB;
+    private javax.swing.JPanel prac2Pnl;
     private javax.swing.JLabel prac2YrDeptLbl;
+    private javax.swing.JTextField prac3AmountTB;
     private javax.swing.JComboBox<String> prac3CrsNmCBx;
+    private javax.swing.JTextField prac3NoOfDutyTB;
+    private javax.swing.JPanel prac3Pnl;
     private javax.swing.JLabel prac3YrDeptLbl;
+    private javax.swing.JTextField prac4AmountTB;
     private javax.swing.JComboBox<String> prac4CrsNmCBx;
+    private javax.swing.JTextField prac4NoOfDutyTB;
+    private javax.swing.JPanel prac4Pnl;
     private javax.swing.JLabel prac4YrDeptLbl;
     private javax.swing.JButton previewBtn;
+    private javax.swing.JTextField q1Amount;
     private javax.swing.JComboBox<String> q1CrsCdCBx;
     private javax.swing.JLabel q1CrsCdLbl;
     private javax.swing.JComboBox<String> q1CrsNmCBx;
@@ -2490,6 +3358,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel q1SlLbl;
     private javax.swing.JLabel q1SubLbl;
     private javax.swing.JComboBox<String> q1hrCBx;
+    private javax.swing.JTextField q2Amount;
     private javax.swing.JComboBox<String> q2CrsCdCBx;
     private javax.swing.JLabel q2CrsCdLbl;
     private javax.swing.JComboBox<String> q2CrsNmCBx;
@@ -2498,6 +3367,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel q2SlLbl;
     private javax.swing.JLabel q2SubLbl;
     private javax.swing.JComboBox<String> q2hrCBx;
+    private javax.swing.JTextField q3Amount;
     private javax.swing.JComboBox<String> q3CrsCdCBx;
     private javax.swing.JLabel q3CrsCdLbl;
     private javax.swing.JComboBox<String> q3CrsNmCBx;
@@ -2506,6 +3376,7 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel q3SlLbl;
     private javax.swing.JLabel q3SubLbl;
     private javax.swing.JComboBox<String> q3hrCBx;
+    private javax.swing.JTextField q4Amount;
     private javax.swing.JComboBox<String> q4CrsCdCBx;
     private javax.swing.JLabel q4CrsCdLbl;
     private javax.swing.JComboBox<String> q4CrsNmCBx;
@@ -2514,21 +3385,79 @@ public class Compose_RemuBill extends javax.swing.JFrame {
     private javax.swing.JLabel q4SlLbl;
     private javax.swing.JLabel q4SubLbl;
     private javax.swing.JComboBox<String> q4hrCBx;
+    private javax.swing.JTextField qAdj1Amount;
     private javax.swing.JComboBox<String> qAdj1CrsNmCBx;
     private javax.swing.JLabel qAdj1DeptLbl;
+    private javax.swing.JTextField qAdjNoPTB;
+    private javax.swing.JTextField qAdjNoTB;
     private javax.swing.JPanel remuBillDoc;
+    private javax.swing.JTextField resultAmount;
+    private javax.swing.JTextField resultCrsNmTB;
+    private javax.swing.JTextField resultNoOfStTB;
     private javax.swing.JLabel resultYrDeptLbl;
     private javax.swing.JTextField session;
-    private com.toedter.calendar.JDateChooser startDateChooser;
+    private javax.swing.JTextField startDate;
     private javax.swing.JButton submitBtn;
     private javax.swing.JTextField teacherAddress;
     private javax.swing.JTextField teacherName;
-    private javax.swing.JPanel testPanel;
-    private javax.swing.JPanel testPanel1;
-    private javax.swing.JPanel testPanel2;
-    private javax.swing.JPanel testPanel3;
-    private javax.swing.JPanel testPanel4;
+    private javax.swing.JTextField vivaAmount;
+    private javax.swing.JTextField vivaCrsNmTB;
+    private javax.swing.JTextField vivaNoOfStTB;
     private javax.swing.JLabel vivaYrDeptLbl;
     // End of variables declaration//GEN-END:variables
+
+	int prac1Bill, prac2Bill, prac3Bill, prac4Bill;
+
+	private void setPrac1Bill() {
+		String txt;
+		int rate = 1200;
+		try {
+			int noOfAnsSheet = Integer.valueOf(Converter.toEnglishNumerals(prac1NoOfDutyTB.getText()));
+			prac1Bill = rate * noOfAnsSheet;
+			txt = Converter.toBanglaNumerals(String.valueOf(prac1Bill));
+			prac1AmountTB.setText(txt);
+		} catch (Exception ex) {
+			prac1AmountTB.setText("০");
+		} //To change body of generated methods, choose Tools | Templates.
+	}
+
+	private void setPrac2Bill() {
+		String txt;
+		int rate = 1200;
+		try {
+			int noOfAnsSheet = Integer.valueOf(Converter.toEnglishNumerals(prac2NoOfDutyTB.getText()));
+			prac2Bill = rate * noOfAnsSheet;
+			txt = Converter.toBanglaNumerals(String.valueOf(prac2Bill));
+			prac2AmountTB.setText(txt);
+		} catch (Exception ex) {
+			prac2AmountTB.setText("০");
+		} //To change body of generated methods, choose Tools | Templates.
+	}
+
+	private void setPrac3Bill() {
+		String txt;
+		int rate = 1200;
+		try {
+			int noOfAnsSheet = Integer.valueOf(Converter.toEnglishNumerals(prac3NoOfDutyTB.getText()));
+			prac3Bill = rate * noOfAnsSheet;
+			txt = Converter.toBanglaNumerals(String.valueOf(prac3Bill));
+			prac3AmountTB.setText(txt);
+		} catch (Exception ex) {
+			prac3AmountTB.setText("০");
+		} //To change body of generated methods, choose Tools | Templates.
+	}
+
+	private void setPrac4Bill() {
+		String txt;
+		int rate = 1200;
+		try {
+			int noOfAnsSheet = Integer.valueOf(Converter.toEnglishNumerals(prac4NoOfDutyTB.getText()));
+			prac4Bill = rate * noOfAnsSheet;
+			txt = Converter.toBanglaNumerals(String.valueOf(prac4Bill));
+			prac4AmountTB.setText(txt);
+		} catch (Exception ex) {
+			prac4AmountTB.setText("০");
+		} //To change body of generated methods, choose Tools | Templates.
+	}
 
 }

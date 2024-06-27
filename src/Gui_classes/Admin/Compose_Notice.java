@@ -4,6 +4,7 @@ import DB_classes.PdfDatabaseManager;
 import Gui_classes.pdf_Preview;
 import static Other.Utility.loadCustomFont;
 import Other.PDFWithImages;
+import Other.Utility;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
@@ -33,7 +34,7 @@ public class Compose_Notice extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
-	String fontPath = "E:/PaperlessOffice/Fonts/Nikosh.ttf";
+	String fontPath = Utility.NIKOSH_FONT_PATH;
 	Font customFont = loadCustomFont(fontPath, 18);
 	Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 	//Variables for document

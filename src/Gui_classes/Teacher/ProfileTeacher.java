@@ -7,6 +7,7 @@ import Gui_classes.login;
 import static DB_classes.DatabaseOperations.retrieveTeacherDataFromDatabase;
 import static DB_classes.DatabaseOperations.retrieveUserDataFromDatabase;
 import Other.Teacher;
+import Other.Utility;
 import static Other.Utility.loadCustomFont;
 import java.awt.Font;
 import javax.swing.border.Border;
@@ -23,8 +24,9 @@ public class ProfileTeacher extends javax.swing.JFrame {
 
 	private Teacher teacher;
 	Border editableBorder;
-final Font customFont = loadCustomFont("Fonts/Nikosh.ttf", 18, Font.BOLD);
-	
+	final String fontPath = Utility.SOLAIMANLIPI_FONT_PATH;
+	final Font customFont = loadCustomFont(fontPath, 18, Font.BOLD);
+
 	/**
 	 * Creates new form Profile
 	 */

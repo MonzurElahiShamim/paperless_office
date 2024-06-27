@@ -244,7 +244,7 @@ public class login extends javax.swing.JFrame {
 				}
 
 			} else if (teacher.isSelected() == true) {
-				String sql = "SELECT * FROM teacher WHERE Email='" + userEmail + "' && password='" + userPass + "'";
+				String sql = "SELECT * FROM teacher WHERE email='" + userEmail + "' && password='" + userPass + "'";
 				rs = stmt.executeQuery(sql);
 				if (rs.next()) {
 					UserSession.getInstance().setUser(userEmail);

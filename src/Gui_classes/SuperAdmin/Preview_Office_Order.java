@@ -5,6 +5,7 @@ import DB_classes.databaseConnection;
 import Gui_classes.Admin.Home_Admin;
 import Gui_classes.pdf_Preview;
 import Other.PDFWithImages;
+import Other.Utility;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
@@ -37,6 +38,7 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 	 * Creates new form compose
 	 */
 	int docId;
+	String userType = "super";
 
 	public Preview_Office_Order() {
 		docId = 4;
@@ -46,6 +48,13 @@ public class Preview_Office_Order extends javax.swing.JFrame {
 
 	public Preview_Office_Order(int docId) {
 		this.docId = docId;
+		initComponents();
+		modifyValues();
+	}
+	
+	public Preview_Office_Order(int docId, String userType) {
+		this.docId = docId;
+		this.userType = userType;
 		initComponents();
 		modifyValues();
 	}
@@ -272,7 +281,7 @@ public class Preview_Office_Order extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void modifyValues() {
-		String fontPath = "Fonts/Nikosh.ttf";
+		String fontPath = Utility.SOLAIMANLIPI_FONT_PATH;
 		Font customFont = loadCustomFont(fontPath, 18);
 		Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 

@@ -2,12 +2,12 @@ package Gui_classes.SuperAdmin;
 
 import DB_classes.PdfDatabaseManager;
 import DB_classes.databaseConnection;
+import Gui_classes.Admin.ReceipientSelection;
 import Gui_classes.pdf_Preview;
 import Other.PDFWithImages;
+import Other.Utility;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,8 +17,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -37,11 +35,12 @@ public class Preview_Letter extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
-	final String fontPath = "Fonts/Nikosh.ttf";
+	final String fontPath = Utility.SOLAIMANLIPI_FONT_PATH;
 	final Font customFont = loadCustomFont(fontPath, 18);
 	final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 
 	int docId;
+	String userType = "super";
 
 	public Preview_Letter() {
 		docId = 1;
@@ -51,6 +50,12 @@ public class Preview_Letter extends javax.swing.JFrame {
 
 	public Preview_Letter(int docId) {
 		this.docId = docId;
+		initComponents();
+		modifyValues(docId);
+	}
+	public Preview_Letter(int docId, String userType) {
+		this.docId = docId;
+		this.userType = userType;
 		initComponents();
 		modifyValues(docId);
 	}
@@ -92,6 +97,7 @@ public class Preview_Letter extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         designation = new javax.swing.JTextArea();
         editBtn = new javax.swing.JButton();
+        publishBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -305,6 +311,19 @@ public class Preview_Letter extends javax.swing.JFrame {
             }
         });
 
+        publishBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        publishBtn.setText("Publish");
+        publishBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                publishBtnMouseClicked(evt);
+            }
+        });
+        publishBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                publishBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -316,19 +335,22 @@ public class Preview_Letter extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(approveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-                    .addComponent(editBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(editBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(publishBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(47, 47, 47))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(approveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)
                         .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(publishBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41)
                         .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(docScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 660, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -356,7 +378,10 @@ public class Preview_Letter extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void modifyValues(int docId) {
-		//int docId = 1; // Replace 123 with the actual doc_id you want to retrieve
+		if(userType.equals("super")){
+			publishBtn.setVisible(false);
+		}
+//int docId = 1; // Replace 123 with the actual doc_id you want to retrieve
 		String[] rowData = PdfDatabaseManager.retrieveDocAsText(docId);
 		if (rowData != null) {
 			// Access the retrieved data
@@ -431,7 +456,7 @@ public class Preview_Letter extends javax.swing.JFrame {
 	}
 
 	private String createPdf() {
-		String fileName = "tem/ModifiedLetter.pdf";
+		String fileName = "E:/PaperlessOffice/temp/ModifiedLetter.pdf";
 		String str_date = date.getText();
 		String receipient = personnel.getText();
 		String dept = department.getText();
@@ -625,6 +650,17 @@ public class Preview_Letter extends javax.swing.JFrame {
 		editBtn.setVisible(false);
     }//GEN-LAST:event_editBtnActionPerformed
 
+    private void publishBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_publishBtnMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_publishBtnMouseClicked
+
+    private void publishBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publishBtnActionPerformed
+        // TODO add your handling code here:
+		ReceipientSelection object = new ReceipientSelection();
+		object.setVisible(true);
+		this.setVisible(false);
+    }//GEN-LAST:event_publishBtnActionPerformed
+
 	/**
 	 * @param args the command line
 	 * arguments
@@ -691,6 +727,7 @@ public class Preview_Letter extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel medium;
     private javax.swing.JTextField personnel;
+    private javax.swing.JButton publishBtn;
     private javax.swing.JTextField reference;
     private javax.swing.JTextField subject_letter;
     private javax.swing.JLabel uni_name;

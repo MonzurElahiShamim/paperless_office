@@ -26,11 +26,11 @@ public class Utility {
 
 	final static int FONT_SIZE = 16;
 	//Nikosh Font
-	public final static String NIKOSH_FONT_PATH = "Fonts/Nikosh.ttf";
+	public final static String NIKOSH_FONT_PATH = "G:/Fonts/Nikosh.ttf";
 	public final static Font NIKOSH = loadCustomFont(NIKOSH_FONT_PATH, FONT_SIZE);
 	public final static Font NIKOSH_BOLD = loadCustomFont(NIKOSH_FONT_PATH, FONT_SIZE, Font.BOLD);
 	
-	public final static String SOLAIMANLIPI_FONT_PATH = "Fonts/SolaimanLipi_22-02-2012.ttf";
+	public final static String SOLAIMANLIPI_FONT_PATH = "G:/Fonts/SolaimanLipi_22-02-2012.ttf";
 	public final static Font SOLAIMANLIPI = loadCustomFont(SOLAIMANLIPI_FONT_PATH, FONT_SIZE);
 	public final static Font SOLAIMANLIPI_BOLD = loadCustomFont(SOLAIMANLIPI_FONT_PATH, FONT_SIZE, Font.BOLD);
 

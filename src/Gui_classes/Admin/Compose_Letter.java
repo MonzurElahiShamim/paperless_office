@@ -5,6 +5,7 @@ import Gui_classes.pdf_Preview;
 import static Other.Utility.createPlaceholderText;
 import static Other.Utility.loadCustomFont;
 import Other.PDFWithImages;
+import Other.Utility;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.event.FocusEvent;
@@ -36,7 +37,7 @@ public class Compose_Letter extends javax.swing.JFrame {
 	/**
 	 * Creates new form compose
 	 */
-	final String fontPath = "E:/PaperlessOffice/Fonts/Nikosh.ttf";
+	final String fontPath = Utility.NIKOSH_FONT_PATH;
 	final Font customFont = loadCustomFont(fontPath, 18);
 	final Font boldCustomFont = loadCustomFont(fontPath, 18, Font.BOLD);
 

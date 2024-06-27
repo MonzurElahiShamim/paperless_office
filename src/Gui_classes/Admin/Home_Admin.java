@@ -210,9 +210,6 @@ public class Home_Admin extends javax.swing.JFrame {
 
     private void composeLetterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_composeLetterMouseClicked
 		// TODO add your handling code here:
-		Compose_Application letter = new Compose_Application();
-		letter.setVisible(true);
-		this.setVisible(false);
     }//GEN-LAST:event_composeLetterMouseClicked
 
     private void composeLetterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_composeLetterActionPerformed
