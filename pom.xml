@@ -33,6 +33,22 @@
             <artifactId>pdfbox</artifactId>
             <version>2.0.28</version>
         </dependency>
+
+        <!-- ICEpdf Core and Viewer (local JARs) -->
+        <dependency>
+            <groupId>org.icepdf.os</groupId>
+            <artifactId>icepdf-core</artifactId>
+            <version>4.3.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/jars/icepdf-core-4.3.3.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.icepdf.os</groupId>
+            <artifactId>icepdf-viewer</artifactId>
+            <version>4.3.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/jars/icepdf-viewer-4.3.3.jar</systemPath>
+        </dependency>
         
         <!-- Gmail API -->
         <dependency>
@@ -78,6 +94,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
         </plugins>
     </build>

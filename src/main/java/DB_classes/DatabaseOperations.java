@@ -7,13 +7,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Monzur Elahi Shamim
  */
 public class DatabaseOperations {
+
+	private static final Logger LOGGER = Logger.getLogger(DatabaseOperations.class.getName());
 
 	static void insertDataIntoDatabase(String stId, String nameEn, String nameBn, String fatherEn, String fatherBn, String mobile,
 		String session, String instEmail, String personEmail, String password) {
@@ -32,10 +35,9 @@ public class DatabaseOperations {
 			preparedStatement.setString(10, password);
 
 			preparedStatement.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Registered successfully!");
+			LOGGER.info("Registered successfully");
 		} catch (SQLException ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+			LOGGER.log(Level.SEVERE, "Error registering student", ex);
 		}
 	}
 
@@ -55,24 +57,24 @@ public class DatabaseOperations {
 			int rowsAffected = preparedStatement.executeUpdate();
 
 			if (rowsAffected > 0) {
-				// Log success - consider using proper logging framework
-				JOptionPane.showMessageDialog(null, "Student data updated successfully!");
+				LOGGER.info("Student data updated successfully");
 			} else {
-				// Log warning - consider using proper logging framework
-				JOptionPane.showMessageDialog(null, "No rows were updated.");
+				LOGGER.warning("No student rows were updated");
 			}
 		} catch (SQLException e) {
-			// Log error - consider using proper logging framework
-			JOptionPane.showMessageDialog(null, "Error updating student data: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Error updating student data", e);
 		}
 	}
 
 	public static UserInfo retrieveUserDataFromDatabase(String email) {
 		UserInfo user = null;
-		try (Connection connection = databaseConnection.connection();
-			 PreparedStatement preparedStatement = connection.prepareStatement(
-				 "SELECT * FROM student WHERE eduEmail = ? OR personalEmail = ?");
-		) {
+		try (Connection connection = databaseConnection.connection()) {
+			if (connection == null) {
+				// DB not available; return null gracefully
+				return null;
+			}
+			try (PreparedStatement preparedStatement = connection.prepareStatement(
+				"SELECT * FROM student WHERE eduEmail = ? OR personalEmail = ?")) {
 			preparedStatement.setString(1, email);
 			preparedStatement.setString(2, email);
 			
@@ -90,9 +92,9 @@ public class DatabaseOperations {
 					user.setPersonEmail(resultSet.getString("personalEmail"));
 				}
 			}
+			}
 		} catch (SQLException ex) {
-			ex.printStackTrace();
-			// Handle the exception properly (logging, error message, etc.)
+			LOGGER.log(Level.SEVERE, "Error retrieving student", ex);
 		}
 		return user;
 	}
@@ -120,8 +122,7 @@ public class DatabaseOperations {
 			resultSet.close();
 			preparedStatement.close();
 		} catch (SQLException ex) {
-			ex.printStackTrace();
-			// Handle the exception properly (logging, error message, etc.)
+			LOGGER.log(Level.SEVERE, "Error retrieving teacher", ex);
 		}
 		return teacher;
 	}
@@ -143,15 +144,12 @@ public class DatabaseOperations {
 			int rowsAffected = preparedStatement.executeUpdate();
 
 			if (rowsAffected > 0) {
-				// Log success - consider using proper logging framework
-				JOptionPane.showMessageDialog(null, "Teacher data updated successfully!");
+				LOGGER.info("Teacher data updated successfully");
 			} else {
-				// Log warning - consider using proper logging framework
-				JOptionPane.showMessageDialog(null, "No rows were updated.");
+				LOGGER.warning("No teacher rows were updated");
 			}
 		} catch (SQLException e) {
-			// Log error - consider using proper logging framework
-			JOptionPane.showMessageDialog(null, "Error updating teacher data: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Error updating teacher data", e);
 		}
 	}
 }

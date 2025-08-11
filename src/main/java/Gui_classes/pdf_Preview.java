@@ -18,9 +18,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.apache.pdfbox.pdmodel.PDDocument;
-// import org.icepdf.ri.common.ComponentKeyBinding;
-// import org.icepdf.ri.common.SwingController;
-// import org.icepdf.ri.common.SwingViewBuilder;
+import org.icepdf.ri.common.ComponentKeyBinding;
+import org.icepdf.ri.common.SwingController;
+import org.icepdf.ri.common.SwingViewBuilder;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

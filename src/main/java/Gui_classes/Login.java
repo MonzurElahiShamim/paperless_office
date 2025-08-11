@@ -53,7 +53,7 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         password = new javax.swing.JPasswordField();
         mail = new javax.swing.JTextField();
-        Login = new javax.swing.JButton();
+    login = new javax.swing.JButton();
         cancel = new javax.swing.JButton();
         admin = new javax.swing.JRadioButton();
         teacher = new javax.swing.JRadioButton();
