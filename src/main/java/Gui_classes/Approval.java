@@ -10,9 +10,9 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import org.icepdf.ri.common.ComponentKeyBinding;
-import org.icepdf.ri.common.SwingController;
-import org.icepdf.ri.common.SwingViewBuilder;
+// import org.icepdf.ri.common.ComponentKeyBinding;
+// import org.icepdf.ri.common.SwingController;
+// import org.icepdf.ri.common.SwingViewBuilder;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -220,7 +220,7 @@ public class Approval extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
 //                if (!UserSession.getInstance().isAuthenticated()) {
-//                    JOptionPane.showMessageDialog(null, "You need to login first!");
+//                    JOptionPane.showMessageDialog(null, "You need to Login first!");
 //                } else {
 //                    new Approval().setVisible(true); 
 //                }

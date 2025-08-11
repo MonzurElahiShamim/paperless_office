@@ -6,7 +6,7 @@ import Other.Notification;
 import DB_classes.PdfDatabaseManager;
 import DB_classes.databaseConnection;
 import Gui_classes.Approval;
-import Gui_classes.login;
+import Gui_classes.Login;
 import Gui_classes.pdf_Preview;
 import Other.UserSession;
 import java.sql.Connection;
@@ -249,7 +249,7 @@ public class Notifications extends javax.swing.JFrame {
     private void logoutBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutBtnMouseClicked
 		dispose();
 		UserSession.getInstance().clearSession();
-		login object = new login();
+		Login object = new Login();
 		object.setVisible(true);
     }//GEN-LAST:event_logoutBtnMouseClicked
 

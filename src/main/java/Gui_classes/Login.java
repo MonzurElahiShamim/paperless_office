@@ -9,6 +9,7 @@ import Other.UserSession;
 import DB_classes.databaseConnection;
 import java.awt.HeadlessException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,7 +20,7 @@ import javax.swing.JOptionPane;
  *
  * @author Monzur Elahi Shamim
  */
-public class login extends javax.swing.JFrame {
+public class Login extends javax.swing.JFrame {
 
 	/**
 	 * Creates new form login
@@ -28,7 +29,7 @@ public class login extends javax.swing.JFrame {
 	Statement stmt = null;
 	ResultSet rs = null;
 
-	public login() {
+	public Login() {
 		super("Login");
 		initComponents();
 		conn = databaseConnection.connection();
@@ -52,7 +53,7 @@ public class login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         password = new javax.swing.JPasswordField();
         mail = new javax.swing.JTextField();
-        login = new javax.swing.JButton();
+        Login = new javax.swing.JButton();
         cancel = new javax.swing.JButton();
         admin = new javax.swing.JRadioButton();
         teacher = new javax.swing.JRadioButton();
@@ -318,13 +319,13 @@ public class login extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		//</editor-fold>
 		//</editor-fold>
@@ -333,7 +334,7 @@ public class login extends javax.swing.JFrame {
 
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(() -> {
-			new login().setVisible(true);
+			new Login().setVisible(true);
 		});
 	}
 

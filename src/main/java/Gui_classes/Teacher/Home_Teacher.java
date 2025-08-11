@@ -1,6 +1,6 @@
 package Gui_classes.Teacher;
 
-import Gui_classes.login;
+import Gui_classes.Login;
 import Other.UserSession;
 import Other.Utility;
 import java.awt.Font;
@@ -190,7 +190,7 @@ public class Home_Teacher extends javax.swing.JFrame {
 
 		dispose();
 		UserSession.getInstance().clearSession();
-		login object = new login();
+		Login object = new Login();
 		object.setVisible(true);
     }//GEN-LAST:event_logoutBtnMouseClicked
 
@@ -243,8 +243,8 @@ public class Home_Teacher extends javax.swing.JFrame {
 //		java.awt.EventQueue.invokeLater(new Runnable() {
 //			public void run() {
 //				if (!UserSession.getInstance().isAuthenticated()) {
-//					JOptionPane.showMessageDialog(null, "You need to login first!");
-//					new login().setVisible(true);
+//					JOptionPane.showMessageDialog(null, "You need to Login first!");
+//					new Login().setVisible(true);
 //				} else {
 //					new Home_Teacher().setVisible(true);
 //				}

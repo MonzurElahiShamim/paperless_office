@@ -6,7 +6,7 @@ import Gui_classes.Student.Compose_PC_Application;
 import Gui_classes.Student.ComposeProttoyon;
 import Gui_classes.Student.Compose_SC_Application;
 import Gui_classes.Student.ProfileStudent;
-import Gui_classes.login;
+import Gui_classes.Login;
 import Other.UserSession;
 import Other.Utility;
 import static Other.Utility.loadCustomFont;
@@ -222,7 +222,7 @@ public class Home_Stu extends javax.swing.JFrame {
     private void logoutBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutBtnMouseClicked
 		dispose();
 		UserSession.getInstance().clearSession();
-		login object = new login();
+		Login object = new Login();
 		object.setVisible(true);
     }//GEN-LAST:event_logoutBtnMouseClicked
 
@@ -278,8 +278,8 @@ public class Home_Stu extends javax.swing.JFrame {
 //		java.awt.EventQueue.invokeLater(new Runnable() {
 //			public void run() {
 //				if (!UserSession.getInstance().isAuthenticated()) {
-//					JOptionPane.showMessageDialog(null, "You need to login first!");
-//					new login().setVisible(true);
+//					JOptionPane.showMessageDialog(null, "You need to Login first!");
+//					new Login().setVisible(true);
 //				} else {
 //					new Home_Stu().setVisible(true);
 //				}

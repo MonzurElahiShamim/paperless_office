@@ -371,7 +371,7 @@ public class Compose_Notice extends javax.swing.JFrame {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 //                if (!UserSession.getInstance().isAuthenticated()) {
-//                    JOptionPane.showMessageDialog(null, "You need to login first!");
+//                    JOptionPane.showMessageDialog(null, "You need to Login first!");
 //                } else {
 //                    new Compose_Notice().setVisible(true);
 //                }

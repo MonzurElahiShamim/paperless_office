@@ -3,7 +3,7 @@ package Gui_classes.Student;
 import Other.UserSession;
 import Other.UserInfo;
 import DB_classes.DatabaseOperations;
-import Gui_classes.login;
+import Gui_classes.Login;
 import static DB_classes.DatabaseOperations.retrieveUserDataFromDatabase;
 import javax.swing.border.Border;
 
@@ -354,7 +354,7 @@ public class ProfileStudent extends javax.swing.JFrame {
     private void logoutBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutBtnMouseClicked
 		dispose();
 		UserSession.getInstance().clearSession();
-		login object = new login();
+		Login object = new Login();
 		object.setVisible(true);
     }//GEN-LAST:event_logoutBtnMouseClicked
 

@@ -1,7 +1,7 @@
 package Gui_classes.Admin;
 
 import Gui_classes.Teacher.Compose_Application;
-import Gui_classes.login;
+import Gui_classes.Login;
 import Gui_classes.pdf_Preview;
 import Other.UserSession;
 import java.io.File;
@@ -248,7 +248,7 @@ public class Home_Admin extends javax.swing.JFrame {
     private void logoutBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutBtnMouseClicked
 		dispose();
 		UserSession.getInstance().clearSession();
-		login object = new login();
+		Login object = new Login();
 		object.setVisible(true);
     }//GEN-LAST:event_logoutBtnMouseClicked
 
@@ -303,9 +303,9 @@ public class Home_Admin extends javax.swing.JFrame {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 //                if (!UserSession.getInstance().isAuthenticated()) {
-//                    JOptionPane.showMessageDialog(null, "You need to login first!");
-//			new login().setVisible(true);
-//                    // Redirect the user to the login frame or perform other actions as needed
+//                    JOptionPane.showMessageDialog(null, "You need to Login first!");
+//			new Login().setVisible(true);
+//                    // Redirect the user to the Login frame or perform other actions as needed
 //                    //dispose(); // Close this frame if the user is not authenticated
 //                } else {
 //                    new Home_Admin().setVisible(true);

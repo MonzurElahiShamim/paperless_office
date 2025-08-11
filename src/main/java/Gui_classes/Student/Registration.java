@@ -1,7 +1,7 @@
 package Gui_classes.Student;
 
 import DB_classes.DataValidate;
-import Gui_classes.login;
+import Gui_classes.Login;
 
 /**
  *
@@ -245,7 +245,7 @@ public class Registration extends javax.swing.JFrame {
 
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
 		setVisible(false);
-		login object = new login();
+		Login object = new Login();
 		object.setVisible(true);
     }//GEN-LAST:event_cancelBtnActionPerformed
 
