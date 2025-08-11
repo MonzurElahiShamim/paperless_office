@@ -222,8 +222,11 @@ public class login extends javax.swing.JFrame {
 			String userPass = String.valueOf(Pass);
 			
 			if (admin.isSelected() == true) {
-				String sql = "SELECT * FROM admin WHERE mail='" + userEmail + "' AND password='" + userPass + "'";
-				rs = stmt.executeQuery(sql);
+				String sql = "SELECT * FROM admin WHERE mail=? AND password=?";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, userEmail);
+				pstmt.setString(2, userPass);
+				rs = pstmt.executeQuery();
 
 				if (rs.next()) {
 					String userType = rs.getString("user_type");
@@ -244,8 +247,11 @@ public class login extends javax.swing.JFrame {
 				}
 
 			} else if (teacher.isSelected() == true) {
-				String sql = "SELECT * FROM teacher WHERE email='" + userEmail + "' && password='" + userPass + "'";
-				rs = stmt.executeQuery(sql);
+				String sql = "SELECT * FROM teacher WHERE email=? AND password=?";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, userEmail);
+				pstmt.setString(2, userPass);
+				rs = pstmt.executeQuery();
 				if (rs.next()) {
 					UserSession.getInstance().setUser(userEmail);
 					setVisible(false);
@@ -255,8 +261,11 @@ public class login extends javax.swing.JFrame {
 					JOptionPane.showMessageDialog(null, "Password or mail is invalid!");
 				}
 			} else if (student.isSelected() == true) {
-				String sql = "SELECT * FROM student WHERE eduEmail='" + userEmail + "' && password='" + userPass + "'";
-				rs = stmt.executeQuery(sql);
+				String sql = "SELECT * FROM student WHERE eduEmail=? AND password=?";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, userEmail);
+				pstmt.setString(2, userPass);
+				rs = pstmt.executeQuery();
 				
 				if (rs.next()) {
 					UserSession.getInstance().setUser(userEmail);
