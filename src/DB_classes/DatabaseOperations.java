@@ -55,40 +55,41 @@ public class DatabaseOperations {
 			int rowsAffected = preparedStatement.executeUpdate();
 
 			if (rowsAffected > 0) {
-				System.out.println("Student data updated successfully!");
+				// Log success - consider using proper logging framework
+				JOptionPane.showMessageDialog(null, "Student data updated successfully!");
 			} else {
-				System.out.println("No rows were updated.");
+				// Log warning - consider using proper logging framework
+				JOptionPane.showMessageDialog(null, "No rows were updated.");
 			}
 		} catch (SQLException e) {
-			System.out.println("Error updating student data: " + e.getMessage());
+			// Log error - consider using proper logging framework
+			JOptionPane.showMessageDialog(null, "Error updating student data: " + e.getMessage());
 		}
 	}
 
 	public static UserInfo retrieveUserDataFromDatabase(String email) {
 		UserInfo user = null;
-		try (Connection connection = databaseConnection.connection()) {
-			String query = "SELECT * FROM student WHERE eduEmail = ? OR personalEmail = ?";
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
+		try (Connection connection = databaseConnection.connection();
+			 PreparedStatement preparedStatement = connection.prepareStatement(
+				 "SELECT * FROM student WHERE eduEmail = ? OR personalEmail = ?");
+		) {
 			preparedStatement.setString(1, email);
 			preparedStatement.setString(2, email);
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()) {
-				user = new UserInfo();
-				user.setStId(resultSet.getString("st_id"));
-				user.setStNameEn(resultSet.getString("stNameEn"));
-				user.setStNameBn(resultSet.getString("stNameBn"));
-				user.setFatherNameEn(resultSet.getString("fatherNameEn"));
-				user.setFatherNameBn(resultSet.getString("fatherNameBn"));
-				user.setMobile(resultSet.getString("mobile"));
-				user.setSession(resultSet.getString("session"));
-				user.setInstEmail(resultSet.getString("eduEmail"));
-				user.setPersonEmail(resultSet.getString("personalEmail"));
-				// Retrieve other fields as needed
+			
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.next()) {
+					user = new UserInfo();
+					user.setStId(resultSet.getString("st_id"));
+					user.setStNameEn(resultSet.getString("stNameEn"));
+					user.setStNameBn(resultSet.getString("stNameBn"));
+					user.setFatherNameEn(resultSet.getString("fatherNameEn"));
+					user.setFatherNameBn(resultSet.getString("fatherNameBn"));
+					user.setMobile(resultSet.getString("mobile"));
+					user.setSession(resultSet.getString("session"));
+					user.setInstEmail(resultSet.getString("eduEmail"));
+					user.setPersonEmail(resultSet.getString("personalEmail"));
+				}
 			}
-
-			resultSet.close();
-			preparedStatement.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 			// Handle the exception properly (logging, error message, etc.)
@@ -142,12 +143,15 @@ public class DatabaseOperations {
 			int rowsAffected = preparedStatement.executeUpdate();
 
 			if (rowsAffected > 0) {
-				System.out.println("Teacher data updated successfully!");
+				// Log success - consider using proper logging framework
+				JOptionPane.showMessageDialog(null, "Teacher data updated successfully!");
 			} else {
-				System.out.println("No rows were updated.");
+				// Log warning - consider using proper logging framework
+				JOptionPane.showMessageDialog(null, "No rows were updated.");
 			}
 		} catch (SQLException e) {
-			System.out.println("Error updating student data: " + e.getMessage());
+			// Log error - consider using proper logging framework
+			JOptionPane.showMessageDialog(null, "Error updating teacher data: " + e.getMessage());
 		}
 	}
 }
