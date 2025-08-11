@@ -32,7 +32,9 @@ Paperless Office is a desktop application designed to streamline document manage
    cd paperless_office
    ```
 2. **Configure Database:**
-   - Create a MySQL database and update connection settings in `nbproject/private/config.properties`.
+   - Create a MySQL database named `paperless_office` (or choose another and update properties).
+   - Create the required tables (see Schema section below) or run the provided script.
+   - Provide connection settings either via `src/main/resources/database.properties` (create it) or system properties.
 3. **Add Fonts:**
    - Place required fonts in the `Fonts/` directory.
 4. **Build the Project:**
@@ -63,3 +65,34 @@ For questions or feedback:
 
 ---
 For more details, refer to the source code and documentation within the repository.
+
+## Database Schema
+
+MySQL DDL (production example):
+
+```sql
+CREATE TABLE IF NOT EXISTS student (
+   st_id VARCHAR(50) PRIMARY KEY,
+   stNameEn VARCHAR(100),
+   stNameBn VARCHAR(100),
+   fatherNameEn VARCHAR(100),
+   fatherNameBn VARCHAR(100),
+   mobile VARCHAR(30),
+   session VARCHAR(50),
+   eduEmail VARCHAR(150) UNIQUE,
+   personalEmail VARCHAR(150),
+   password VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS teacher (
+   id VARCHAR(50) PRIMARY KEY,
+   nameEn VARCHAR(100),
+   nameBn VARCHAR(100),
+   mobile VARCHAR(30),
+   designation VARCHAR(100),
+   email VARCHAR(150) UNIQUE,
+   dept VARCHAR(100)
+);
+```
+
+You can also reference the test schema at `src/test/resources/schema.sql` (H2-compatible) which mirrors this structure.
