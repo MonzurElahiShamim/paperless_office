@@ -23,18 +23,18 @@ public class DatabaseConfig {
     }
     
     public static String getUrl() {
-        return props.getProperty("db.url");
+        return System.getProperty("db.url", props.getProperty("db.url"));
     }
-    
+
     public static String getUsername() {
-        return props.getProperty("db.username");
+        return System.getProperty("db.username", props.getProperty("db.username"));
     }
-    
+
     public static String getPassword() {
-        return props.getProperty("db.password");
+        return System.getProperty("db.password", props.getProperty("db.password"));
     }
-    
+
     public static String getDriver() {
-        return props.getProperty("db.driver");
+        return System.getProperty("db.driver", props.getProperty("db.driver"));
     }
 }
