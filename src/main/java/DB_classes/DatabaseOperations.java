@@ -21,7 +21,7 @@ public class DatabaseOperations {
 	static void insertDataIntoDatabase(String stId, String nameEn, String nameBn, String fatherEn, String fatherBn, String mobile,
 		String session, String instEmail, String personEmail, String password) {
 		try (Connection connection = databaseConnection.connection()) {
-			String query = "INSERT INTO student (st_id, firstName, lastName, fatherNameEn, mobile, session, eduEmail, personalEmail, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String query = "INSERT INTO student (st_id, stNameEn, stNameBn, fatherNameEn, fatherNameBn, mobile, session, eduEmail, personalEmail, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, stId);
 			preparedStatement.setString(2, nameEn);
